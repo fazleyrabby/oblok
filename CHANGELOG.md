@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 12 — Scheduler Monitoring (v0.4)
+- **Database & Models**: Created `scheduled_tasks` (`2026_08_02_000012_create_scheduled_tasks_table.php`) and `task_runs` (`2026_08_02_000013_create_task_runs_table.php`) migrations. Built `ScheduledTask` and `TaskRun` Eloquent models with UUID keys, plus `TaskRunStatus` enum (running/success/failed/missed/skipped) with labels and colors.
+- **Cron Scheduling**: `ScheduledTask::calculateNextRun()` computes the next execution using `dragonmantank/cron-expression`, honoring the task timezone. `recordRun()` records a completed run and advances the schedule; `markMissed()` records a missed run and advances past the current time.
+- **Missed-Run Detection**: Built `CheckScheduledTasksJob` (scheduled every minute in `routes/console.php`) that flags enabled tasks whose run window has passed beyond `atlas.scheduler.missed_grace_minutes` (env `ATLAS_SCHEDULER_MISSED_GRACE_MINUTES`, default 5) with a `missed` run.
+- **Controllers & Routes**: Built Web and REST API V1 `ScheduledTaskController` (index/create/store/show/edit/update/destroy/recordRun). Added nested `projects/{project}/scheduled-tasks` routes (web + `api/v1`) with `{scheduledTask}` scoped binding and a `POST .../runs` recording endpoint.
+- **Validation & Authorization**: Added `StoreScheduledTaskRequest` (validates cron expressions and timezones), `UpdateScheduledTaskRequest`, and `RecordTaskRunRequest`. Added `manageScheduler` ability for Owner/Admin/Operator roles and `ScheduledTaskPolicy`.
+- **API Resources**: Added `ScheduledTaskResource` and `TaskRunResource` with consistent JSON envelopes.
+- **Views & UI**: Built scheduler Blade views (`resources/views/scheduled-tasks/`) with task list, run-history table, record-run form for operators, and a cURL example for the runs endpoint. Added Scheduler to the sidebar navigation.
+- **Testing**: Added Pest unit tests (`tests/Unit/ScheduledTaskTest.php`) and feature tests (`tests/Feature/Scheduler/`) covering cron math, run recording, missed-run detection, CRUD, and authorization (**160 total passing tests**, 493 assertions).
+
+### Fixed
+
+- **PostgreSQL compatibility**: Changed the `encrypted_config` column on `notification_channels` from `json` to `text` (`2026_08_02_000014_change_encrypted_config_to_text_on_notification_channels_table.php`). Laravel's `encrypted:array` cast stores an opaque base64 string that is not valid JSON, which PostgreSQL rejected at insert time (MySQL was lax). This resolves CI failures on the Phase 10/11 notification-channel tests.
+
 #### Phase 11 — Webhook Inspector (v0.4)
 - **Database & Models**: Created `webhook_calls` migration (`2026_08_02_000011_create_webhook_calls_table.php`) and `WebhookCall` Eloquent model with UUID keys, JSON casts, `ofEvent` scope, and a `webhookCalls()` relation on `Project`.
 - **Capture**: Built `CaptureWebhook` action (`app/Actions/Webhooks/CaptureWebhook.php`). The deployment webhook receiver (`DeploymentWebhookController`) now records every incoming request — method, URL, headers, full payload, source IP, user agent, response status, and processing time.

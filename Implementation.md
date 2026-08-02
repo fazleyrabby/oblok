@@ -193,6 +193,20 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 12
+
+Scheduler Monitoring
+
+Built on the Phase 11 webhook foundation:
+
+- scheduled_tasks and task_runs tables; ScheduledTask and TaskRun models with TaskRunStatus enum
+- cron math via dragonmantank/cron-expression with per-task timezone support (calculateNextRun)
+- recordRun() records completed runs and advances the schedule; markMissed() records missed runs
+- CheckScheduledTasksJob scheduled every minute flags enabled tasks past the grace window (atlas.scheduler.missed_grace_minutes, default 5)
+- manageScheduler ability (Owner/Admin/Operator) and ScheduledTaskPolicy; web + API v1 routes with scoped {scheduledTask} binding and a POST runs recording endpoint
+- Scheduler views (index/create/edit/show) with run-history table and record-run form; sidebar navigation entry
+- Pest unit + feature coverage for cron math, run recording, missed-run detection, CRUD, and authorization (160 passing tests)
+
 Phase 11
 
 Webhook Inspector

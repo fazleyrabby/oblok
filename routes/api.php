@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\NotificationDeliveryController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ProjectMemberController;
 use App\Http\Controllers\Api\V1\QueueController;
+use App\Http\Controllers\Api\V1\ScheduledTaskController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\WebhookCallController;
 use Illuminate\Support\Facades\Route;
@@ -100,5 +101,16 @@ Route::prefix('v1')->middleware('auth')->group(function () {
                 'show' => 'api.v1.projects.webhooks.show',
             ]);
         Route::post('projects/{project}/webhooks/{webhookCall}/replay', [WebhookCallController::class, 'replay'])->name('api.v1.projects.webhooks.replay');
+
+        Route::apiResource('projects.scheduled-tasks', ScheduledTaskController::class)
+            ->parameters(['scheduled-tasks' => 'scheduledTask'])
+            ->names([
+                'index' => 'api.v1.projects.scheduled-tasks.index',
+                'store' => 'api.v1.projects.scheduled-tasks.store',
+                'show' => 'api.v1.projects.scheduled-tasks.show',
+                'update' => 'api.v1.projects.scheduled-tasks.update',
+                'destroy' => 'api.v1.projects.scheduled-tasks.destroy',
+            ]);
+        Route::post('projects/{project}/scheduled-tasks/{scheduledTask}/runs', [ScheduledTaskController::class, 'recordRun'])->name('api.v1.projects.scheduled-tasks.runs');
     });
 });

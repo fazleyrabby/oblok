@@ -158,6 +158,16 @@ class Project extends Model
     }
 
     /**
+     * Get the scheduled tasks registered for this project.
+     *
+     * @return HasMany<ScheduledTask, $this>
+     */
+    public function scheduledTasks(): HasMany
+    {
+        return $this->hasMany(ScheduledTask::class);
+    }
+
+    /**
      * Resolve a single member of this project by user id (for scoped route binding).
      *
      * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>
