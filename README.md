@@ -1,5 +1,8 @@
 # oblok
 
+<img width="1260" height="772" alt="CleanShot 2026-08-03 at 01 01 46" src="https://github.com/user-attachments/assets/359a0685-35d6-4ab5-b6b1-9b63060c0c47" />
+
+
 A self-hosted Developer Operations Platform for engineering teams.
 
 oblok provides a unified workspace for monitoring services, tracking deployments, inspecting queues, managing incidents, and operating backend applications — without depending on third-party SaaS.
