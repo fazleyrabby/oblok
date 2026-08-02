@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 14 — API Key Management (v0.4)
+- **Database & Models**: Created `api_keys` migration (`2026_08_02_000018_create_api_keys_table.php`) and `ApiKey` Eloquent model (UUID keys, `user_id` + `project_id` foreign keys). Keys are scoped to a single project, tokens are stored as SHA-256 hashes with a displayable `key_prefix`, and each key tracks `requests_count` and `last_used_at` plus optional `expires_at`/`revoked_at`.
+- **Actions**: Built `CreateApiKey` (generates a prefixed plaintext token and returns it exactly once) and `RevokeApiKey`.
+- **Machine Auth**: Added a custom `api_key` auth guard (`app/Auth/ApiKeyGuard.php`) that resolves the owning user from an `Authorization: Bearer` token, rejects revoked/expired keys, records usage, and re-resolves per request so long-running workers never reuse a stale identity. The REST V1 API now accepts both session auth and API keys (`auth:web,api_key`), with a per-project scope middleware (`EnsureApiKeyProjectScope`) that forbids cross-project access.
+- **Rate Limiting**: Added a named `api_key` rate limiter (default 120 requests/minute per key, env `ATLAS_API_RATE_LIMIT`) applied to the V1 API.
+- **Controllers & Routes**: Built Web and REST API V1 `ApiKeyController` (index/store/destroy). Added nested `projects/{project}/api-keys` routes (web + `api/v1`).
+- **Validation & Authorization**: Added `StoreApiKeyRequest` (name + optional future expiry). Added `manageApiKeys` ability for Owner/Admin roles and `ApiKeyPolicy`.
+- **API Resource**: Added `ApiKeyResource` with prefix, usage counters, and lifecycle timestamps (never the raw token).
+- **Views & UI**: Built the API Keys Blade view (`resources/views/api-keys/`) with a generate form, one-time token display with copy button, and a lifecycle table (requests, last used, expiry, revoke). Added API Keys to the sidebar navigation.
+- **Configuration**: Added `atlas.api_keys.prefix` and `atlas.api.rate_limit` config plus `.env.example` entries (`ATLAS_API_KEY_PREFIX`, `ATLAS_API_RATE_LIMIT`).
+- **Testing**: Added Pest unit tests (`tests/Unit/ApiKeyTest.php`) and feature tests (`tests/Feature/Integrations/`) covering hashing, expiry/revocation, Bearer authentication, 401/403 paths, project scope enforcement, session fallback, rate limiting, and web/API key management (**202 total passing tests**, 634 assertions).
+
 #### Phase 13 — GitHub Integration (v0.4)
 - **Database & Models**: Created `github_integrations` (`2026_08_02_000015_create_github_integrations_table.php`), `github_commits` (`..._000016`), and `github_pull_requests` (`..._000017`) migrations. Built `GitHubIntegration`, `GitHubCommit`, and `GitHubPullRequest` Eloquent models (one integration per project) with access tokens encrypted at rest.
 - **API Client**: Built `GitHubApiService` (`app/Services/GitHub/`) — a Laravel HTTP client for the GitHub REST API with typed `GitHubCommitData`/`GitHubPullRequestData` value objects and a domain `GitHubApiException`. The base URL is configurable for GitHub Enterprise (`GITHUB_API_URL`).

@@ -45,6 +45,7 @@ enum ProjectRole: string
                 'manageWebhooks',
                 'manageScheduler',
                 'manageIntegrations',
+                'manageApiKeys',
             ],
             self::Admin => [
                 'view',
@@ -56,6 +57,7 @@ enum ProjectRole: string
                 'ingestLogs',
                 'manageWebhooks',
                 'manageScheduler',
+                'manageApiKeys',
             ],
             self::Operator => [
                 'view',

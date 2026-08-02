@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
+use App\Http\Controllers\Web\ApiKeyController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\GitHubIntegrationController;
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
     Route::post('projects/{project}/github', [GitHubIntegrationController::class, 'store'])->name('projects.github.store');
     Route::post('projects/{project}/github/sync', [GitHubIntegrationController::class, 'sync'])->name('projects.github.sync');
     Route::delete('projects/{project}/github', [GitHubIntegrationController::class, 'destroy'])->name('projects.github.destroy');
+
+    Route::get('projects/{project}/api-keys', [ApiKeyController::class, 'index'])->name('projects.api-keys.index');
+    Route::post('projects/{project}/api-keys', [ApiKeyController::class, 'store'])->name('projects.api-keys.store');
+    Route::delete('projects/{project}/api-keys/{apiKey}', [ApiKeyController::class, 'destroy'])->name('projects.api-keys.destroy');
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

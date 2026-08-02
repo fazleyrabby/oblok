@@ -193,6 +193,21 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 14
+
+API Key Management
+
+Built on the Phase 13 GitHub integration foundation:
+
+- api_keys table; ApiKey model scoped to a single project with SHA-256 hashed tokens, displayable key_prefix, usage counters, and optional expiry/revocation
+- CreateApiKey generates a prefixed plaintext token and returns it exactly once; RevokeApiKey disables a key immediately
+- custom api_key auth guard resolves the owning user from an Authorization: Bearer token, rejects revoked/expired keys, records usage, and re-resolves per request to avoid stale identity in long-running workers
+- REST V1 API now accepts session auth OR per-project API keys (auth:web,api_key) with EnsureApiKeyProjectScope middleware forbidding cross-project access
+- named api_key rate limiter (atlas.api.rate_limit, default 120/min per key) applied to the V1 API
+- manageApiKeys ability (Owner/Admin) and ApiKeyPolicy; web + API v1 api-keys routes (index/store/destroy)
+- API Keys view with one-time token display and lifecycle table; sidebar navigation entry
+- Pest unit + feature coverage for hashing, expiry/revocation, Bearer authentication, scope enforcement, session fallback, rate limiting, and web/API management (202 passing tests)
+
 Phase 13
 
 GitHub Integration

@@ -32,4 +32,22 @@ return [
         'timeout' => env('GITHUB_API_TIMEOUT', 10),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Keys
+    |--------------------------------------------------------------------------
+    |
+    | Machine-to-machine access for the REST API. Tokens are generated with a
+    | configurable prefix and rate-limited per key against the API limits.
+    |
+    */
+
+    'api_keys' => [
+        'prefix' => env('ATLAS_API_KEY_PREFIX', 'atl_'),
+    ],
+
+    'api' => [
+        'rate_limit' => env('ATLAS_API_RATE_LIMIT', 120),
+    ],
+
 ];

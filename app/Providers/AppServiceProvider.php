@@ -2,12 +2,17 @@
 
 namespace App\Providers;
 
+use App\Auth\ApiKeyGuard;
 use App\Enums\AlertMetric;
 use App\Support\Alerts\MetricSourceRegistry;
 use App\Support\Alerts\Sources\DeploymentStatusMetricSource;
 use App\Support\Alerts\Sources\IncidentOpenedMetricSource;
 use App\Support\Alerts\Sources\QueueBacklogMetricSource;
 use App\Support\Alerts\Sources\ServiceHealthMetricSource;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +39,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Auth::extend('api_key', function ($app, $name, array $config) {
+            return new ApiKeyGuard(
+                $app['auth']->createUserProvider($config['provider'] ?? null),
+            );
+        });
+
+        RateLimiter::for('api_key', function (Request $request) {
+            $token = $request->bearerToken();
+            $key = $token
+                ? 'api-key:'.hash('sha256', $token)
+                : 'ip:'.(string) $request->ip();
+
+            return Limit::perMinute((int) config('atlas.api.rate_limit'))->by($key);
+        });
     }
 }

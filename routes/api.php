@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AlertEventController;
 use App\Http\Controllers\Api\V1\AlertRuleController;
+use App\Http\Controllers\Api\V1\ApiKeyController;
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\GitHubIntegrationController;
@@ -21,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('v1/webhooks/deployments/{project:slug}', DeploymentWebhookController::class)
     ->name('api.v1.webhooks.deployments');
 
-// Authenticated REST API endpoints
-Route::prefix('v1')->middleware('auth')->group(function () {
+// Authenticated REST API endpoints (session or per-project API key)
+Route::prefix('v1')->middleware(['auth:web,api_key', 'throttle:api_key', 'api_key.scope'])->group(function () {
     Route::apiResource('projects', ProjectController::class)->names([
         'index' => 'api.v1.projects.index',
         'store' => 'api.v1.projects.store',
@@ -113,6 +114,17 @@ Route::prefix('v1')->middleware('auth')->group(function () {
                 'destroy' => 'api.v1.projects.scheduled-tasks.destroy',
             ]);
         Route::post('projects/{project}/scheduled-tasks/{scheduledTask}/runs', [ScheduledTaskController::class, 'recordRun'])->name('api.v1.projects.scheduled-tasks.runs');
+    });
+
+    Route::scopeBindings()->group(function () {
+        Route::apiResource('projects.api-keys', ApiKeyController::class)
+            ->parameters(['api-keys' => 'apiKey'])
+            ->only(['index', 'store', 'destroy'])
+            ->names([
+                'index' => 'api.v1.projects.api-keys.index',
+                'store' => 'api.v1.projects.api-keys.store',
+                'destroy' => 'api.v1.projects.api-keys.destroy',
+            ]);
     });
 
     Route::get('projects/{project}/github', [GitHubIntegrationController::class, 'index'])->name('api.v1.projects.github.index');

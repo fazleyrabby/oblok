@@ -61,8 +61,8 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Deployment History | Timeline view with rollback indicators |
 | Custom Metrics | Ingest and store application-defined metrics |
 | Metric Dashboards | Configurable charts and time-range selectors |
-| API Key Management | Issue, rotate, and revoke API keys per project |
-| API Usage Tracking | Request counts and rate limiting per key |
+| API Key Management | Issue, rotate, and revoke API keys per project — ✅ delivered (Phase 14) |
+| API Usage Tracking | Request counts and rate limiting per key — ✅ delivered (Phase 14) |
 
 ---
 
@@ -153,6 +153,6 @@ These are exploratory goals. They are not committed and will be scoped based on 
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | ⚪ Planned　　　　 |       |
 | v0.3    | ⚪ Planned　　　　 |       |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13) |
+| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |

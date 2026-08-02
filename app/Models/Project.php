@@ -179,6 +179,16 @@ class Project extends Model
     }
 
     /**
+     * Get the API keys issued for this project.
+     *
+     * @return HasMany<ApiKey, $this>
+     */
+    public function apiKeys(): HasMany
+    {
+        return $this->hasMany(ApiKey::class);
+    }
+
+    /**
      * Resolve a single member of this project by user id (for scoped route binding).
      *
      * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>
