@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
 use App\Http\Controllers\Api\V1\ProjectController;
+use App\Http\Controllers\Api\V1\ProjectMemberController;
 use App\Http\Controllers\Api\V1\QueueController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,12 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         'destroy' => 'api.v1.projects.incidents.destroy',
     ]);
     Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('api.v1.projects.incidents.resolve');
+
+    Route::apiResource('projects.members', ProjectMemberController::class)->only(['index', 'store', 'destroy'])->names([
+        'index' => 'api.v1.projects.members.index',
+        'store' => 'api.v1.projects.members.store',
+        'destroy' => 'api.v1.projects.members.destroy',
+    ]);
 
     Route::apiResource('projects.logs', LogController::class)->only(['index', 'store'])->names([
         'index' => 'api.v1.projects.logs.index',

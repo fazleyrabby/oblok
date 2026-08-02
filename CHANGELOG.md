@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+#### Phase 9 — Team Members & Role Authorization (v0.3)
+- **Database & Relationships**: Created `project_members` pivot table migration (`2026_08_02_000005_create_project_members_table.php`). Added `members(): BelongsToMany` on `Project` and `memberProjects(): BelongsToMany` on `User` models with `role` attributes.
+- **Actions**: Built `AddProjectMember` (`app/Actions/Teams/AddProjectMember.php`) and `RemoveProjectMember` (`app/Actions/Teams/RemoveProjectMember.php`) actions.
+- **Controllers & Views**: Built Web (`app/Http/Controllers/Web/ProjectMemberController.php`) and REST API V1 (`app/Http/Controllers/Api/V1/ProjectMemberController.php`) controllers. Built team management Blade view (`resources/views/projects/members.blade.php`).
+- **Testing**: Added Pest unit tests (`tests/Unit/ProjectMemberTest.php`) and feature tests (`tests/Feature/Teams/TeamManagementTest.php`) (**75 total passing tests**, 244 assertions).
+
+---
+
 ## [v0.2.0] - 2026-08-02 — Milestone v0.2 Queue & Deployment Operations Release
 
 ### Added

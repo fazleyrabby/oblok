@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\IncidentController;
 use App\Http\Controllers\Web\LogController;
 use App\Http\Controllers\Web\ProjectController;
+use App\Http\Controllers\Web\ProjectMemberController;
 use App\Http\Controllers\Web\QueueController;
 use App\Http\Controllers\Web\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('projects.incidents', IncidentController::class);
     Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('projects.incidents.resolve');
+
+    Route::resource('projects.members', ProjectMemberController::class)->only(['index', 'store', 'destroy']);
 
     Route::get('projects/{project}/logs', [LogController::class, 'index'])->name('projects.logs.index');
 
