@@ -2,7 +2,7 @@
        x-init="$watch('collapsed', val => localStorage.setItem('atlas_sidebar_collapsed', val))"
        @keydown.window.bracket.prevent="collapsed = !collapsed"
        :class="collapsed ? 'w-20' : 'w-64'"
-       class="hidden md:flex flex-col fixed inset-y-0 left-0 bg-gray-900 border-r border-gray-800 text-gray-300 transition-all duration-200 ease-in-out z-30">
+       class="hidden md:flex flex-col fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 text-gray-300 transition-all duration-200 ease-in-out z-30">
 
     <!-- Top Logo & Collapse Toggle -->
     <div class="h-16 flex items-center justify-between px-4 border-b border-gray-800">
