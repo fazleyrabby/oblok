@@ -3,15 +3,15 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <!-- Demo Credentials Helper Banner & One-Click Demo Login -->
-    <div class="mb-6 p-4 bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-gray-700 rounded-lg">
+    <div class="mb-6 p-4 bg-gray-950 border border-gray-800 rounded-xl shadow-sm">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider block">Demo Access</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400">admin@atlas.dev / password</span>
+                <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">Demo Access Available</span>
+                <span class="text-xs font-mono text-gray-400">admin@atlas.dev / password</span>
             </div>
             <form method="POST" action="{{ route('login.demo') }}">
                 @csrf
-                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded shadow-sm transition flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 whitespace-nowrap">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
 
         <!-- Email Address -->
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div>
             <x-input-label for="password" :value="__('Password')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
@@ -45,21 +45,21 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
+        <div class="block">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember" checked>
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded border-gray-700 bg-gray-950 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember" checked>
+                <span class="ms-2 text-sm text-gray-300">{{ __('Remember me') }}</span>
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-between pt-2">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a class="text-xs text-indigo-400 hover:text-indigo-300 focus:outline-none" href="{{ route('password.request') }}">
+                    {{ __('Forgot password?') }}
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button>
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
