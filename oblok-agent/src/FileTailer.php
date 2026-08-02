@@ -1,6 +1,6 @@
 <?php
 
-namespace AtlasAgent;
+namespace OblokAgent;
 
 class FileTailer
 {

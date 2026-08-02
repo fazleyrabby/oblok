@@ -1,0 +1,15 @@
+services:
+  oblok-agent:
+    build: ./oblok-agent
+    container_name: oblok_agent
+    restart: unless-stopped
+    environment:
+      OBLOK_URL: ${OBLOK_URL}
+      OBLOK_API_KEY: ${OBLOK_API_KEY}
+      OBLOK_PROJECT_ID: ${OBLOK_PROJECT_ID}
+      OBLOK_AGENT_NAME: ${OBLOK_AGENT_NAME:-oblok-agent}
+      OBLOK_LOG_FILES: ${OBLOK_LOG_FILES:-}
+      OBLOK_ACCESS_LOG: ${OBLOK_ACCESS_LOG:-/var/log/nginx/access.log}
+    volumes:
+      - ./storage/logs:/var/log/app:ro
+      - /var/log/nginx:/var/log/nginx:ro

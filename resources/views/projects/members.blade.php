@@ -27,7 +27,7 @@
                 <form method="POST" action="{{ route('projects.members.store', $project) }}" class="flex flex-col sm:flex-row items-center gap-3">
                     @csrf
                     <div class="flex-1 w-full">
-                        <x-text-input id="email" name="email" type="email" class="w-full" placeholder="colleague@atlas.dev" required />
+                        <x-text-input id="email" name="email" type="email" class="w-full" placeholder="colleague@oblok.dev" required />
                         <x-input-error class="mt-1" :messages="$errors->get('email')" />
                     </div>
                     <div class="w-full sm:w-48">

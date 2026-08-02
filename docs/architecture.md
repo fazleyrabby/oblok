@@ -1,14 +1,14 @@
 # Architecture
 
-> This document explains **how** Atlas is built and **why** each architectural decision was made.
+> This document explains **how** oblok is built and **why** each architectural decision was made.
 >
-> For what Atlas builds, see [spec.md](spec.md). For technology rationale, see [tech-stack.md](tech-stack.md). For engineering process, see [development.md](development.md).
+> For what oblok builds, see [spec.md](spec.md). For technology rationale, see [tech-stack.md](tech-stack.md). For engineering process, see [development.md](development.md).
 
 ---
 
 ## High-Level Architecture
 
-Atlas is a monolithic Laravel application deployed via Docker Compose. The monolith uses an **Action-Driven Architecture** built on standard Laravel conventions.
+oblok is a monolithic Laravel application deployed via Docker Compose. The monolith uses an **Action-Driven Architecture** built on standard Laravel conventions.
 
 ```mermaid
 graph TB
@@ -40,7 +40,7 @@ graph TB
 
 **Why a monolith?**
 
-Atlas is built for self-hosted deployments. A monolith provides:
+oblok is built for self-hosted deployments. A monolith provides:
 
 - Simpler deployment (one application, one Docker Compose topology).
 - Easier debugging (single process, shared memory, no network boundaries between microservices).
@@ -51,7 +51,7 @@ Atlas is built for self-hosted deployments. A monolith provides:
 
 ## Action-Driven Laravel Architecture
 
-Atlas follows idiomatic Laravel conventions enhanced by single-purpose **Action Classes** for business use cases.
+oblok follows idiomatic Laravel conventions enhanced by single-purpose **Action Classes** for business use cases.
 
 ```mermaid
 graph TB
@@ -116,7 +116,7 @@ graph TB
 ## Directory Structure
 
 ```
-atlas/
+oblok/
 ├── app/                  # Single-purpose business actions & domain logic
 │   ├── Actions/          # Actions (Auth, Projects, Monitoring)
 │   ├── Enums/            # Typed Domain Enums

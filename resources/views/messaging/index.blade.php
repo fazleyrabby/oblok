@@ -5,7 +5,7 @@
                 <h2 class="font-semibold text-xl text-gray-100 leading-tight">
                     Messaging for {{ $project->name }}
                 </h2>
-                <p class="text-xs text-gray-400 mt-1">Connect chat platforms and send messages from Atlas</p>
+                <p class="text-xs text-gray-400 mt-1">Connect chat platforms and send messages from oblok</p>
             </div>
             @if($integration && auth()->user()->can('delete', $integration))
                 <form method="POST" action="{{ route('projects.messaging.destroy', [$project, $integration]) }}"
@@ -31,7 +31,7 @@
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
                 <h3 class="text-base font-semibold text-gray-200">Connect a chat platform</h3>
                 <p class="mt-1 text-sm text-gray-400">
-                    Connect a Slack workspace with a bot token to list channels and post messages from Atlas.
+                    Connect a Slack workspace with a bot token to list channels and post messages from oblok.
                 </p>
 
                 <form method="POST" action="{{ route('projects.messaging.store', $project) }}" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">

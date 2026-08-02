@@ -1,8 +1,8 @@
 # AGENTS.md
 
-# Project Atlas — AI Engineering Guide
+# Project oblok — AI Engineering Guide
 
-> This document defines how AI coding agents should contribute to Project Atlas.
+> This document defines how AI coding agents should contribute to Project oblok.
 >
 > It is the primary source of truth for coding conventions, architectural constraints, development workflow, and engineering standards.
 >
@@ -12,7 +12,7 @@
 
 # Project Overview
 
-Project Atlas is a self-hosted Developer Operations Platform.
+Project oblok is a self-hosted Developer Operations Platform.
 
 The goal is to provide engineering teams with a unified workspace for operating modern backend applications, including:
 
@@ -30,7 +30,7 @@ The goal is to provide engineering teams with a unified workspace for operating 
 - Team Collaboration
 - Analytics
 
-Atlas is intentionally designed as a long-term open-source project and portfolio centerpiece showcasing production-grade software engineering.
+oblok is intentionally designed as a long-term open-source project and portfolio centerpiece showcasing production-grade software engineering.
 
 ---
 
@@ -40,7 +40,7 @@ Before making changes, consult the correct document.
 
 | Concern | Document |
 |---------|----------|
-| Why Atlas exists | `docs/vision.md` |
+| Why oblok exists | `docs/vision.md` |
 | What to build (requirements) | `docs/spec.md` |
 | How it is built (architecture) | `docs/architecture.md` |
 | UX patterns and user flows | `docs/design.md` |
@@ -56,7 +56,7 @@ If a topic spans multiple documents, it is defined in one and referenced by othe
 
 # Engineering Philosophy
 
-Atlas values:
+oblok values:
 
 - Simplicity over cleverness.
 - Maintainability over shortcuts.
@@ -106,7 +106,7 @@ Code and documentation should evolve together.
 
 # Architecture Rules
 
-Atlas follows **Idiomatic Laravel with Actions**.
+oblok follows **Idiomatic Laravel with Actions**.
 
 ```
 Presentation (Controllers, Requests, Resources, Views)
@@ -224,7 +224,7 @@ Every migration should be reversible.
 
 # API Rules
 
-Atlas is API-first.
+oblok is API-first.
 
 Every UI feature should eventually expose an API.
 
@@ -293,7 +293,7 @@ Avoid unnecessary JavaScript frameworks.
 
 # UI Philosophy
 
-Atlas is a professional developer tool.
+oblok is a professional developer tool.
 
 Inspired by:
 
@@ -394,7 +394,7 @@ Never:
 
 # Long-Term Vision
 
-Atlas is not a demo project.
+oblok is not a demo project.
 
 It is intended to become:
 

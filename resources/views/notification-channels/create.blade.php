@@ -37,12 +37,12 @@
                         <div data-config="webhook" class="space-y-4">
                             <div>
                                 <x-input-label for="config_url" :value="__('Webhook URL')" />
-                                <x-text-input id="config_url" name="config[url]" type="url" class="mt-1 block w-full font-mono text-sm" :value="old('config.url')" placeholder="https://your-endpoint.example.com/hooks/atlas" />
+                                <x-text-input id="config_url" name="config[url]" type="url" class="mt-1 block w-full font-mono text-sm" :value="old('config.url')" placeholder="https://your-endpoint.example.com/hooks/oblok" />
                                 <x-input-error class="mt-2" :messages="$errors->get('config.url')" />
                             </div>
                             <div>
                                 <x-input-label for="config_secret" :value="__('HMAC Secret (Optional)')" />
-                                <x-text-input id="config_secret" name="config[secret]" type="password" class="mt-1 block w-full font-mono text-sm" :value="old('config.secret')" placeholder="Shared secret for X-Atlas-Signature" />
+                                <x-text-input id="config_secret" name="config[secret]" type="password" class="mt-1 block w-full font-mono text-sm" :value="old('config.secret')" placeholder="Shared secret for X-oblok-Signature" />
                                 <x-input-error class="mt-2" :messages="$errors->get('config.secret')" />
                             </div>
                         </div>

@@ -29,7 +29,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             }
 
             return $user !== null && in_array($user->email, [
-                'admin@atlas.dev',
+                'admin@oblok.dev',
             ]);
         });
     }

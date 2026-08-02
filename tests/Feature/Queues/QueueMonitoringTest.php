@@ -33,7 +33,7 @@ test('api returns queue metrics json payload', function () {
 });
 
 test('horizon dashboard gate allows authenticated admin user', function () {
-    $user = User::factory()->create(['email' => 'admin@atlas.dev']);
+    $user = User::factory()->create(['email' => 'admin@oblok.dev']);
 
     $response = $this->actingAs($user)->get('/horizon');
 

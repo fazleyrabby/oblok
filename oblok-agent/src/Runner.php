@@ -1,6 +1,6 @@
 <?php
 
-namespace AtlasAgent;
+namespace OblokAgent;
 
 class Runner
 {
@@ -10,7 +10,7 @@ class Runner
     ) {}
 
     /**
-     * Tail configured files and forward logs and request metrics to Atlas.
+     * Tail configured files and forward logs and request metrics to oblok.
      */
     public function run(): void
     {

@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
                 ? 'api-key:'.hash('sha256', $token)
                 : 'ip:'.(string) $request->ip();
 
-            return Limit::perMinute((int) config('atlas.api.rate_limit'))->by($key);
+            return Limit::perMinute((int) config('oblok.api.rate_limit'))->by($key);
         });
     }
 }

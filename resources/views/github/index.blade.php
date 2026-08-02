@@ -39,7 +39,7 @@
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
                 <h3 class="text-base font-semibold text-gray-200">Link a GitHub repository</h3>
                 <p class="mt-1 text-sm text-gray-400">
-                    Connect a repository to surface its recent commits and pull requests inside Atlas.
+                    Connect a repository to surface its recent commits and pull requests inside oblok.
                     Use a personal access token with <span class="font-mono text-xs">repo</span> scope.
                 </p>
 

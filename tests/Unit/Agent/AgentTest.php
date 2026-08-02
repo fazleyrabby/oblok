@@ -1,22 +1,22 @@
 <?php
 
-use AtlasAgent\AccessLogParser;
-use AtlasAgent\Config;
-use AtlasAgent\FileTailer;
-use AtlasAgent\LogLineParser;
-use AtlasAgent\RequestMetricsAggregator;
+use OblokAgent\AccessLogParser;
+use OblokAgent\Config;
+use OblokAgent\FileTailer;
+use OblokAgent\LogLineParser;
+use OblokAgent\RequestMetricsAggregator;
 
 test('config reads environment values', function () {
     $config = Config::fromEnv([
-        'ATLAS_URL' => 'https://atlas.lan/',
-        'ATLAS_API_KEY' => 'atl_key',
-        'ATLAS_PROJECT_ID' => 'abc',
-        'ATLAS_LOG_FILES' => ' /a.log, /b.log ',
-        'ATLAS_ACCESS_LOG' => '/var/log/nginx/access.log',
-        'ATLAS_POLL_INTERVAL' => '4',
+        'OBLOK_URL' => 'https://oblok.lan/',
+        'OBLOK_API_KEY' => 'atl_key',
+        'OBLOK_PROJECT_ID' => 'abc',
+        'OBLOK_LOG_FILES' => ' /a.log, /b.log ',
+        'OBLOK_ACCESS_LOG' => '/var/log/nginx/access.log',
+        'OBLOK_POLL_INTERVAL' => '4',
     ]);
 
-    expect($config->baseUrl)->toBe('https://atlas.lan')
+    expect($config->baseUrl)->toBe('https://oblok.lan')
         ->and($config->apiKey)->toBe('atl_key')
         ->and($config->projectId)->toBe('abc')
         ->and($config->logFiles)->toBe(['/a.log', '/b.log'])
@@ -27,9 +27,9 @@ test('config reads environment values', function () {
 
 test('config requires nothing but tolerates missing optional values', function () {
     $config = Config::fromEnv([
-        'ATLAS_URL' => 'https://atlas.lan',
-        'ATLAS_API_KEY' => 'atl_key',
-        'ATLAS_PROJECT_ID' => 'abc',
+        'OBLOK_URL' => 'https://oblok.lan',
+        'OBLOK_API_KEY' => 'atl_key',
+        'OBLOK_PROJECT_ID' => 'abc',
     ]);
 
     expect($config->logFiles)->toBe([])
@@ -107,7 +107,7 @@ test('request metrics aggregator resets after flush', function () {
 });
 
 test('file tailer returns only newly appended lines', function () {
-    $file = tempnam(sys_get_temp_dir(), 'atlas-agent-');
+    $file = tempnam(sys_get_temp_dir(), 'oblok-agent-');
     file_put_contents($file, "first line\n");
 
     $tailer = new FileTailer($file);
@@ -122,7 +122,7 @@ test('file tailer returns only newly appended lines', function () {
 });
 
 test('file tailer resumes after truncation without re-reading old content', function () {
-    $file = tempnam(sys_get_temp_dir(), 'atlas-agent-');
+    $file = tempnam(sys_get_temp_dir(), 'oblok-agent-');
     file_put_contents($file, "old line\n");
 
     $tailer = new FileTailer($file);

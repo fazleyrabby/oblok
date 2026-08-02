@@ -34,7 +34,7 @@ class GenericWebhookChannel
 
         if ($secret) {
             $signature = hash_hmac('sha256', json_encode($payload), $secret);
-            $request = $request->withHeaders(['X-Atlas-Signature' => $signature]);
+            $request = $request->withHeaders(['X-oblok-Signature' => $signature]);
         }
 
         $request->post($url, $payload);

@@ -1,16 +1,16 @@
-# Atlas
+# oblok
 
 A self-hosted Developer Operations Platform for engineering teams.
 
-Atlas provides a unified workspace for monitoring services, tracking deployments, inspecting queues, managing incidents, and operating backend applications — without depending on third-party SaaS.
+oblok provides a unified workspace for monitoring services, tracking deployments, inspecting queues, managing incidents, and operating backend applications — without depending on third-party SaaS.
 
 ---
 
-## Why Atlas
+## Why oblok
 
 Engineering teams typically rely on a fragmented set of tools to operate their applications: one for uptime monitoring, another for log aggregation, another for deployment tracking, and yet another for queue inspection. Each tool requires its own account, configuration, and mental model.
 
-Atlas consolidates these operational concerns into a single, self-hosted platform. One deployment. One interface. Full ownership of your data.
+oblok consolidates these operational concerns into a single, self-hosted platform. One deployment. One interface. Full ownership of your data.
 
 See [docs/vision.md](docs/vision.md) for the full project philosophy.
 
@@ -77,8 +77,8 @@ See [docs/tech-stack.md](docs/tech-stack.md) for detailed rationale and tradeoff
 
 ```bash
 # Clone the repository
-git clone https://github.com/fazleyrabby/project-atlas.git
-cd project-atlas
+git clone https://github.com/fazleyrabby/project-oblok.git
+cd project-oblok
 
 # Install PHP & JS dependencies
 composer install
@@ -104,7 +104,7 @@ php artisan migrate
 
 | Document | Description |
 |----------|-------------|
-| [Vision](docs/vision.md) | Why Atlas exists — mission, philosophy, principles |
+| [Vision](docs/vision.md) | Why oblok exists — mission, philosophy, principles |
 | [Specification](docs/spec.md) | Product requirements and MVP scope |
 | [Architecture](docs/architecture.md) | System design, Clean Architecture, module boundaries |
 | [UX Design](docs/design.md) | Navigation, layouts, user flows, interaction patterns |
@@ -150,4 +150,4 @@ Contributions are welcome. Before contributing:
 
 ## License
 
-Atlas is open-source software. See [LICENSE](LICENSE) for details.
+oblok is open-source software. See [LICENSE](LICENSE) for details.

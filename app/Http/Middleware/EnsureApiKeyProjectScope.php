@@ -13,7 +13,7 @@ class EnsureApiKeyProjectScope
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $key = $request->attributes->get('atlas_api_key');
+        $key = $request->attributes->get('oblok_api_key');
 
         if (! $key) {
             return $next($request);

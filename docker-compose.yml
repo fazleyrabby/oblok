@@ -1,7 +1,7 @@
 services:
   nginx:
     image: nginx:alpine
-    container_name: atlas_nginx
+    container_name: oblok_nginx
     ports:
       - "${FORWARD_HTTP_PORT:-8080}:80"
     volumes:
@@ -10,21 +10,21 @@ services:
     depends_on:
       - app
     networks:
-      - atlas_network
+      - oblok_network
 
   app:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: atlas_app
+    container_name: oblok_app
     volumes:
       - .:/var/www/html
     environment:
       CONTAINER_ROLE: app
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE:-atlas}
-      DB_USERNAME: ${DB_USERNAME:-atlas}
+      DB_DATABASE: ${DB_DATABASE:-oblok}
+      DB_USERNAME: ${DB_USERNAME:-oblok}
       DB_PASSWORD: ${DB_PASSWORD:-secret}
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -32,13 +32,13 @@ services:
       - postgres
       - redis
     networks:
-      - atlas_network
+      - oblok_network
 
   worker:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: atlas_worker
+    container_name: oblok_worker
     command: php artisan queue:work redis --queue=monitoring,notifications,default,low --tries=3 --timeout=90
     volumes:
       - .:/var/www/html
@@ -46,8 +46,8 @@ services:
       CONTAINER_ROLE: worker
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE:-atlas}
-      DB_USERNAME: ${DB_USERNAME:-atlas}
+      DB_DATABASE: ${DB_DATABASE:-oblok}
+      DB_USERNAME: ${DB_USERNAME:-oblok}
       DB_PASSWORD: ${DB_PASSWORD:-secret}
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -56,13 +56,13 @@ services:
       - postgres
       - redis
     networks:
-      - atlas_network
+      - oblok_network
 
   scheduler:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: atlas_scheduler
+    container_name: oblok_scheduler
     command: php artisan schedule:work
     volumes:
       - .:/var/www/html
@@ -70,8 +70,8 @@ services:
       CONTAINER_ROLE: scheduler
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE:-atlas}
-      DB_USERNAME: ${DB_USERNAME:-atlas}
+      DB_DATABASE: ${DB_DATABASE:-oblok}
+      DB_USERNAME: ${DB_USERNAME:-oblok}
       DB_PASSWORD: ${DB_PASSWORD:-secret}
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -80,34 +80,34 @@ services:
       - postgres
       - redis
     networks:
-      - atlas_network
+      - oblok_network
 
   postgres:
     image: postgres:16-alpine
-    container_name: atlas_postgres
+    container_name: oblok_postgres
     ports:
       - "${FORWARD_DB_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-atlas}
-      POSTGRES_USER: ${DB_USERNAME:-atlas}
+      POSTGRES_DB: ${DB_DATABASE:-oblok}
+      POSTGRES_USER: ${DB_USERNAME:-oblok}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - atlas_network
+      - oblok_network
 
   redis:
     image: redis:7-alpine
-    container_name: atlas_redis
+    container_name: oblok_redis
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
-      - atlas_network
+      - oblok_network
 
 networks:
-  atlas_network:
+  oblok_network:
     driver: bridge
 
 volumes:

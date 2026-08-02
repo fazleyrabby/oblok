@@ -90,7 +90,7 @@ class ScheduledTask extends Model
     {
         $now ??= now();
 
-        $graceMinutes = (int) config('atlas.scheduler.missed_grace_minutes', 5);
+        $graceMinutes = (int) config('oblok.scheduler.missed_grace_minutes', 5);
 
         return $query->whereNotNull('next_run_at')
             ->where('next_run_at', '<=', $now->copy()->subMinutes($graceMinutes));

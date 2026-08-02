@@ -45,7 +45,7 @@ class ApiKeyGuard implements Guard
             return $this->user = null;
         }
 
-        app('request')->attributes->set('atlas_api_key', $key);
+        app('request')->attributes->set('oblok_api_key', $key);
 
         $key->increment('requests_count', 1, ['last_used_at' => now()]);
 

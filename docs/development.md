@@ -1,6 +1,6 @@
 # Development Guide
 
-> Engineering handbook for Project Atlas.
+> Engineering handbook for Project oblok.
 >
 > This document defines how engineers (human and AI) work on the codebase.
 >
@@ -10,7 +10,7 @@
 
 ## Coding Standards
 
-Atlas follows PSR-12 and standard Laravel conventions enforced automatically by tooling.
+oblok follows PSR-12 and standard Laravel conventions enforced automatically by tooling.
 
 | Tool | Purpose | Command |
 |------|---------|---------|
@@ -44,7 +44,7 @@ Names describe intent cleanly and follow standard Laravel patterns.
 
 ## Folder Structure
 
-Atlas uses standard Laravel root folders with feature sub-directories:
+oblok uses standard Laravel root folders with feature sub-directories:
 
 - `app/Actions/{Feature}/`
 - `app/Events/{Feature}/`

@@ -1,6 +1,6 @@
 # Tech Stack
 
-> Every technology used in Project Atlas, why it was chosen, what alternatives were considered, and what tradeoffs exist.
+> Every technology used in Project oblok, why it was chosen, what alternatives were considered, and what tradeoffs exist.
 >
 > For how these technologies fit together architecturally, see [architecture.md](architecture.md). For the engineering process around them, see [development.md](development.md).
 
@@ -16,7 +16,7 @@
 - Mature ecosystem with extensive first-party packages (Horizon, Reverb, Sanctum, Breeze).
 - Strong conventions that reduce decision fatigue.
 - Excellent documentation and community support.
-- Built-in support for queues, events, notifications, and scheduling — all core to Atlas.
+- Built-in support for queues, events, notifications, and scheduling — all core to oblok.
 - First-class testing support with Pest integration.
 
 **Alternatives considered:**
@@ -25,12 +25,12 @@
 |------------|-------------------|
 | Symfony | More flexible but requires more boilerplate. Laravel's conventions better suit a single-developer project. |
 | Spring Boot | JVM ecosystem adds operational complexity. PHP deployment is simpler for self-hosted targets. |
-| Go (stdlib/Echo) | Excellent performance but lacks the built-in ecosystem for queues, events, and ORM that Atlas needs. |
+| Go (stdlib/Echo) | Excellent performance but lacks the built-in ecosystem for queues, events, and ORM that oblok needs. |
 | Node.js (NestJS) | Viable, but the Laravel ecosystem provides more out-of-the-box for operational tooling. |
 
 **Tradeoffs:**
-- PHP has lower raw throughput than Go or Rust, but Atlas workloads are I/O-bound, not CPU-bound.
-- Laravel's conventions can feel rigid for unconventional architectures, but Atlas embraces those conventions.
+- PHP has lower raw throughput than Go or Rust, but oblok workloads are I/O-bound, not CPU-bound.
+- Laravel's conventions can feel rigid for unconventional architectures, but oblok embraces those conventions.
 
 **Future considerations:**
 - Evaluate Laravel Octane for long-running process performance if health check throughput becomes a bottleneck.
@@ -49,7 +49,7 @@
 - Strong typing capabilities reduce runtime errors when used with PHPStan.
 
 **Tradeoffs:**
-- PHP's reputation is weaker than Go or Rust in some engineering communities, but its capabilities are sufficient for Atlas.
+- PHP's reputation is weaker than Go or Rust in some engineering communities, but its capabilities are sufficient for oblok.
 
 ---
 
@@ -63,7 +63,7 @@
 - Superior support for JSON columns, full-text search, and advanced indexing compared to MySQL.
 - Better data integrity defaults (strict mode by default, proper transaction isolation).
 - Native UUID support.
-- Excellent performance for analytical queries that Atlas will need for metrics and log aggregation.
+- Excellent performance for analytical queries that oblok will need for metrics and log aggregation.
 - Strong ecosystem of extensions (pg_stat_statements, pg_trgm for fuzzy search).
 
 **Alternatives considered:**
@@ -105,7 +105,7 @@
 | RabbitMQ | More powerful queue semantics than needed. Adds operational complexity. |
 
 **Tradeoffs:**
-- Redis is single-threaded. Unlikely to be a bottleneck at Atlas's target scale.
+- Redis is single-threaded. Unlikely to be a bottleneck at oblok's target scale.
 - Using Redis for both cache and queue means a Redis failure impacts both. Acceptable for self-hosted deployments where simplicity matters more than fault isolation.
 
 **Future considerations:**
@@ -139,7 +139,7 @@
 
 **Why selected:**
 - First-party Laravel package. No external WebSocket service required.
-- Self-hosted, consistent with Atlas's philosophy of zero external dependencies.
+- Self-hosted, consistent with oblok's philosophy of zero external dependencies.
 - Integrates directly with Laravel's event broadcasting system.
 
 **Alternatives considered:**
@@ -175,16 +175,16 @@
 **Why selected:**
 - Minimal footprint (~15KB). Declared directly in HTML attributes.
 - No build step. No virtual DOM. No component tree.
-- Sufficient for the interactivity Atlas needs without the complexity of React or Vue.
+- Sufficient for the interactivity oblok needs without the complexity of React or Vue.
 
 **Alternatives considered:**
 
 | Alternative | Reason Not Selected |
 |------------|-------------------|
-| React | Requires a full SPA architecture, build pipeline, and API layer. Overkill for Atlas. |
+| React | Requires a full SPA architecture, build pipeline, and API layer. Overkill for oblok. |
 | Vue.js | Better than React for progressive enhancement, but still heavier than Alpine.js. |
 | htmx | Viable, but Alpine.js is more mature and has better Laravel ecosystem support (via Livewire patterns). |
-| Livewire | Adds server-side state management complexity. Alpine.js is simpler for Atlas's needs. |
+| Livewire | Adds server-side state management complexity. Alpine.js is simpler for oblok's needs. |
 
 ### Tailwind CSS
 
@@ -209,7 +209,7 @@
 **Purpose:** Interactive charts for metrics, uptime history, response times, and dashboards.
 
 **Why selected:**
-- Rich chart types (line, area, bar, donut) covering all Atlas use cases.
+- Rich chart types (line, area, bar, donut) covering all oblok use cases.
 - Built-in dark mode support.
 - Interactive tooltips, zooming, and time-range selection.
 - No framework dependency — works with vanilla JavaScript and Blade.
@@ -243,7 +243,7 @@
 
 | Alternative | Reason Not Selected |
 |------------|-------------------|
-| Laravel Jetstream | Includes team management and API tokens out of the box, but is more opinionated and heavier. Atlas will build these features incrementally. |
+| Laravel Jetstream | Includes team management and API tokens out of the box, but is more opinionated and heavier. oblok will build these features incrementally. |
 | Laravel Fortify | Headless — no UI scaffolding. Breeze provides starter templates. |
 | Custom auth | Unnecessary when Breeze provides a solid, auditable starting point. |
 
@@ -270,7 +270,7 @@
 | Alternative | Reason Not Selected |
 |------------|-------------------|
 | PHPUnit | Pest is built on PHPUnit and provides a better developer experience with less syntax. |
-| Codeception | More complex setup. Pest covers Atlas's testing needs with less configuration. |
+| Codeception | More complex setup. Pest covers oblok's testing needs with less configuration. |
 
 ---
 

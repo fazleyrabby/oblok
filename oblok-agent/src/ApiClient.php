@@ -1,6 +1,6 @@
 <?php
 
-namespace AtlasAgent;
+namespace OblokAgent;
 
 class ApiClient
 {
@@ -11,7 +11,7 @@ class ApiClient
     ) {}
 
     /**
-     * Push a single log entry to Atlas.
+     * Push a single log entry to oblok.
      */
     public function pushLog(string $message, string $level, ?array $context = null, ?string $channel = null): bool
     {
@@ -28,7 +28,7 @@ class ApiClient
     }
 
     /**
-     * Push a batch of metric samples to Atlas.
+     * Push a batch of metric samples to oblok.
      *
      * @param  array<int, array<string, mixed>>  $metrics
      */

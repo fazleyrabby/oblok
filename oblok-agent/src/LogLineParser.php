@@ -1,6 +1,6 @@
 <?php
 
-namespace AtlasAgent;
+namespace OblokAgent;
 
 class LogLineParser
 {
@@ -56,7 +56,7 @@ class LogLineParser
     }
 
     /**
-     * Normalize a log level to the values Atlas accepts.
+     * Normalize a log level to the values oblok accepts.
      */
     private function normalizeLevel(mixed $level): string
     {

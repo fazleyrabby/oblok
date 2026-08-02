@@ -7,7 +7,7 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
                 <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">Demo Access Available</span>
-                <span class="text-xs font-mono text-gray-400">admin@atlas.dev / password</span>
+                <span class="text-xs font-mono text-gray-400">admin@oblok.dev / password</span>
             </div>
             <form method="POST" action="{{ route('login.demo') }}">
                 @csrf
@@ -27,7 +27,7 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', 'admin@atlas.dev')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', 'admin@oblok.dev')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 

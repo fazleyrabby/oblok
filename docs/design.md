@@ -1,8 +1,8 @@
 # UX Design
 
-> User experience patterns, layouts, interaction design, and user flows for Project Atlas.
+> User experience patterns, layouts, interaction design, and user flows for Project oblok.
 >
-> This document defines **how users interact** with Atlas. It is distinct from [DESIGN.md](../DESIGN.md), which defines the visual design system (tokens, components, colors, typography).
+> This document defines **how users interact** with oblok. It is distinct from [DESIGN.md](../DESIGN.md), which defines the visual design system (tokens, components, colors, typography).
 >
 > For product requirements, see [spec.md](spec.md). For architecture, see [architecture.md](architecture.md).
 
@@ -23,7 +23,7 @@ DESIGN.md answers "what does it look like?" This document answers "how does it w
 
 ### Sidebar Navigation
 
-Atlas uses a persistent left sidebar as the primary navigation mechanism.
+oblok uses a persistent left sidebar as the primary navigation mechanism.
 
 **Structure:**
 
@@ -273,7 +273,7 @@ List views support filtering through a filter bar above the table.
 
 ## Tables
 
-Tables are the primary way Atlas displays collections of data. See [DESIGN.md](../DESIGN.md#tables) for visual specifications.
+Tables are the primary way oblok displays collections of data. See [DESIGN.md](../DESIGN.md#tables) for visual specifications.
 
 ### Behavior
 
@@ -292,7 +292,7 @@ Clicking a row navigates to the detail page for that resource. Action buttons wi
 
 ## Mobile Behavior
 
-Atlas is desktop-first. Mobile is supported but optimized for read-only use.
+oblok is desktop-first. Mobile is supported but optimized for read-only use.
 
 | Feature | Desktop | Mobile |
 |---------|---------|--------|
@@ -302,13 +302,13 @@ Atlas is desktop-first. Mobile is supported but optimized for read-only use.
 | Forms | Side-by-side fields | Stacked fields |
 | Dashboard cards | 4-column grid | 2-column grid, then stacked |
 
-**Why desktop-first?** Atlas is an operational tool used at a workstation. Mobile support exists for on-call engineers checking status, not for performing complex configuration.
+**Why desktop-first?** oblok is an operational tool used at a workstation. Mobile support exists for on-call engineers checking status, not for performing complex configuration.
 
 ---
 
 ## Accessibility
 
-Atlas targets WCAG AA compliance. See [DESIGN.md](../DESIGN.md#accessibility) for visual accessibility standards (contrast, focus indicators).
+oblok targets WCAG AA compliance. See [DESIGN.md](../DESIGN.md#accessibility) for visual accessibility standards (contrast, focus indicators).
 
 ### Interaction Accessibility
 
@@ -353,7 +353,7 @@ Toasts stack from the bottom-right. Maximum 3 visible at once.
 
 ## Information Density
 
-Atlas is designed for engineers who prefer data-rich interfaces.
+oblok is designed for engineers who prefer data-rich interfaces.
 
 **Principles:**
 
@@ -372,7 +372,7 @@ Atlas is designed for engineers who prefer data-rich interfaces.
 | Forms | Standard (comfortable input sizing for usability) |
 | Documentation / Settings | Relaxed (readable line length, generous spacing) |
 
-**Why high density?** Atlas users are engineers who process structured data daily. They are accustomed to dense interfaces (terminal, IDE, GitHub). Sparse layouts waste screen space and increase cognitive load by spreading information across more scrollable area.
+**Why high density?** oblok users are engineers who process structured data daily. They are accustomed to dense interfaces (terminal, IDE, GitHub). Sparse layouts waste screen space and increase cognitive load by spreading information across more scrollable area.
 
 ---
 

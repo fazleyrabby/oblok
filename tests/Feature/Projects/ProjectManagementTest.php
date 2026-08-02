@@ -20,14 +20,14 @@ test('user can create a project with auto-generated slug', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->post(route('projects.store'), [
-        'name' => 'Atlas Monitoring System',
+        'name' => 'oblok Monitoring System',
         'description' => 'Self-hosted monitoring backend',
     ]);
 
-    $project = Project::where('name', 'Atlas Monitoring System')->first();
+    $project = Project::where('name', 'oblok Monitoring System')->first();
 
     expect($project)->not->toBeNull()
-        ->and($project->slug)->toBe('atlas-monitoring-system')
+        ->and($project->slug)->toBe('oblok-monitoring-system')
         ->and($project->user_id)->toBe($user->id);
 
     $response->assertRedirect(route('projects.show', $project));

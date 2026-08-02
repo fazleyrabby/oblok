@@ -18,11 +18,11 @@ class GitHubApiService
      */
     protected function client(string $token): PendingRequest
     {
-        return Http::baseUrl(config('atlas.github.api_url'))
+        return Http::baseUrl(config('oblok.github.api_url'))
             ->withToken($token)
             ->accept('application/vnd.github+json')
             ->asJson()
-            ->timeout((int) config('atlas.github.timeout', 10));
+            ->timeout((int) config('oblok.github.timeout', 10));
     }
 
     /**

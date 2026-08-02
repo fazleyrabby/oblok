@@ -1,6 +1,6 @@
 # Roadmap
 
-> Development timeline and milestones for Project Atlas.
+> Development timeline and milestones for Project oblok.
 >
 > Each version has a theme, a focused set of deliverables, and clear goals.
 >
@@ -10,7 +10,7 @@
 
 ## Versioning
 
-Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Breaking changes may occur between minor versions before v1.0.
+oblok uses semantic versioning. Pre-1.0 releases indicate active development. Breaking changes may occur between minor versions before v1.0.
 
 ---
 
@@ -18,7 +18,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 **Theme:** Core platform and first operational value.
 
-**Goal:** A user can deploy Atlas, create projects, and monitor services.
+**Goal:** A user can deploy oblok, create projects, and monitor services.
 
 | Deliverable | Description |
 |-------------|-------------|
@@ -42,7 +42,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Deliverable | Description |
 |-------------|-------------|
 | Log Aggregation | Ingest, store, search, and filter application logs |
-| Queue Monitoring | Job queue visibility, job inspection, retry failed jobs — metrics ingested from any queue (Laravel, Bull, RQ, Kafka) via the metrics API, decoupled from Atlas's own Redis |
+| Queue Monitoring | Job queue visibility, job inspection, retry failed jobs — metrics ingested from any queue (Laravel, Bull, RQ, Kafka) via the metrics API, decoupled from oblok's own Redis |
 | Notifications | Multi-channel alerting (email, Slack, webhook) with configurable rules |
 | Alert Rules | Threshold-based alerts tied to monitoring and queue metrics |
 | Realtime Updates | WebSocket-powered live updates for dashboards and logs |
@@ -71,7 +71,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 ## v0.4 — Integrations
 
-**Theme:** Connect Atlas with external services and scheduled operations.
+**Theme:** Connect oblok with external services and scheduled operations.
 
 **Goal:** A user can inspect webhooks, monitor cron jobs, and connect third-party services.
 
@@ -83,7 +83,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | GitHub Integration | Link projects to repositories, surface commit and PR context |
 | Slack Integration | Send notifications and alerts to Slack channels — ✅ delivered (Phase 15, driver framework ready for Discord/Telegram) |
 | Integration Framework | Extensible interface for adding new integrations |
-| Atlas Agent (atlas-agent) | Optional single binary that runs beside any project — ✅ delivered (Phase 17) tails stdout/log files, reads access logs, collects resource stats, and pushes logs, metrics, and request data to Atlas APIs with zero app-code injection |
+| oblok Agent (oblok-agent) | Optional single binary that runs beside any project — ✅ delivered (Phase 17) tails stdout/log files, reads access logs, collects resource stats, and pushes logs, metrics, and request data to oblok APIs with zero app-code injection |
 
 ---
 
@@ -91,7 +91,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 **Theme:** Apply AI to operational workflows.
 
-**Goal:** A user can ask Atlas questions about their systems and receive intelligent assistance.
+**Goal:** A user can ask oblok questions about their systems and receive intelligent assistance.
 
 | Deliverable | Description |
 |-------------|-------------|
@@ -107,7 +107,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 **Theme:** Stability, polish, and production readiness.
 
-**Goal:** Atlas is reliable enough for teams to depend on in production.
+**Goal:** oblok is reliable enough for teams to depend on in production.
 
 | Deliverable | Description |
 |-------------|-------------|
@@ -132,7 +132,7 @@ These are exploratory goals. They are not committed and will be scoped based on 
 |------|-------------|
 | Plugin System | Allow third-party extensions to add modules, integrations, and dashboard widgets |
 | Theme Customization | User-configurable color schemes and branding |
-| Multi-tenancy | Support multiple teams on a single Atlas installation |
+| Multi-tenancy | Support multiple teams on a single oblok installation |
 | Role-Based Access Control | Fine-grained permissions beyond basic authentication |
 | Audit Log | Track all user actions for compliance and debugging |
 | Command Palette | Keyboard-first navigation and actions (⌘K) |
@@ -152,12 +152,12 @@ These are exploratory goals. They are not committed and will be scoped based on 
 
 ## Cross-Cutting: Stack-Independent Monitoring
 
-Atlas treats every monitored project as a black box, regardless of framework (Laravel, Node, Python, Go, static sites). This principle guides every monitoring deliverable.
+oblok treats every monitored project as a black box, regardless of framework (Laravel, Node, Python, Go, static sites). This principle guides every monitoring deliverable.
 
-- **Agentless-first**: Atlas is push-based by design — apps (or a sidecar) POST to its REST APIs. Only health checks are outbound (Atlas pings the target).
-- **Zero-injection**: Health checks, deployments, incidents, and webhooks need no app changes. Logs, request, and resource monitoring work via the optional `atlas-agent`, so no project code or package is required.
+- **Agentless-first**: oblok is push-based by design — apps (or a sidecar) POST to its REST APIs. Only health checks are outbound (oblok pings the target).
+- **Zero-injection**: Health checks, deployments, incidents, and webhooks need no app changes. Logs, request, and resource monitoring work via the optional `oblok-agent`, so no project code or package is required.
 - **Prometheus-compatible**: Resource and custom metrics reuse the Prometheus ecosystem (node_exporter, cAdvisor, app `/metrics`) rather than reinventing collection.
-- **Mapped in this roadmap**: resource + request monitoring and advanced check types (v0.3), `atlas-agent` + integration framework (v0.4), queue decoupling (v0.2).
+- **Mapped in this roadmap**: resource + request monitoring and advanced check types (v0.3), `oblok-agent` + integration framework (v0.4), queue decoupling (v0.2).
 
 ---
 
@@ -168,6 +168,6 @@ Atlas treats every monitored project as a black box, regardless of framework (La
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates pending |
 | v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring planned |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); Atlas Agent delivered (Phase 17) |
+| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); oblok Agent delivered (Phase 17) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |

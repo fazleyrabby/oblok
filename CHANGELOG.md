@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Project Atlas will be documented in this file.
+All notable changes to Project oblok will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -11,12 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Phase 17 — Atlas Agent (v0.4)
-- **Standalone Agent**: Built `atlas-agent/` — a dependency-free, stack-independent PHP CLI shipper that runs beside any project and pushes data to Atlas. No changes to the monitored application are required.
+#### Phase 17 — oblok Agent (v0.4)
+- **Standalone Agent**: Built `oblok-agent/` — a dependency-free, stack-independent PHP CLI shipper that runs beside any project and pushes data to oblok. No changes to the monitored application are required.
 - **Log Shipping**: `LogLineParser` handles JSON log lines, Laravel text lines (`[2026-08-02 12:00:00] production.ERROR: message`), and plain lines; `FileTailer` tails from the end, survives rotation/truncation, and forwards each line to `POST /api/v1/projects/{project}/logs`.
 - **Request Metrics**: `AccessLogParser` parses nginx combined-format lines (optional `$request_time`); `RequestMetricsAggregator` aggregates per-minute `http_requests_total{method,status}` and `http_request_duration_seconds{method,status}` samples to the metrics API.
-- **Config & Client**: `Config` reads env (`ATLAS_URL`, `ATLAS_API_KEY`, `ATLAS_PROJECT_ID`, `ATLAS_LOG_FILES`, `ATLAS_ACCESS_LOG`, poll/flush intervals); `ApiClient` authenticates with a Bearer API key. `bin/atlas-agent` supports `--log=` and `--access-log=` overrides.
-- **Deployment**: `Dockerfile` (php:8.3-cli-alpine + curl) and `docker-compose.atlas-agent.yml` sidecar example with read-only log/nginx mounts.
+- **Config & Client**: `Config` reads env (`OBLOK_URL`, `OBLOK_API_KEY`, `OBLOK_PROJECT_ID`, `OBLOK_LOG_FILES`, `OBLOK_ACCESS_LOG`, poll/flush intervals); `ApiClient` authenticates with a Bearer API key. `bin/oblok-agent` supports `--log=` and `--access-log=` overrides.
+- **Deployment**: `Dockerfile` (php:8.3-cli-alpine + curl) and `docker-compose.oblok-agent.yml` sidecar example with read-only log/nginx mounts.
 - **Testing**: Added Pest unit tests (`tests/Unit/Agent/AgentTest.php`) covering the parsers, aggregator, config, and tailer rotation behavior (**252 total passing tests**, 782 assertions).
 
 #### Phase 16 — Custom Metrics, Prometheus Scrape & Dashboards (v0.3)
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Validation & Authorization**: Added `ingestMetrics` (Owner/Admin/Operator) and `manageMetrics` (Owner/Admin) abilities. Added `IngestMetricsRequest`, `StoreMetricTargetRequest`, `MetricSamplePolicy`, and `MetricTargetPolicy`.
 - **Controllers & Routes**: Built Web and REST API V1 `MetricController` (dashboard, chart data, ingestion, target CRUD). Added `projects/{project}/metrics` routes (web + `api/v1`).
 - **API Resources**: Added `MetricTargetResource`.
-- **Configuration**: Added `atlas.metrics` config block (`scrape_timeout`) and `.env.example` entry (`METRICS_SCRAPE_TIMEOUT`).
+- **Configuration**: Added `oblok.metrics` config block (`scrape_timeout`) and `.env.example` entry (`METRICS_SCRAPE_TIMEOUT`).
 - **Testing**: Added Pest unit tests (`tests/Unit/MetricsTest.php`) and feature tests (`tests/Feature/Metrics/`) covering the parser, ingestion, chart bucketing, scrape jobs, and authorization (**241 total passing tests**, 749 assertions).
 
 #### Phase 15 — Messaging Integrations (v0.4)
@@ -39,19 +39,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Validation & Authorization**: Added `StoreMessagingIntegrationRequest` (platform enum + bot token) and `SendMessagingMessageRequest`. Reused the `manageIntegrations` ability (Owner/Admin) with `MessagingIntegrationPolicy`.
 - **API Resources**: Added `MessagingIntegrationResource` and `ChatChannelResource` with consistent JSON envelopes.
 - **Views & UI**: Built the messaging Blade view (`resources/views/messaging/`) with a connect form, workspace summary, channel selector, and message composer. Added Messaging to the sidebar navigation.
-- **Configuration**: Added `atlas.messaging.slack` config block (`api_url`, `timeout`) and matching `.env.example` entries (`SLACK_API_URL`, `SLACK_API_TIMEOUT`).
+- **Configuration**: Added `oblok.messaging.slack` config block (`api_url`, `timeout`) and matching `.env.example` entries (`SLACK_API_URL`, `SLACK_API_TIMEOUT`).
 - **Testing**: Added Pest unit tests (`tests/Unit/MessagingIntegrationTest.php`) and feature tests (`tests/Feature/Integrations/`) covering the driver contract, Slack API calls, encryption, connect/send/disconnect, and authorization (**222 total passing tests**, 695 assertions).
 
 #### Phase 14 — API Key Management (v0.4)
 - **Database & Models**: Created `api_keys` migration (`2026_08_02_000018_create_api_keys_table.php`) and `ApiKey` Eloquent model (UUID keys, `user_id` + `project_id` foreign keys). Keys are scoped to a single project, tokens are stored as SHA-256 hashes with a displayable `key_prefix`, and each key tracks `requests_count` and `last_used_at` plus optional `expires_at`/`revoked_at`.
 - **Actions**: Built `CreateApiKey` (generates a prefixed plaintext token and returns it exactly once) and `RevokeApiKey`.
 - **Machine Auth**: Added a custom `api_key` auth guard (`app/Auth/ApiKeyGuard.php`) that resolves the owning user from an `Authorization: Bearer` token, rejects revoked/expired keys, records usage, and re-resolves per request so long-running workers never reuse a stale identity. The REST V1 API now accepts both session auth and API keys (`auth:web,api_key`), with a per-project scope middleware (`EnsureApiKeyProjectScope`) that forbids cross-project access.
-- **Rate Limiting**: Added a named `api_key` rate limiter (default 120 requests/minute per key, env `ATLAS_API_RATE_LIMIT`) applied to the V1 API.
+- **Rate Limiting**: Added a named `api_key` rate limiter (default 120 requests/minute per key, env `OBLOK_API_RATE_LIMIT`) applied to the V1 API.
 - **Controllers & Routes**: Built Web and REST API V1 `ApiKeyController` (index/store/destroy). Added nested `projects/{project}/api-keys` routes (web + `api/v1`).
 - **Validation & Authorization**: Added `StoreApiKeyRequest` (name + optional future expiry). Added `manageApiKeys` ability for Owner/Admin roles and `ApiKeyPolicy`.
 - **API Resource**: Added `ApiKeyResource` with prefix, usage counters, and lifecycle timestamps (never the raw token).
 - **Views & UI**: Built the API Keys Blade view (`resources/views/api-keys/`) with a generate form, one-time token display with copy button, and a lifecycle table (requests, last used, expiry, revoke). Added API Keys to the sidebar navigation.
-- **Configuration**: Added `atlas.api_keys.prefix` and `atlas.api.rate_limit` config plus `.env.example` entries (`ATLAS_API_KEY_PREFIX`, `ATLAS_API_RATE_LIMIT`).
+- **Configuration**: Added `oblok.api_keys.prefix` and `oblok.api.rate_limit` config plus `.env.example` entries (`OBLOK_API_KEY_PREFIX`, `OBLOK_API_RATE_LIMIT`).
 - **Testing**: Added Pest unit tests (`tests/Unit/ApiKeyTest.php`) and feature tests (`tests/Feature/Integrations/`) covering hashing, expiry/revocation, Bearer authentication, 401/403 paths, project scope enforcement, session fallback, rate limiting, and web/API key management (**202 total passing tests**, 634 assertions).
 
 #### Phase 13 — GitHub Integration (v0.4)
@@ -62,13 +62,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Validation & Authorization**: Added `StoreGitHubIntegrationRequest` (validates `owner/name` repository format and token). Added `manageIntegrations` ability for Owner/Admin roles and `GitHubIntegrationPolicy`.
 - **API Resources**: Added `GitHubIntegrationResource`, `GitHubCommitResource`, and `GitHubPullRequestResource` with consistent JSON envelopes.
 - **Views & UI**: Built the GitHub integration Blade view (`resources/views/github/`) with a connect form, repository summary, recent-commit and open-PR context cards, and sync/disconnect actions. Added GitHub to the sidebar navigation.
-- **Configuration**: Added `atlas.github` config block (`api_url`, `timeout`) and matching `.env.example` entries.
+- **Configuration**: Added `oblok.github` config block (`api_url`, `timeout`) and matching `.env.example` entries.
 - **Testing**: Added Pest unit tests (`tests/Unit/GitHubIntegrationTest.php`) and feature tests (`tests/Feature/Integrations/`) covering the API client, encryption, connect/sync/disconnect, and authorization (**177 total passing tests**, 565 assertions).
 
 #### Phase 12 — Scheduler Monitoring (v0.4)
 - **Database & Models**: Created `scheduled_tasks` (`2026_08_02_000012_create_scheduled_tasks_table.php`) and `task_runs` (`2026_08_02_000013_create_task_runs_table.php`) migrations. Built `ScheduledTask` and `TaskRun` Eloquent models with UUID keys, plus `TaskRunStatus` enum (running/success/failed/missed/skipped) with labels and colors.
 - **Cron Scheduling**: `ScheduledTask::calculateNextRun()` computes the next execution using `dragonmantank/cron-expression`, honoring the task timezone. `recordRun()` records a completed run and advances the schedule; `markMissed()` records a missed run and advances past the current time.
-- **Missed-Run Detection**: Built `CheckScheduledTasksJob` (scheduled every minute in `routes/console.php`) that flags enabled tasks whose run window has passed beyond `atlas.scheduler.missed_grace_minutes` (env `ATLAS_SCHEDULER_MISSED_GRACE_MINUTES`, default 5) with a `missed` run.
+- **Missed-Run Detection**: Built `CheckScheduledTasksJob` (scheduled every minute in `routes/console.php`) that flags enabled tasks whose run window has passed beyond `oblok.scheduler.missed_grace_minutes` (env `OBLOK_SCHEDULER_MISSED_GRACE_MINUTES`, default 5) with a `missed` run.
 - **Controllers & Routes**: Built Web and REST API V1 `ScheduledTaskController` (index/create/store/show/edit/update/destroy/recordRun). Added nested `projects/{project}/scheduled-tasks` routes (web + `api/v1`) with `{scheduledTask}` scoped binding and a `POST .../runs` recording endpoint.
 - **Validation & Authorization**: Added `StoreScheduledTaskRequest` (validates cron expressions and timezones), `UpdateScheduledTaskRequest`, and `RecordTaskRunRequest`. Added `manageScheduler` ability for Owner/Admin/Operator roles and `ScheduledTaskPolicy`.
 - **API Resources**: Added `ScheduledTaskResource` and `TaskRunResource` with consistent JSON envelopes.
@@ -170,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Phase 1 — Authentication (v0.1)
 - **Session Authentication**: Installed Laravel Breeze Blade stack with Alpine.js and Tailwind CSS (`routes/auth.php`).
-- **Demo Login**: Added demo user seeding (`admin@atlas.dev`) and one-click demo login button.
+- **Demo Login**: Added demo user seeding (`admin@oblok.dev`) and one-click demo login button.
 - **User Verification**: Implemented `MustVerifyEmail` contract on `User` model.
 - **Testing**: Integrated 25 Pest auth feature tests (`tests/Feature/Auth/*`).
 

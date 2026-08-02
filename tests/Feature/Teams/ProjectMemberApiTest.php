@@ -31,11 +31,11 @@ test('a non-member cannot list project members via API', function () {
 
 test('owner can add a member via API and response includes role and added_at', function () {
     $owner = User::factory()->create();
-    $colleague = User::factory()->create(['email' => 'colleague@atlas.dev']);
+    $colleague = User::factory()->create(['email' => 'colleague@oblok.dev']);
     $project = Project::factory()->create(['user_id' => $owner->id]);
 
     $response = $this->actingAs($owner)->postJson(route('api.v1.projects.members.store', $project), [
-        'email' => 'colleague@atlas.dev',
+        'email' => 'colleague@oblok.dev',
         'role' => 'admin',
     ]);
 
@@ -58,7 +58,7 @@ test('operator cannot add a member via API', function () {
     $project->members()->attach($operator->id, ['role' => 'operator']);
 
     $this->actingAs($operator)->postJson(route('api.v1.projects.members.store', $project), [
-        'email' => 'colleague@atlas.dev',
+        'email' => 'colleague@oblok.dev',
         'role' => 'operator',
     ])->assertForbidden();
 });

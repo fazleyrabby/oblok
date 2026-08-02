@@ -76,11 +76,11 @@ test('slack driver sends a message via chat.postMessage', function () {
         'https://slack.com/api/chat.postMessage' => Http::response(['ok' => true]),
     ]);
 
-    app(SlackDriver::class)->send(['bot_token' => 'xoxb-test-token'], 'C111', 'Hello Atlas');
+    app(SlackDriver::class)->send(['bot_token' => 'xoxb-test-token'], 'C111', 'Hello oblok');
 
     Http::assertSent(fn ($request) => str_contains($request->url(), '/chat.postMessage')
         && $request->data()['channel'] === 'C111'
-        && $request->data()['text'] === 'Hello Atlas');
+        && $request->data()['text'] === 'Hello oblok');
 });
 
 test('integration encrypts the platform config at rest', function () {

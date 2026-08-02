@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('deployment webhook receiver captures a webhook call with payload and headers', function () {
-    $project = Project::factory()->create(['slug' => 'atlas-core-backend']);
+    $project = Project::factory()->create(['slug' => 'oblok-core-backend']);
 
     $response = $this->postJson(route('api.v1.webhooks.deployments', $project->slug), [
         'environment' => 'production',

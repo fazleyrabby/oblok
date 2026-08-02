@@ -9,10 +9,10 @@
     <div class="h-16 flex items-center justify-between px-4 border-b border-gray-800">
         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 overflow-hidden">
             <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-sm flex-shrink-0">
-                A
+                O
             </div>
             <span x-show="!sidebarCollapsed" class="font-bold text-lg text-white tracking-tight whitespace-nowrap">
-                Atlas
+                oblok
             </span>
         </a>
         <button @click="sidebarCollapsed = !sidebarCollapsed"

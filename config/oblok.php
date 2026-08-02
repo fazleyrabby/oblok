@@ -14,7 +14,7 @@ return [
     */
 
     'scheduler' => [
-        'missed_grace_minutes' => env('ATLAS_SCHEDULER_MISSED_GRACE_MINUTES', 5),
+        'missed_grace_minutes' => env('OBLOK_SCHEDULER_MISSED_GRACE_MINUTES', 5),
     ],
 
     /*
@@ -43,11 +43,11 @@ return [
     */
 
     'api_keys' => [
-        'prefix' => env('ATLAS_API_KEY_PREFIX', 'atl_'),
+        'prefix' => env('OBLOK_API_KEY_PREFIX', 'atl_'),
     ],
 
     'api' => [
-        'rate_limit' => env('ATLAS_API_RATE_LIMIT', 120),
+        'rate_limit' => env('OBLOK_API_RATE_LIMIT', 120),
     ],
 
     /*

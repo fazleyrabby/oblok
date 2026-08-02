@@ -21,7 +21,7 @@ class ScrapeMetricTarget
     public function handle(MetricTarget $target): void
     {
         try {
-            $response = Http::timeout((int) config('atlas.metrics.scrape_timeout', 10))
+            $response = Http::timeout((int) config('oblok.metrics.scrape_timeout', 10))
                 ->accept('text/plain')
                 ->get($target->url);
 

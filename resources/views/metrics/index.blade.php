@@ -32,7 +32,7 @@
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
                 <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-1">Scrape targets</h3>
                 <p class="text-xs text-gray-400 mt-1">
-                    Point Atlas at a Prometheus-compatible endpoint (node_exporter, cAdvisor, app <span class="font-mono">/metrics</span>).
+                    Point oblok at a Prometheus-compatible endpoint (node_exporter, cAdvisor, app <span class="font-mono">/metrics</span>).
                 </p>
                 @if(auth()->user()->can('create', [\App\Models\MetricTarget::class, $project]))
                     <form method="POST" action="{{ route('projects.metrics.targets.store', $project) }}" class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">

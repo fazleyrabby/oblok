@@ -8,11 +8,11 @@ uses(RefreshDatabase::class);
 
 test('project owner can add team member by email', function () {
     $owner = User::factory()->create();
-    $colleague = User::factory()->create(['email' => 'colleague@atlas.dev']);
+    $colleague = User::factory()->create(['email' => 'colleague@oblok.dev']);
     $project = Project::factory()->create(['user_id' => $owner->id]);
 
     $response = $this->actingAs($owner)->post(route('projects.members.store', $project), [
-        'email' => 'colleague@atlas.dev',
+        'email' => 'colleague@oblok.dev',
         'role' => 'admin',
     ]);
 

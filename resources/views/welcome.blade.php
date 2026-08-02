@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Project Atlas') }} — Developer Operations Platform</title>
+        <title>{{ config('app.name', 'Project oblok') }} — Developer Operations Platform</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -19,9 +19,9 @@
         <header class="w-full max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-extrabold text-white text-xl shadow-lg shadow-indigo-600/30">
-                    A
+                    O
                 </div>
-                <span class="font-bold text-xl text-white tracking-tight">Project Atlas</span>
+                <span class="font-bold text-xl text-white tracking-tight">Project oblok</span>
             </div>
 
             <nav class="flex items-center space-x-4 text-sm font-medium">
@@ -71,7 +71,7 @@
                         <a href="{{ route('login') }}" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition">
                             Sign In to Console
                         </a>
-                        <a href="https://github.com/fazleyrabby/project-atlas" target="_blank" class="w-full sm:w-auto px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-800 text-sm font-semibold rounded-xl transition">
+                        <a href="https://github.com/fazleyrabby/project-oblok" target="_blank" class="w-full sm:w-auto px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-800 text-sm font-semibold rounded-xl transition">
                             View on GitHub
                         </a>
                     @endauth
@@ -110,10 +110,10 @@
         <!-- Footer -->
         <footer class="w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 border-t border-gray-900 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-2">
             <div>
-                &copy; {{ date('Y') }} Project Atlas. Built with Laravel 13 & PHP 8.4.
+                &copy; {{ date('Y') }} Project oblok. Built with Laravel 13 & PHP 8.4.
             </div>
             <div>
-                <a href="https://github.com/fazleyrabby/project-atlas" target="_blank" class="hover:text-gray-300 transition">GitHub Repository</a>
+                <a href="https://github.com/fazleyrabby/project-oblok" target="_blank" class="hover:text-gray-300 transition">GitHub Repository</a>
             </div>
         </footer>
     </body>

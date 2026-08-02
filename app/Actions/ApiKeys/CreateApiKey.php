@@ -17,7 +17,7 @@ class CreateApiKey
      */
     public function handle(User $user, Project $project, string $name, ?Carbon $expiresAt = null): array
     {
-        $token = config('atlas.api_keys.prefix').Str::random(36);
+        $token = config('oblok.api_keys.prefix').Str::random(36);
 
         $key = ApiKey::create([
             'user_id' => $user->id,

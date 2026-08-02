@@ -1,8 +1,8 @@
 # DESIGN.md
 
-# Project Atlas — Design System
+# Project oblok — Design System
 
-> This document defines the visual language, design principles, UI components, interaction patterns, and accessibility standards for Project Atlas.
+> This document defines the visual language, design principles, UI components, interaction patterns, and accessibility standards for Project oblok.
 >
 > It serves as the single source of truth for both human designers and AI coding agents when creating or modifying the user interface.
 >
@@ -12,7 +12,7 @@
 
 # Design Philosophy
 
-Atlas is a professional developer tool.
+oblok is a professional developer tool.
 
 The interface should prioritize:
 
@@ -46,7 +46,7 @@ The same interaction should behave the same way throughout the application.
 
 ## Density
 
-Atlas is built for engineers.
+oblok is built for engineers.
 
 Information density is preferred over excessive whitespace.
 
@@ -77,7 +77,7 @@ Accessibility is not optional.
 
 # Visual Style
 
-Atlas should feel similar to modern engineering tools.
+oblok should feel similar to modern engineering tools.
 
 Primary inspiration:
 
@@ -545,6 +545,6 @@ Choose the simpler solution.
 
 # Guiding Principle
 
-Atlas should feel like software built by engineers for engineers.
+oblok should feel like software built by engineers for engineers.
 
 Every interface should reduce cognitive load, surface the right information at the right time, and make operational workflows fast, predictable, and enjoyable.

@@ -117,9 +117,9 @@ class SlackDriver implements ChatPlatform
      */
     protected function client(string $token): PendingRequest
     {
-        return Http::baseUrl((string) config('atlas.messaging.slack.api_url'))
+        return Http::baseUrl((string) config('oblok.messaging.slack.api_url'))
             ->withToken($token)
             ->asJson()
-            ->timeout((int) config('atlas.messaging.slack.timeout', 10));
+            ->timeout((int) config('oblok.messaging.slack.timeout', 10));
     }
 }

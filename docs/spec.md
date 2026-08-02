@@ -1,20 +1,20 @@
 # Specification
 
-> Product Requirements Document for Project Atlas.
+> Product Requirements Document for Project oblok.
 >
-> This document defines **what** Atlas builds. It does not describe how it is built.
+> This document defines **what** oblok builds. It does not describe how it is built.
 >
-> For why Atlas exists, see [vision.md](vision.md). For architecture, see [architecture.md](architecture.md). For timeline, see [roadmap.md](roadmap.md).
+> For why oblok exists, see [vision.md](vision.md). For architecture, see [architecture.md](architecture.md). For timeline, see [roadmap.md](roadmap.md).
 
 ---
 
 ## Documentation Strategy
 
-Atlas maintains a small set of focused documents. Each file owns one responsibility.
+oblok maintains a small set of focused documents. Each file owns one responsibility.
 
 | Document | Responsibility |
 |----------|---------------|
-| [vision.md](vision.md) | Why Atlas exists |
+| [vision.md](vision.md) | Why oblok exists |
 | [spec.md](spec.md) | What to build (this document) |
 | [architecture.md](architecture.md) | How it is built |
 | [design.md](design.md) | UX patterns and user flows |
@@ -32,7 +32,7 @@ Documents reference each other instead of duplicating content.
 ## Repository Structure
 
 ```
-atlas/
+oblok/
 ├── app/                  # Application code (Actions, Controllers, Models, Events)
 ├── bootstrap/            # Application bootstrap configuration
 ├── config/               # Application configuration
@@ -55,7 +55,7 @@ atlas/
 
 ## Product Overview
 
-Atlas is a self-hosted Developer Operations Platform. It provides engineering teams with a unified workspace for operating backend applications.
+oblok is a self-hosted Developer Operations Platform. It provides engineering teams with a unified workspace for operating backend applications.
 
 The platform consolidates operational concerns — monitoring, deployments, logs, queues, webhooks, incidents, and notifications — into a single interface, eliminating the need to context-switch between multiple tools.
 
@@ -214,7 +214,7 @@ The MVP (v0.1) focuses on four modules that provide immediate operational value.
 
 ### Service Monitoring
 
-- As a user, I can register a URL for monitoring so Atlas checks if my service is running.
+- As a user, I can register a URL for monitoring so oblok checks if my service is running.
 - As a user, I can view the current status of all my services so I know what needs attention.
 - As a user, I can view uptime history so I can identify patterns in outages.
 - As a user, I can pause monitoring for a service during planned maintenance so I do not receive false alerts.

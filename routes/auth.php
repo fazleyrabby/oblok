@@ -26,9 +26,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login/demo', function () {
         $user = User::firstOrCreate(
-            ['email' => 'admin@atlas.dev'],
+            ['email' => 'admin@oblok.dev'],
             [
-                'name' => 'Atlas Operator',
+                'name' => 'oblok Operator',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
             ]
