@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Auth\ApiKeyGuard;
 use App\Enums\AlertMetric;
+use App\Enums\MessagingPlatform;
+use App\Services\Messaging\Drivers\SlackDriver;
+use App\Services\Messaging\MessagingDriverRegistry;
 use App\Support\Alerts\MetricSourceRegistry;
 use App\Support\Alerts\Sources\DeploymentStatusMetricSource;
 use App\Support\Alerts\Sources\IncidentOpenedMetricSource;
@@ -29,6 +32,14 @@ class AppServiceProvider extends ServiceProvider
             $registry->register(AlertMetric::QueueBacklog, QueueBacklogMetricSource::class);
             $registry->register(AlertMetric::DeploymentStatus, DeploymentStatusMetricSource::class);
             $registry->register(AlertMetric::IncidentOpened, IncidentOpenedMetricSource::class);
+
+            return $registry;
+        });
+
+        $this->app->singleton(MessagingDriverRegistry::class, function ($app) {
+            $registry = new MessagingDriverRegistry;
+
+            $registry->register(MessagingPlatform::Slack, SlackDriver::class);
 
             return $registry;
         });

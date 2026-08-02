@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 15 — Messaging Integrations (v0.4)
+- **Driver Framework**: Defined a `ChatPlatform` driver interface (`app/Services/Messaging/ChatPlatform.php`) with `verify()`/`channels()`/`send()` plus a `MessagingDriverRegistry` that resolves a driver per platform. Adding a new platform (Discord, Telegram, …) is a new enum case + driver + registry entry.
+- **Slack Driver**: Implemented `SlackDriver` (`app/Services/Messaging/Drivers/`) against the Slack Web API — `auth.test` (verify + workspace metadata), `conversations.list` (channel picker), and `chat.postMessage` (send). Transport and `ok:false` API failures surface as a domain `MessagingApiException`; the bot token is stored encrypted at rest.
+- **Database & Models**: Created `messaging_integrations` migration (`2026_08_02_000019_create_messaging_integrations_table.php`) and `MessagingIntegration` Eloquent model (UUID keys, one integration per project+platform, encrypted `config` text column, platform/enabled scopes). Added `MessagingPlatform` enum.
+- **Actions & Jobs**: Built `ConnectMessagingIntegration` (validates credentials via the driver, then `updateOrCreate`), `DisconnectMessagingIntegration`, and `SendMessagingMessage`. Added `SendMessagingMessageJob` (queued, retried) for background posting.
+- **Controllers & Routes**: Built Web and REST API V1 `MessagingIntegrationController` (index/store/channels/send/destroy). Added nested `projects/{project}/messaging` routes (web + `api/v1`).
+- **Validation & Authorization**: Added `StoreMessagingIntegrationRequest` (platform enum + bot token) and `SendMessagingMessageRequest`. Reused the `manageIntegrations` ability (Owner/Admin) with `MessagingIntegrationPolicy`.
+- **API Resources**: Added `MessagingIntegrationResource` and `ChatChannelResource` with consistent JSON envelopes.
+- **Views & UI**: Built the messaging Blade view (`resources/views/messaging/`) with a connect form, workspace summary, channel selector, and message composer. Added Messaging to the sidebar navigation.
+- **Configuration**: Added `atlas.messaging.slack` config block (`api_url`, `timeout`) and matching `.env.example` entries (`SLACK_API_URL`, `SLACK_API_TIMEOUT`).
+- **Testing**: Added Pest unit tests (`tests/Unit/MessagingIntegrationTest.php`) and feature tests (`tests/Feature/Integrations/`) covering the driver contract, Slack API calls, encryption, connect/send/disconnect, and authorization (**222 total passing tests**, 695 assertions).
+
 #### Phase 14 — API Key Management (v0.4)
 - **Database & Models**: Created `api_keys` migration (`2026_08_02_000018_create_api_keys_table.php`) and `ApiKey` Eloquent model (UUID keys, `user_id` + `project_id` foreign keys). Keys are scoped to a single project, tokens are stored as SHA-256 hashes with a displayable `key_prefix`, and each key tracks `requests_count` and `last_used_at` plus optional `expires_at`/`revoked_at`.
 - **Actions**: Built `CreateApiKey` (generates a prefixed plaintext token and returns it exactly once) and `RevokeApiKey`.

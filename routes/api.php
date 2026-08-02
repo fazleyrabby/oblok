@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\GitHubIntegrationController;
 use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
+use App\Http\Controllers\Api\V1\MessagingIntegrationController;
 use App\Http\Controllers\Api\V1\NotificationChannelController;
 use App\Http\Controllers\Api\V1\NotificationDeliveryController;
 use App\Http\Controllers\Api\V1\ProjectController;
@@ -133,4 +134,10 @@ Route::prefix('v1')->middleware(['auth:web,api_key', 'throttle:api_key', 'api_ke
     Route::get('projects/{project}/github/pull-requests', [GitHubIntegrationController::class, 'pullRequests'])->name('api.v1.projects.github.pull-requests');
     Route::post('projects/{project}/github/sync', [GitHubIntegrationController::class, 'sync'])->name('api.v1.projects.github.sync');
     Route::delete('projects/{project}/github', [GitHubIntegrationController::class, 'destroy'])->name('api.v1.projects.github.destroy');
+
+    Route::get('projects/{project}/messaging', [MessagingIntegrationController::class, 'index'])->name('api.v1.projects.messaging.index');
+    Route::post('projects/{project}/messaging', [MessagingIntegrationController::class, 'store'])->name('api.v1.projects.messaging.store');
+    Route::get('projects/{project}/messaging/channels/{integration}', [MessagingIntegrationController::class, 'channels'])->name('api.v1.projects.messaging.channels');
+    Route::post('projects/{project}/messaging/{integration}/send', [MessagingIntegrationController::class, 'send'])->name('api.v1.projects.messaging.send');
+    Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('api.v1.projects.messaging.destroy');
 });

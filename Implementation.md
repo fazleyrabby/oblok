@@ -193,6 +193,20 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 15
+
+Messaging Integrations
+
+Built on the Phase 14 API key foundation:
+
+- ChatPlatform driver interface (verify/channels/send) and MessagingDriverRegistry for per-platform resolution; new platforms are an enum case + driver + registry entry
+- SlackDriver against the Slack Web API: auth.test (workspace metadata), conversations.list (channel picker), chat.postMessage (send); ok:false and transport failures surface as MessagingApiException
+- messaging_integrations table; MessagingIntegration model (one per project+platform) with encrypted config at rest; MessagingPlatform enum
+- ConnectMessagingIntegration validates credentials then updateOrCreate; DisconnectMessagingIntegration removes the integration; SendMessagingMessage posts through the driver; SendMessagingMessageJob for background sends
+- manageIntegrations ability (Owner/Admin) and MessagingIntegrationPolicy; web + API v1 messaging routes (index/store/channels/send/destroy)
+- Messaging view with connect form, workspace summary, channel selector, and message composer; sidebar navigation entry
+- Pest unit + feature coverage for the driver contract, Slack API calls, encryption, connect/send/disconnect, and authorization (222 passing tests)
+
 Phase 14
 
 API Key Management

@@ -50,4 +50,21 @@ return [
         'rate_limit' => env('ATLAS_API_RATE_LIMIT', 120),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Messaging Integrations
+    |--------------------------------------------------------------------------
+    |
+    | Per-platform client settings for chat integrations. Additional platforms
+    | (Discord, Telegram, etc.) add a config block and a matching driver.
+    |
+    */
+
+    'messaging' => [
+        'slack' => [
+            'api_url' => env('SLACK_API_URL', 'https://slack.com/api'),
+            'timeout' => env('SLACK_API_TIMEOUT', 10),
+        ],
+    ],
+
 ];

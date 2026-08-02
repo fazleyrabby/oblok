@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\GitHubIntegrationController;
 use App\Http\Controllers\Web\IncidentController;
 use App\Http\Controllers\Web\LogController;
+use App\Http\Controllers\Web\MessagingIntegrationController;
 use App\Http\Controllers\Web\NotificationChannelController;
 use App\Http\Controllers\Web\NotificationDeliveryController;
 use App\Http\Controllers\Web\ProjectController;
@@ -66,6 +67,11 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/api-keys', [ApiKeyController::class, 'index'])->name('projects.api-keys.index');
     Route::post('projects/{project}/api-keys', [ApiKeyController::class, 'store'])->name('projects.api-keys.store');
     Route::delete('projects/{project}/api-keys/{apiKey}', [ApiKeyController::class, 'destroy'])->name('projects.api-keys.destroy');
+
+    Route::get('projects/{project}/messaging', [MessagingIntegrationController::class, 'index'])->name('projects.messaging.index');
+    Route::post('projects/{project}/messaging', [MessagingIntegrationController::class, 'store'])->name('projects.messaging.store');
+    Route::post('projects/{project}/messaging/{integration}/send', [MessagingIntegrationController::class, 'send'])->name('projects.messaging.send');
+    Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('projects.messaging.destroy');
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

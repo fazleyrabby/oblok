@@ -78,7 +78,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Webhook Replay | Re-deliver captured webhooks for debugging |
 | Scheduler Monitoring | Track cron job execution and detect missed runs |
 | GitHub Integration | Link projects to repositories, surface commit and PR context |
-| Slack Integration | Send notifications and alerts to Slack channels |
+| Slack Integration | Send notifications and alerts to Slack channels — ✅ delivered (Phase 15, driver framework ready for Discord/Telegram) |
 | Integration Framework | Extensible interface for adding new integrations |
 
 ---
@@ -153,6 +153,6 @@ These are exploratory goals. They are not committed and will be scoped based on 
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | ⚪ Planned　　　　 |       |
 | v0.3    | ⚪ Planned　　　　 |       |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14) |
+| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |

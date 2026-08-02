@@ -179,6 +179,16 @@ class Project extends Model
     }
 
     /**
+     * Get the messaging integration linked to this project.
+     *
+     * @return HasOne<MessagingIntegration, $this>
+     */
+    public function messagingIntegration(): HasOne
+    {
+        return $this->hasOne(MessagingIntegration::class);
+    }
+
+    /**
      * Get the API keys issued for this project.
      *
      * @return HasMany<ApiKey, $this>
