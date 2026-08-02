@@ -36,6 +36,30 @@ test('config requires nothing but tolerates missing optional values', function (
         ->and($config->accessLogFile)->toBeNull();
 });
 
+test('config expands glob patterns into concrete log files', function () {
+    $dir = sys_get_temp_dir().'/oblok-agent-glob-'.uniqid();
+    mkdir($dir);
+    file_put_contents($dir.'/laravel-2026-08-02.log', 'one');
+    file_put_contents($dir.'/laravel-2026-08-03.log', 'two');
+
+    $config = Config::fromEnv([
+        'OBLOK_URL' => 'https://oblok.lan',
+        'OBLOK_API_KEY' => 'atl_key',
+        'OBLOK_PROJECT_ID' => 'abc',
+        'OBLOK_LOG_FILES' => $dir.'/laravel-*.log',
+    ]);
+
+    $files = $config->resolveLogFiles();
+
+    expect($files)->toContain($dir.'/laravel-2026-08-02.log')
+        ->and($files)->toContain($dir.'/laravel-2026-08-03.log');
+
+    foreach ($files as $file) {
+        @unlink($file);
+    }
+    @rmdir($dir);
+});
+
 test('log line parser extracts json entries', function () {
     $parser = new LogLineParser;
 

@@ -19,9 +19,7 @@ class Runner
         $aggregator = new RequestMetricsAggregator;
 
         $tailers = [];
-        foreach ($this->config->logFiles as $file) {
-            $tailers[] = new FileTailer($file);
-        }
+
         $accessTailer = $this->config->accessLogFile !== null
             ? new FileTailer($this->config->accessLogFile)
             : null;
@@ -29,6 +27,12 @@ class Runner
         $lastFlush = microtime(true);
 
         while (true) {
+            foreach ($this->config->resolveLogFiles() as $file) {
+                if (! isset($tailers[$file])) {
+                    $tailers[$file] = new FileTailer($file);
+                }
+            }
+
             foreach ($tailers as $tailer) {
                 foreach ($tailer->readNewLines() as $line) {
                     $entry = $logParser->parse($line);

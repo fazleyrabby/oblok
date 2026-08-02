@@ -102,7 +102,7 @@ services:
       OBLOK_API_KEY: ${OBLOK_API_KEY}
       OBLOK_PROJECT_ID: ${OBLOK_PROJECT_ID}
       OBLOK_AGENT_NAME: my-app-agent
-      OBLOK_LOG_FILES: /var/log/app/laravel.log
+      OBLOK_LOG_FILES: /var/log/app/laravel-*.log
       OBLOK_ACCESS_LOG: /var/log/nginx/access.log
     volumes:
       - ./storage/logs:/var/log/app:ro
@@ -120,7 +120,7 @@ Run it locally without Docker:
 
 ```bash
 OBLOK_URL=... OBLOK_API_KEY=... OBLOK_PROJECT_ID=... \
-OBLOK_LOG_FILES=/srv/app/storage/logs/laravel.log \
+OBLOK_LOG_FILES=/srv/app/storage/logs/laravel-*.log \
 OBLOK_ACCESS_LOG=/var/log/nginx/access.log \
 php oblok-agent/bin/oblok-agent
 ```

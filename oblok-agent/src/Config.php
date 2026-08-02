@@ -50,4 +50,31 @@ class Config
 
         return $config;
     }
+
+    /**
+     * Expand the configured log file patterns into concrete file paths.
+     *
+     * Patterns containing glob characters are expanded; literal paths pass
+     * through untouched (even when the file does not exist yet).
+     *
+     * @return array<int, string>
+     */
+    public function resolveLogFiles(): array
+    {
+        $files = [];
+
+        foreach ($this->logFiles as $pattern) {
+            if (strpbrk($pattern, '*?[') !== false) {
+                foreach (glob($pattern) ?: [] as $match) {
+                    $files[] = $match;
+                }
+
+                continue;
+            }
+
+            $files[] = $pattern;
+        }
+
+        return $files;
+    }
 }

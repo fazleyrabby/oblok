@@ -24,7 +24,7 @@ required.
 | `OBLOK_URL` | yes | oblok base URL, e.g. `https://oblok.yourlab.lan` |
 | `OBLOK_API_KEY` | yes | A per-project API key (issued in oblok → Management → API Keys) |
 | `OBLOK_PROJECT_ID` | yes | The UUID of the oblok project |
-| `OBLOK_LOG_FILES` | no | Comma-separated log files to tail |
+| `OBLOK_LOG_FILES` | no | Comma-separated log files to tail (globs supported, e.g. `laravel-*.log`) |
 | `OBLOK_ACCESS_LOG` | no | nginx access log path to parse |
 | `OBLOK_AGENT_NAME` | no | Label shown in agent output |
 | `OBLOK_POLL_INTERVAL` | no | Seconds between file polls (default 2) |
