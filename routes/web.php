@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;
+use App\Http\Controllers\Web\IncidentController;
 use App\Http\Controllers\Web\LogController;
 use App\Http\Controllers\Web\ProjectController;
 use App\Http\Controllers\Web\QueueController;
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::post('projects/{project}/services/{service}/ping', [ServiceController::class, 'ping'])->name('projects.services.ping');
 
     Route::resource('projects.deployments', DeploymentController::class)->only(['index', 'show']);
+
+    Route::resource('projects.incidents', IncidentController::class);
+    Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('projects.incidents.resolve');
 
     Route::get('projects/{project}/logs', [LogController::class, 'index'])->name('projects.logs.index');
 

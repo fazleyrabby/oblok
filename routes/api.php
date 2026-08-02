@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
+use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\QueueController;
@@ -36,6 +37,15 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         'index' => 'api.v1.projects.deployments.index',
         'show' => 'api.v1.projects.deployments.show',
     ]);
+
+    Route::apiResource('projects.incidents', IncidentController::class)->names([
+        'index' => 'api.v1.projects.incidents.index',
+        'store' => 'api.v1.projects.incidents.store',
+        'show' => 'api.v1.projects.incidents.show',
+        'update' => 'api.v1.projects.incidents.update',
+        'destroy' => 'api.v1.projects.incidents.destroy',
+    ]);
+    Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('api.v1.projects.incidents.resolve');
 
     Route::apiResource('projects.logs', LogController::class)->only(['index', 'store'])->names([
         'index' => 'api.v1.projects.logs.index',

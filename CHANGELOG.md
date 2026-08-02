@@ -7,16 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [v0.2.0] - 2026-08-02 — Milestone v0.2 Queue & Deployment Operations Release
 
 ### Added
+
+#### Phase 8 — Incident Management & Alerting (v0.2)
+- **Database & Models**: Created `incidents` migration (`2026_08_02_000004_create_incidents_table.php`) and `Incident` Eloquent model with UUID keys, soft deletes, and `scopeOpen`/`scopeResolved` scopes.
+- **Actions & Event Trigger**: Built `CreateIncident` and `ResolveIncident` actions. Created `TriggerIncidentOnServiceFailure` listener automatically opening `high` severity incidents upon service failure events.
+- **Controllers & Views**: Built Web (`app/Http/Controllers/Web/IncidentController.php`) and API V1 (`app/Http/Controllers/Api/V1/IncidentController.php`) controllers. Designed incident timeline Blade views (`resources/views/incidents/`) with severity badges and resolution triggers.
+- **Testing**: Added Pest unit tests (`tests/Unit/IncidentTest.php`) and feature tests (`tests/Feature/Incidents/`) verifying manual incident logging, resolution, and automated service failure triggers (**72 total passing tests**, 236 assertions).
 
 #### Phase 7 — Log Aggregation & Inspection (v0.2)
 - **Database & Models**: Created `logs` migration (`2026_08_02_000003_create_logs_table.php`) and `LogEntry` Eloquent model (`app/Models/LogEntry.php`) with UUID keys and level/search scopes.
 - **Action & Ingestion**: Built `IngestLogEntry` action (`app/Actions/Logs/IngestLogEntry.php`) and `IngestLogRequest` validation for REST log ingestion (`POST /api/v1/projects/{project}/logs`).
 - **Controllers & Stream UI**: Built Web (`app/Http/Controllers/Web/LogController.php`) and API V1 (`app/Http/Controllers/Api/V1/LogController.php`) controllers. Designed real-time log inspector view (`resources/views/logs/index.blade.php`) with severity color badges, search input, and level filters.
 - **Sidebar & Alignment**: Resolved global layout alignment to 100% full-width container (`w-full px-4 sm:px-6 lg:px-8`) and added dynamic project route resolution for Services, Deployments, and Logs Stream in sidebar.
-- **Testing**: Added Pest unit tests (`tests/Unit/LogEntryTest.php`) and feature tests (`tests/Feature/Logs/LogAggregationTest.php`) (**66 total passing tests**, 219 assertions).
+- **Testing**: Added Pest unit tests (`tests/Unit/LogEntryTest.php`) and feature tests (`tests/Feature/Logs/LogAggregationTest.php`).
 
 #### Phase 6 — Queue Monitoring & Horizon Integration (v0.2)
 - **Laravel Horizon**: Installed and configured `laravel/horizon` package (`config/horizon.php`). Registered `viewHorizon` gate in `app/Providers/HorizonServiceProvider.php`.

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Deployment;
 use App\Models\HealthCheckResult;
+use App\Models\Incident;
 use App\Models\LogEntry;
 use App\Models\Project;
 use App\Models\Service;
@@ -69,6 +70,15 @@ class DatabaseSeeder extends Seeder
             'project_id' => $project1->id,
         ]);
 
+        Incident::factory()->create([
+            'project_id' => $project1->id,
+            'service_id' => $service1->id,
+            'title' => 'Stripe Webhook Rate Limit Spike',
+            'description' => 'Upstream Stripe webhook API returned HTTP 429 response rate limits during spike.',
+            'severity' => 'high',
+            'status' => 'investigating',
+        ]);
+
         // Seed demo project 2
         $project2 = Project::factory()->create([
             'user_id' => $user->id,
@@ -109,6 +119,14 @@ class DatabaseSeeder extends Seeder
 
         LogEntry::factory()->count(15)->create([
             'project_id' => $project2->id,
+        ]);
+
+        Incident::factory()->resolved()->create([
+            'project_id' => $project2->id,
+            'service_id' => $service2->id,
+            'title' => 'OAuth Redis Cache Eviction Flap',
+            'description' => 'Temporary Redis memory limit reached causing token verification retries.',
+            'severity' => 'medium',
         ]);
 
         // Seed demo project 3

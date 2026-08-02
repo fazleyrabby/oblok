@@ -84,6 +84,16 @@ class Project extends Model
     }
 
     /**
+     * Get the incidents recorded for this project.
+     *
+     * @return HasMany<Incident, $this>
+     */
+    public function incidents(): HasMany
+    {
+        return $this->hasMany(Incident::class)->latest('started_at');
+    }
+
+    /**
      * Scope a query to only include active (non-archived) projects.
      *
      * @param  Builder<$this>  $query
