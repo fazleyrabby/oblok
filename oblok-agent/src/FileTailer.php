@@ -22,6 +22,10 @@ class FileTailer
             $this->open();
         }
 
+        if ($this->handle === null) {
+            return [];
+        }
+
         clearstatcache(true, $this->file);
         $currentSize = @filesize($this->file);
 
@@ -29,6 +33,10 @@ class FileTailer
             $this->reset();
         } elseif ($currentSize < $this->size) {
             $this->reset();
+        }
+
+        if ($this->handle === null) {
+            return [];
         }
 
         $lines = [];

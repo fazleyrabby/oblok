@@ -130,6 +130,19 @@ test('request metrics aggregator resets after flush', function () {
     expect($metrics)->toBe([]);
 });
 
+test('file tailer tolerates a missing file without crashing', function () {
+    $file = sys_get_temp_dir().'/atlas-agent-missing-'.uniqid().'.log';
+
+    $tailer = new FileTailer($file);
+
+    expect($tailer->readNewLines())->toBe([]);
+
+    file_put_contents($file, "appeared\n");
+    expect($tailer->readNewLines())->toBe([]);
+
+    @unlink($file);
+});
+
 test('file tailer returns only newly appended lines', function () {
     $file = tempnam(sys_get_temp_dir(), 'oblok-agent-');
     file_put_contents($file, "first line\n");

@@ -7,13 +7,20 @@
                 </h2>
                 <p class="text-xs text-gray-400 mt-1">Real-time log ingestion & error inspector</p>
             </div>
-            <div class="text-xs text-gray-400 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-lg font-mono">
-                API Endpoint: <span class="text-indigo-400 font-semibold">POST /api/v1/projects/{{ $project->id }}/logs</span>
+            <div class="flex items-center gap-3">
+                <button type="button" @click="autoRefresh = !autoRefresh"
+                        :class="autoRefresh ? 'text-emerald-400 border-emerald-800' : 'text-gray-400 border-gray-800'"
+                        class="text-xs font-semibold px-3 py-1.5 rounded-lg border bg-gray-900 uppercase tracking-wider transition">
+                    <span x-text="autoRefresh ? 'Live: ON' : 'Live: OFF'"></span>
+                </button>
+                <div class="text-xs text-gray-400 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-lg font-mono">
+                    API Endpoint: <span class="text-indigo-400 font-semibold">POST /api/v1/projects/{{ $project->id }}/logs</span>
+                </div>
             </div>
         </div>
     </x-slot>
 
-    <div class="space-y-6">
+    <div class="space-y-6" x-data="logStream" @poll.window="autoRefresh && window.location.reload()">
         <!-- Search & Filter Controls Bar -->
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm">
             <form method="GET" action="{{ route('projects.logs.index', $project) }}" class="flex flex-col sm:flex-row items-center gap-3">
@@ -102,4 +109,19 @@
             @endif
         </div>
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('logStream', () => ({
+                autoRefresh: true,
+                init() {
+                    setInterval(() => {
+                        if (this.autoRefresh) {
+                            window.location.reload();
+                        }
+                    }, 10000);
+                },
+            }));
+        });
+    </script>
 </x-app-layout>
