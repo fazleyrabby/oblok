@@ -17,6 +17,15 @@ class LogController extends Controller
     {
         $this->authorize('viewAny', [LogEntry::class, $project]);
 
+        $projects = Project::query()
+            ->where(function ($query) use ($request) {
+                $query->where('user_id', $request->user()->id)
+                    ->orWhereHas('members', fn ($member) => $member->where('users.id', $request->user()->id));
+            })
+            ->active()
+            ->orderBy('name')
+            ->get();
+
         $query = $project->logs();
 
         if ($request->filled('level')) {
@@ -29,6 +38,6 @@ class LogController extends Controller
 
         $logs = $query->paginate(25)->withQueryString();
 
-        return view('logs.index', compact('project', 'logs'));
+        return view('logs.index', compact('project', 'logs', 'projects'));
     }
 }

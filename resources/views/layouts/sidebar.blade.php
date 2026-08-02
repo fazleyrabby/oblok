@@ -1,5 +1,12 @@
 @php
-    $navProject = \App\Models\Project::where('user_id', Auth::id())->active()->first();
+    $navProject = \App\Models\Project::query()
+        ->where(function ($q) {
+            $q->where('user_id', Auth::id())
+              ->orWhereHas('members', fn ($m) => $m->where('users.id', Auth::id()));
+        })
+        ->active()
+        ->orderBy('name')
+        ->first();
 @endphp
 
 <aside :class="{ 'transition-all duration-200 ease-in-out': animated, 'w-20 max-md:-translate-x-full': sidebarCollapsed, 'w-64': !sidebarCollapsed }"

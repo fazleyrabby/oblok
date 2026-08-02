@@ -23,6 +23,19 @@
     <div class="space-y-6" x-data="logStream" @poll.window="autoRefresh && window.location.reload()">
         <!-- Search & Filter Controls Bar -->
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <label for="project-switch" class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Project</label>
+                    <select id="project-switch" onchange="window.location.href = this.value"
+                            class="py-2 px-3 bg-gray-950 border border-gray-800 text-gray-200 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        @foreach($projects as $p)
+                            <option value="{{ route('projects.logs.index', $p) }}" {{ $p->id === $project->id ? 'selected' : '' }}>
+                                {{ $p->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <form method="GET" action="{{ route('projects.logs.index', $project) }}" class="flex flex-col sm:flex-row items-center gap-3">
                 <!-- Search Input -->
                 <div class="flex-1 w-full relative">
