@@ -193,6 +193,20 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 16
+
+Custom Metrics, Prometheus Scrape & Dashboards
+
+Built on the Phase 15 messaging foundation:
+
+- metric_samples and metric_targets tables; MetricSample (labels, value, recorded_at) and MetricTarget models
+- IngestMetrics action (batched) behind POST api/v1/projects/{project}/metrics; works with session auth or Bearer API keys
+- PrometheusExpositionParser for the text exposition format; ScrapeMetricTarget + ScrapeMetricTargetJob; ScrapeAllMetricTargetsJob scheduled every minute
+- QueryMetricSeries down-samples raw samples into bucketed chart series (avg/min/max/sum/last, label filters), cross-DB
+- ingestMetrics (Owner/Admin/Operator) and manageMetrics (Owner/Admin) abilities; MetricSamplePolicy and MetricTargetPolicy
+- Metrics dashboard with ApexCharts, metric-name picker, time ranges, push-metrics cURL example, and scrape-target management
+- Pest unit + feature coverage for the parser, ingestion, chart bucketing, scrape jobs, and authorization (241 passing tests)
+
 Phase 15
 
 Messaging Integrations

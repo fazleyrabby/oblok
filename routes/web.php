@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\GitHubIntegrationController;
 use App\Http\Controllers\Web\IncidentController;
 use App\Http\Controllers\Web\LogController;
 use App\Http\Controllers\Web\MessagingIntegrationController;
+use App\Http\Controllers\Web\MetricController;
 use App\Http\Controllers\Web\NotificationChannelController;
 use App\Http\Controllers\Web\NotificationDeliveryController;
 use App\Http\Controllers\Web\ProjectController;
@@ -72,6 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::post('projects/{project}/messaging', [MessagingIntegrationController::class, 'store'])->name('projects.messaging.store');
     Route::post('projects/{project}/messaging/{integration}/send', [MessagingIntegrationController::class, 'send'])->name('projects.messaging.send');
     Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('projects.messaging.destroy');
+
+    Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('projects.metrics.index');
+    Route::get('projects/{project}/metrics/data', [MetricController::class, 'data'])->name('projects.metrics.data');
+    Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('projects.metrics.targets.store');
+    Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('projects.metrics.targets.destroy');
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

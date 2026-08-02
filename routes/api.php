@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\GitHubIntegrationController;
 use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
 use App\Http\Controllers\Api\V1\MessagingIntegrationController;
+use App\Http\Controllers\Api\V1\MetricController;
 use App\Http\Controllers\Api\V1\NotificationChannelController;
 use App\Http\Controllers\Api\V1\NotificationDeliveryController;
 use App\Http\Controllers\Api\V1\ProjectController;
@@ -140,4 +141,10 @@ Route::prefix('v1')->middleware(['auth:web,api_key', 'throttle:api_key', 'api_ke
     Route::get('projects/{project}/messaging/channels/{integration}', [MessagingIntegrationController::class, 'channels'])->name('api.v1.projects.messaging.channels');
     Route::post('projects/{project}/messaging/{integration}/send', [MessagingIntegrationController::class, 'send'])->name('api.v1.projects.messaging.send');
     Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('api.v1.projects.messaging.destroy');
+
+    Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('api.v1.projects.metrics.index');
+    Route::post('projects/{project}/metrics', [MetricController::class, 'store'])->name('api.v1.projects.metrics.store');
+    Route::get('projects/{project}/metrics/targets', [MetricController::class, 'targets'])->name('api.v1.projects.metrics.targets.index');
+    Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('api.v1.projects.metrics.targets.store');
+    Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('api.v1.projects.metrics.targets.destroy');
 });

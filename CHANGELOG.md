@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 16 — Custom Metrics, Prometheus Scrape & Dashboards (v0.3)
+- **Database & Models**: Created `metric_samples` and `metric_targets` migrations (`2026_08_02_000020_create_metric_tables.php`). Built `MetricSample` (labels, value, recorded_at) and `MetricTarget` (Prometheus scrape targets) Eloquent models with UUID keys and project relations.
+- **Ingestion**: Built `IngestMetrics` action (batched, cross-project) exposed as `POST /api/v1/projects/{project}/metrics`. Accepts counters/gauges with optional labels and timestamps; works with session auth or Bearer API keys.
+- **Prometheus Compatibility**: Built `PrometheusExpositionParser` (`app/Services/Metrics/`) for the text exposition format (HELP/TYPE comments, labels, optional timestamps). `ScrapeMetricTarget` action + `ScrapeMetricTargetJob` fetch targets; `ScrapeAllMetricTargetsJob` is scheduled every minute in `routes/console.php`.
+- **Dashboards**: Built `QueryMetricSeries` action that down-samples raw samples into bucketed chart series (avg/min/max/sum/last, label filters) — cross-DB (no SQL date-trunc). Web dashboard (`resources/views/metrics/`) with ApexCharts line chart, metric-name picker, time-range selectors (1H/6H/24H/7D), push-metrics cURL example, and scrape-target management.
+- **Validation & Authorization**: Added `ingestMetrics` (Owner/Admin/Operator) and `manageMetrics` (Owner/Admin) abilities. Added `IngestMetricsRequest`, `StoreMetricTargetRequest`, `MetricSamplePolicy`, and `MetricTargetPolicy`.
+- **Controllers & Routes**: Built Web and REST API V1 `MetricController` (dashboard, chart data, ingestion, target CRUD). Added `projects/{project}/metrics` routes (web + `api/v1`).
+- **API Resources**: Added `MetricTargetResource`.
+- **Configuration**: Added `atlas.metrics` config block (`scrape_timeout`) and `.env.example` entry (`METRICS_SCRAPE_TIMEOUT`).
+- **Testing**: Added Pest unit tests (`tests/Unit/MetricsTest.php`) and feature tests (`tests/Feature/Metrics/`) covering the parser, ingestion, chart bucketing, scrape jobs, and authorization (**241 total passing tests**, 749 assertions).
+
 #### Phase 15 — Messaging Integrations (v0.4)
 - **Driver Framework**: Defined a `ChatPlatform` driver interface (`app/Services/Messaging/ChatPlatform.php`) with `verify()`/`channels()`/`send()` plus a `MessagingDriverRegistry` that resolves a driver per platform. Adding a new platform (Discord, Telegram, …) is a new enum case + driver + registry entry.
 - **Slack Driver**: Implemented `SlackDriver` (`app/Services/Messaging/Drivers/`) against the Slack Web API — `auth.test` (verify + workspace metadata), `conversations.list` (channel picker), and `chat.postMessage` (send). Transport and `ok:false` API failures surface as a domain `MessagingApiException`; the bot token is stored encrypted at rest.

@@ -67,4 +67,18 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Metrics
+    |--------------------------------------------------------------------------
+    |
+    | Controls Prometheus-compatible scrape targets. Each enabled target is
+    | fetched on the scheduler and its samples are ingested into metric_samples.
+    |
+    */
+
+    'metrics' => [
+        'scrape_timeout' => env('METRICS_SCRAPE_TIMEOUT', 10),
+    ],
+
 ];

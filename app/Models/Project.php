@@ -189,6 +189,26 @@ class Project extends Model
     }
 
     /**
+     * Get the metric samples ingested for this project.
+     *
+     * @return HasMany<MetricSample, $this>
+     */
+    public function metricSamples(): HasMany
+    {
+        return $this->hasMany(MetricSample::class);
+    }
+
+    /**
+     * Get the Prometheus scrape targets registered for this project.
+     *
+     * @return HasMany<MetricTarget, $this>
+     */
+    public function metricTargets(): HasMany
+    {
+        return $this->hasMany(MetricTarget::class);
+    }
+
+    /**
      * Get the API keys issued for this project.
      *
      * @return HasMany<ApiKey, $this>

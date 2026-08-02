@@ -42,7 +42,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Deliverable | Description |
 |-------------|-------------|
 | Log Aggregation | Ingest, store, search, and filter application logs |
-| Queue Monitoring | Job queue visibility, job inspection, retry failed jobs |
+| Queue Monitoring | Job queue visibility, job inspection, retry failed jobs — metrics ingested from any queue (Laravel, Bull, RQ, Kafka) via the metrics API, decoupled from Atlas's own Redis |
 | Notifications | Multi-channel alerting (email, Slack, webhook) with configurable rules |
 | Alert Rules | Threshold-based alerts tied to monitoring and queue metrics |
 | Realtime Updates | WebSocket-powered live updates for dashboards and logs |
@@ -59,8 +59,11 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 |-------------|-------------|
 | Deployment Tracking | Record deployments with metadata (commit, environment, status) |
 | Deployment History | Timeline view with rollback indicators |
-| Custom Metrics | Ingest and store application-defined metrics |
-| Metric Dashboards | Configurable charts and time-range selectors |
+| Custom Metrics | Ingest and store application-defined metrics — ✅ delivered (Phase 16) agentless push endpoint (POST counters/gauges/histograms) plus Prometheus-compatible scrape source |
+| Metric Dashboards | Configurable charts and time-range selectors — ✅ delivered (Phase 16) |
+| Resource Monitoring | Host and container CPU, memory, disk, and network metrics via Prometheus scrape (node_exporter, cAdvisor, app `/metrics`) |
+| Request Monitoring | Per-endpoint request counts, status codes, and latency derived from access logs (agent) or injected middleware |
+| Advanced Check Types | TCP, TLS/certificate-expiry, DNS, and HTTP-with-expectations health checks beyond plain HTTP |
 | API Key Management | Issue, rotate, and revoke API keys per project — ✅ delivered (Phase 14) |
 | API Usage Tracking | Request counts and rate limiting per key — ✅ delivered (Phase 14) |
 
@@ -80,6 +83,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | GitHub Integration | Link projects to repositories, surface commit and PR context |
 | Slack Integration | Send notifications and alerts to Slack channels — ✅ delivered (Phase 15, driver framework ready for Discord/Telegram) |
 | Integration Framework | Extensible interface for adding new integrations |
+| Atlas Agent (atlas-agent) | Optional single binary that runs beside any project — tails stdout/log files, reads access logs, collects resource stats, and pushes logs, metrics, and request data to Atlas APIs with zero app-code injection |
 
 ---
 
@@ -146,13 +150,24 @@ These are exploratory goals. They are not committed and will be scoped based on 
 
 ---
 
+## Cross-Cutting: Stack-Independent Monitoring
+
+Atlas treats every monitored project as a black box, regardless of framework (Laravel, Node, Python, Go, static sites). This principle guides every monitoring deliverable.
+
+- **Agentless-first**: Atlas is push-based by design — apps (or a sidecar) POST to its REST APIs. Only health checks are outbound (Atlas pings the target).
+- **Zero-injection**: Health checks, deployments, incidents, and webhooks need no app changes. Logs, request, and resource monitoring work via the optional `atlas-agent`, so no project code or package is required.
+- **Prometheus-compatible**: Resource and custom metrics reuse the Prometheus ecosystem (node_exporter, cAdvisor, app `/metrics`) rather than reinventing collection.
+- **Mapped in this roadmap**: resource + request monitoring and advanced check types (v0.3), `atlas-agent` + integration framework (v0.4), queue decoupling (v0.2).
+
+---
+
 ## Milestone Status
 
 | Version | Status　　　　　　| Notes |
 | ---------| -------------------| -------|
 | v0.1    | 🔵 In Development | MVP   |
-| v0.2    | ⚪ Planned　　　　 |       |
-| v0.3    | ⚪ Planned　　　　 |       |
+| v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates pending |
+| v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring planned |
 | v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |
