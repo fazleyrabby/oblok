@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     oniguruma-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql pdo_mysql bcmath gd zip opcache
+RUN docker-php-ext-install pdo pdo_pgsql pdo_mysql bcmath gd zip opcache pcntl posix
 
 # Install the Redis extension for queues, cache, and sessions
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
