@@ -8,7 +8,9 @@
                 <p class="text-xs text-gray-400 mt-1">Real-time log ingestion & error inspector</p>
             </div>
             <div class="flex items-center gap-3">
-                <button type="button" @click="autoRefresh = !autoRefresh"
+                <button type="button"
+                        x-data="{ autoRefresh: true, init() { setInterval(() => { if (this.autoRefresh) window.location.reload(); }, 10000); } }"
+                        @click="autoRefresh = !autoRefresh"
                         :class="autoRefresh ? 'text-emerald-400 border-emerald-800' : 'text-gray-400 border-gray-800'"
                         class="text-xs font-semibold px-3 py-1.5 rounded-lg border bg-gray-900 uppercase tracking-wider transition">
                     <span x-text="autoRefresh ? 'Live: ON' : 'Live: OFF'"></span>
@@ -20,7 +22,7 @@
         </div>
     </x-slot>
 
-    <div class="space-y-6" x-data="logStream" @poll.window="autoRefresh && window.location.reload()">
+    <div class="space-y-6">
         <!-- Search & Filter Controls Bar -->
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm">
             <div class="flex items-center justify-between mb-3">
@@ -122,19 +124,4 @@
             @endif
         </div>
     </div>
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('logStream', () => ({
-                autoRefresh: true,
-                init() {
-                    setInterval(() => {
-                        if (this.autoRefresh) {
-                            window.location.reload();
-                        }
-                    }, 10000);
-                },
-            }));
-        });
-    </script>
 </x-app-layout>
