@@ -98,12 +98,12 @@ services:
     build: ./oblok-agent
     restart: unless-stopped
     environment:
-      ATLAS_URL: http://your-oblok:8081
-      ATLAS_API_KEY: ${ATLAS_API_KEY}
-      ATLAS_PROJECT_ID: ${ATLAS_PROJECT_ID}
-      ATLAS_AGENT_NAME: my-app-agent
-      ATLAS_LOG_FILES: /var/log/app/laravel.log
-      ATLAS_ACCESS_LOG: /var/log/nginx/access.log
+      OBLOK_URL: http://your-oblok:8081
+      OBLOK_API_KEY: ${OBLOK_API_KEY}
+      OBLOK_PROJECT_ID: ${OBLOK_PROJECT_ID}
+      OBLOK_AGENT_NAME: my-app-agent
+      OBLOK_LOG_FILES: /var/log/app/laravel.log
+      OBLOK_ACCESS_LOG: /var/log/nginx/access.log
     volumes:
       - ./storage/logs:/var/log/app:ro
       - /var/log/nginx:/var/log/nginx:ro
@@ -119,9 +119,9 @@ The agent starts at the end of each file, survives log rotation, and only reads 
 Run it locally without Docker:
 
 ```bash
-ATLAS_URL=... ATLAS_API_KEY=... ATLAS_PROJECT_ID=... \
-ATLAS_LOG_FILES=/srv/app/storage/logs/laravel.log \
-ATLAS_ACCESS_LOG=/var/log/nginx/access.log \
+OBLOK_URL=... OBLOK_API_KEY=... OBLOK_PROJECT_ID=... \
+OBLOK_LOG_FILES=/srv/app/storage/logs/laravel.log \
+OBLOK_ACCESS_LOG=/var/log/nginx/access.log \
 php oblok-agent/bin/oblok-agent
 ```
 
