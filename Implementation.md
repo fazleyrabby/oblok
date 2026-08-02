@@ -193,6 +193,20 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 13
+
+GitHub Integration
+
+Built on the Phase 12 scheduler foundation:
+
+- github_integrations, github_commits, and github_pull_requests tables; one integration per project with encrypted access tokens
+- GitHubApiService (app/Services/GitHub/) REST client with typed commit/PR data objects and domain exceptions; base URL configurable for GitHub Enterprise
+- ConnectGitHubIntegration validates the repository and detects the default branch; SyncGitHubData upserts commit/PR snapshots; DisconnectGitHubIntegration removes the integration
+- SyncGitHubDataJob (queued, retried) and SyncAllGitHubIntegrationsJob scheduled every 15 minutes
+- manageIntegrations ability (Owner/Admin) and GitHubIntegrationPolicy; web + API v1 routes with connect/sync/disconnect and commits/pull-requests listing
+- GitHub views with connect form, repository summary, recent-commit and open-PR context, sync/disconnect actions; sidebar navigation entry
+- Pest unit + feature coverage for the API client, encryption, connect/sync/disconnect, and authorization (177 passing tests)
+
 Phase 12
 
 Scheduler Monitoring

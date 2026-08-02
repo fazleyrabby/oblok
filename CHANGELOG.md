@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 13 — GitHub Integration (v0.4)
+- **Database & Models**: Created `github_integrations` (`2026_08_02_000015_create_github_integrations_table.php`), `github_commits` (`..._000016`), and `github_pull_requests` (`..._000017`) migrations. Built `GitHubIntegration`, `GitHubCommit`, and `GitHubPullRequest` Eloquent models (one integration per project) with access tokens encrypted at rest.
+- **API Client**: Built `GitHubApiService` (`app/Services/GitHub/`) — a Laravel HTTP client for the GitHub REST API with typed `GitHubCommitData`/`GitHubPullRequestData` value objects and a domain `GitHubApiException`. The base URL is configurable for GitHub Enterprise (`GITHUB_API_URL`).
+- **Actions & Jobs**: Built `ConnectGitHubIntegration` (validates the repository and detects the default branch), `SyncGitHubData` (upserts commit/PR snapshots), and `DisconnectGitHubIntegration`. Added `SyncGitHubDataJob` (queued, retried) and `SyncAllGitHubIntegrationsJob` scheduled every 15 minutes via `routes/console.php`.
+- **Controllers & Routes**: Built Web and REST API V1 `GitHubIntegrationController` (index/store/sync/destroy plus commits and pull-requests listing endpoints). Added nested `projects/{project}/github` routes (web + `api/v1`).
+- **Validation & Authorization**: Added `StoreGitHubIntegrationRequest` (validates `owner/name` repository format and token). Added `manageIntegrations` ability for Owner/Admin roles and `GitHubIntegrationPolicy`.
+- **API Resources**: Added `GitHubIntegrationResource`, `GitHubCommitResource`, and `GitHubPullRequestResource` with consistent JSON envelopes.
+- **Views & UI**: Built the GitHub integration Blade view (`resources/views/github/`) with a connect form, repository summary, recent-commit and open-PR context cards, and sync/disconnect actions. Added GitHub to the sidebar navigation.
+- **Configuration**: Added `atlas.github` config block (`api_url`, `timeout`) and matching `.env.example` entries.
+- **Testing**: Added Pest unit tests (`tests/Unit/GitHubIntegrationTest.php`) and feature tests (`tests/Feature/Integrations/`) covering the API client, encryption, connect/sync/disconnect, and authorization (**177 total passing tests**, 565 assertions).
+
 #### Phase 12 — Scheduler Monitoring (v0.4)
 - **Database & Models**: Created `scheduled_tasks` (`2026_08_02_000012_create_scheduled_tasks_table.php`) and `task_runs` (`2026_08_02_000013_create_task_runs_table.php`) migrations. Built `ScheduledTask` and `TaskRun` Eloquent models with UUID keys, plus `TaskRunStatus` enum (running/success/failed/missed/skipped) with labels and colors.
 - **Cron Scheduling**: `ScheduledTask::calculateNextRun()` computes the next execution using `dragonmantank/cron-expression`, honoring the task timezone. `recordRun()` records a completed run and advances the schedule; `markMissed()` records a missed run and advances past the current time.

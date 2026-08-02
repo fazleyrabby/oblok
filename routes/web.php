@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;
+use App\Http\Controllers\Web\GitHubIntegrationController;
 use App\Http\Controllers\Web\IncidentController;
 use App\Http\Controllers\Web\LogController;
 use App\Http\Controllers\Web\NotificationChannelController;
@@ -55,6 +56,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('projects.scheduled-tasks', ScheduledTaskController::class)->parameters(['scheduled-tasks' => 'scheduledTask']);
         Route::post('projects/{project}/scheduled-tasks/{scheduledTask}/runs', [ScheduledTaskController::class, 'recordRun'])->name('projects.scheduled-tasks.runs');
     });
+
+    Route::get('projects/{project}/github', [GitHubIntegrationController::class, 'index'])->name('projects.github.index');
+    Route::post('projects/{project}/github', [GitHubIntegrationController::class, 'store'])->name('projects.github.store');
+    Route::post('projects/{project}/github/sync', [GitHubIntegrationController::class, 'sync'])->name('projects.github.sync');
+    Route::delete('projects/{project}/github', [GitHubIntegrationController::class, 'destroy'])->name('projects.github.destroy');
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

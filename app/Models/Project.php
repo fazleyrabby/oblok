@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -165,6 +166,16 @@ class Project extends Model
     public function scheduledTasks(): HasMany
     {
         return $this->hasMany(ScheduledTask::class);
+    }
+
+    /**
+     * Get the GitHub integration linked to this project.
+     *
+     * @return HasOne<GitHubIntegration, $this>
+     */
+    public function githubIntegration(): HasOne
+    {
+        return $this->hasOne(GitHubIntegration::class);
     }
 
     /**

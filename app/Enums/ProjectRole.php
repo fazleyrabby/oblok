@@ -44,6 +44,7 @@ enum ProjectRole: string
                 'manageDeployments',
                 'manageWebhooks',
                 'manageScheduler',
+                'manageIntegrations',
             ],
             self::Admin => [
                 'view',

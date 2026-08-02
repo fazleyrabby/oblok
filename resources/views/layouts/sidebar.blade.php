@@ -25,7 +25,7 @@
     </div>
 
     <!-- Navigation Items -->
-    <div class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+    <div class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-6">
         <!-- Core Section -->
         <div>
             <div x-show="!sidebarCollapsed" class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -154,6 +154,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <span x-show="!sidebarCollapsed" class="ml-3">Scheduler</span>
+                </a>
+
+                <a href="{{ $navProject ? route('projects.github.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.github.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">GitHub</span>
                 </a>
 
                 <a href="{{ $navProject ? route('projects.members.index', $navProject) : route('projects.index') }}"

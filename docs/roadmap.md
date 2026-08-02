@@ -153,6 +153,6 @@ These are exploratory goals. They are not committed and will be scoped based on 
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | ⚪ Planned　　　　 |       |
 | v0.3    | ⚪ Planned　　　　 |       |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12) |
+| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |

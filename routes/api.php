@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AlertEventController;
 use App\Http\Controllers\Api\V1\AlertRuleController;
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
+use App\Http\Controllers\Api\V1\GitHubIntegrationController;
 use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
 use App\Http\Controllers\Api\V1\NotificationChannelController;
@@ -113,4 +114,11 @@ Route::prefix('v1')->middleware('auth')->group(function () {
             ]);
         Route::post('projects/{project}/scheduled-tasks/{scheduledTask}/runs', [ScheduledTaskController::class, 'recordRun'])->name('api.v1.projects.scheduled-tasks.runs');
     });
+
+    Route::get('projects/{project}/github', [GitHubIntegrationController::class, 'index'])->name('api.v1.projects.github.index');
+    Route::post('projects/{project}/github', [GitHubIntegrationController::class, 'store'])->name('api.v1.projects.github.store');
+    Route::get('projects/{project}/github/commits', [GitHubIntegrationController::class, 'commits'])->name('api.v1.projects.github.commits');
+    Route::get('projects/{project}/github/pull-requests', [GitHubIntegrationController::class, 'pullRequests'])->name('api.v1.projects.github.pull-requests');
+    Route::post('projects/{project}/github/sync', [GitHubIntegrationController::class, 'sync'])->name('api.v1.projects.github.sync');
+    Route::delete('projects/{project}/github', [GitHubIntegrationController::class, 'destroy'])->name('api.v1.projects.github.destroy');
 });
