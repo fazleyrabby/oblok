@@ -74,6 +74,16 @@ class Project extends Model
     }
 
     /**
+     * Get the log entries ingested for this project.
+     *
+     * @return HasMany<LogEntry, $this>
+     */
+    public function logs(): HasMany
+    {
+        return $this->hasMany(LogEntry::class)->latest('created_at');
+    }
+
+    /**
      * Scope a query to only include active (non-archived) projects.
      *
      * @param  Builder<$this>  $query

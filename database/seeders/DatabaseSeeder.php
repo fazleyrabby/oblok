@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Deployment;
 use App\Models\HealthCheckResult;
+use App\Models\LogEntry;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\User;
@@ -64,6 +65,10 @@ class DatabaseSeeder extends Seeder
             'status' => 'successful',
         ]);
 
+        LogEntry::factory()->count(15)->create([
+            'project_id' => $project1->id,
+        ]);
+
         // Seed demo project 2
         $project2 = Project::factory()->create([
             'user_id' => $user->id,
@@ -100,6 +105,10 @@ class DatabaseSeeder extends Seeder
             'commit_message' => 'fix(ui): synchronize sidebar collapse state with main layout container',
             'author' => 'Fazley Rabbi',
             'status' => 'successful',
+        ]);
+
+        LogEntry::factory()->count(15)->create([
+            'project_id' => $project2->id,
         ]);
 
         // Seed demo project 3

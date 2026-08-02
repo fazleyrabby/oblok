@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
+use App\Http\Controllers\Api\V1\LogController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\QueueController;
 use App\Http\Controllers\Api\V1\ServiceController;
@@ -34,6 +35,11 @@ Route::prefix('v1')->middleware('auth')->group(function () {
     Route::apiResource('projects.deployments', DeploymentController::class)->only(['index', 'show'])->names([
         'index' => 'api.v1.projects.deployments.index',
         'show' => 'api.v1.projects.deployments.show',
+    ]);
+
+    Route::apiResource('projects.logs', LogController::class)->only(['index', 'store'])->names([
+        'index' => 'api.v1.projects.logs.index',
+        'store' => 'api.v1.projects.logs.store',
     ]);
 
     Route::get('queues/metrics', [QueueController::class, 'metrics'])->name('api.v1.queues.metrics');
