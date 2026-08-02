@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+#### Phase 6 — Queue Monitoring & Horizon Integration (v0.2)
+- **Laravel Horizon**: Installed and configured `laravel/horizon` package (`config/horizon.php`). Registered `viewHorizon` gate in `app/Providers/HorizonServiceProvider.php`.
+- **Metrics Action**: Created `GetQueueMetricsAction` (`app/Actions/Queues/GetQueueMetricsAction.php`) aggregating pending jobs, failed jobs, Redis master supervisor status, and recent exception logs.
+- **Controllers & API**: Built Web (`app/Http/Controllers/Web/QueueController.php`) and REST API V1 (`app/Http/Controllers/Api/V1/QueueController.php`) controllers.
+- **Blade & Sidebar**: Built queue monitoring dashboard (`resources/views/queues/index.blade.php`) and enabled "Queues & Workers" navigation item in dark sidebar layout.
+- **Testing**: Added Pest feature tests (`tests/Feature/Queues/QueueMonitoringTest.php`) verifying queue metrics, Horizon gate authorization, and API payloads (**60 total passing tests**, 205 assertions).
+
+#### Phase 5 — Deployment Tracking & Webhook Processing (v0.2)
+- **Database & Models**: Created `deployments` migration (`2026_08_02_000002_create_deployments_table.php`) and `Deployment` Eloquent model with UUID keys, soft deletes, and environment scopes.
+- **Webhook Receiver**: Implemented `ProcessDeploymentWebhook` action (`app/Actions/Deployments/ProcessDeploymentWebhook.php`) parsing GitHub, Vercel, and Railway CI/CD payload metadata.
+- **Controllers & Views**: Built `DeploymentWebhookController` (`POST /api/v1/webhooks/deployments/{project:slug}`), Web controller, and deployment history timeline Blade views (`resources/views/deployments/`).
+- **Testing**: Added Pest unit and feature tests (`tests/Unit/DeploymentTest.php`, `tests/Feature/Deployments/*`).
+
+---
+
 ## [v0.1.0] - 2026-08-02 — Milestone v0.1 Foundation Release
 
 ### Added

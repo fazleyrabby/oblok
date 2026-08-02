@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\ProjectController;
+use App\Http\Controllers\Api\V1\QueueController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,6 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         'index' => 'api.v1.projects.deployments.index',
         'show' => 'api.v1.projects.deployments.show',
     ]);
+
+    Route::get('queues/metrics', [QueueController::class, 'metrics'])->name('api.v1.queues.metrics');
 });

@@ -62,6 +62,15 @@
                     </svg>
                     <span x-show="!sidebarCollapsed" class="ml-3">Services</span>
                 </a>
+
+                <a href="{{ route('queues.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('queues.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Queues & Workers</span>
+                </a>
             </nav>
         </div>
 

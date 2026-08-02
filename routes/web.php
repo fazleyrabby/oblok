@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\ProjectController;
+use App\Http\Controllers\Web\QueueController;
 use App\Http\Controllers\Web\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('projects/{project}/services/{service}/ping', [ServiceController::class, 'ping'])->name('projects.services.ping');
 
     Route::resource('projects.deployments', DeploymentController::class)->only(['index', 'show']);
+
+    Route::get('/queues', QueueController::class)->name('queues.index');
 });
 
 require __DIR__.'/auth.php';
