@@ -27,7 +27,9 @@ class GitHubIntegrationController extends Controller
         $commits = $integration?->commits()->limit(15)->get();
         $pullRequests = $integration?->pullRequests()->limit(15)->get();
 
-        return view('github.index', compact('project', 'integration', 'commits', 'pullRequests'));
+        $projects = $this->accessibleProjects();
+
+        return view('github.index', compact('projects', 'project', 'integration', 'commits', 'pullRequests'));
     }
 
     /**

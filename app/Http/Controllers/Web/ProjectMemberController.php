@@ -25,7 +25,9 @@ class ProjectMemberController extends Controller
 
         $members = $project->members;
 
-        return view('projects.members', compact('project', 'members'));
+        $projects = $this->accessibleProjects();
+
+        return view('projects.members', compact('projects', 'project', 'members'));
     }
 
     /**

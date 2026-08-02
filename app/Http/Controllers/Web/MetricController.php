@@ -26,7 +26,9 @@ class MetricController extends Controller
         $names = $project->metricSamples()->distinct()->orderBy('name')->pluck('name');
         $targets = $project->metricTargets()->latest()->get();
 
-        return view('metrics.index', compact('project', 'names', 'targets'));
+        $projects = $this->accessibleProjects();
+
+        return view('metrics.index', compact('projects', 'project', 'names', 'targets'));
     }
 
     /**

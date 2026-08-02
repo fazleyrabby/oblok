@@ -22,7 +22,9 @@ class IncidentController extends Controller
 
         $incidents = $project->incidents()->paginate(15);
 
-        return view('incidents.index', compact('project', 'incidents'));
+        $projects = $this->accessibleProjects();
+
+        return view('incidents.index', compact('projects', 'project', 'incidents'));
     }
 
     /**

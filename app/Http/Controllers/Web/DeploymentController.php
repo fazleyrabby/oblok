@@ -18,7 +18,9 @@ class DeploymentController extends Controller
 
         $deployments = $project->deployments()->paginate(15);
 
-        return view('deployments.index', compact('project', 'deployments'));
+        $projects = $this->accessibleProjects();
+
+        return view('deployments.index', compact('projects', 'project', 'deployments'));
     }
 
     /**

@@ -22,7 +22,9 @@ class ServiceController extends Controller
 
         $services = $project->services()->with('healthCheckResults')->latest()->get();
 
-        return view('services.index', compact('project', 'services'));
+        $projects = $this->accessibleProjects();
+
+        return view('services.index', compact('projects', 'project', 'services'));
     }
 
     /**

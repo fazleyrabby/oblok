@@ -21,7 +21,9 @@ class AlertEventController extends Controller
             ->latest('triggered_at')
             ->paginate(15);
 
-        return view('alerts.index', compact('project', 'events'));
+        $projects = $this->accessibleProjects();
+
+        return view('alerts.index', compact('projects', 'project', 'events'));
     }
 
     /**

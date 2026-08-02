@@ -22,7 +22,9 @@ class WebhookCallController extends Controller
         $webhookCalls = $project->webhookCalls()
             ->paginate(15);
 
-        return view('webhooks.index', compact('project', 'webhookCalls'));
+        $projects = $this->accessibleProjects();
+
+        return view('webhooks.index', compact('projects', 'project', 'webhookCalls'));
     }
 
     /**

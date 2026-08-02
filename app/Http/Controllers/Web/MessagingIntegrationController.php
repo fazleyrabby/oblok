@@ -39,7 +39,9 @@ class MessagingIntegrationController extends Controller
             }
         }
 
-        return view('messaging.index', compact('project', 'integration', 'channels', 'channelError'));
+        $projects = $this->accessibleProjects();
+
+        return view('messaging.index', compact('projects', 'project', 'integration', 'channels', 'channelError'));
     }
 
     /**

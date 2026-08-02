@@ -24,7 +24,9 @@ class ScheduledTaskController extends Controller
             ->with('runs')
             ->paginate(15);
 
-        return view('scheduled-tasks.index', compact('project', 'scheduledTasks'));
+        $projects = $this->accessibleProjects();
+
+        return view('scheduled-tasks.index', compact('projects', 'project', 'scheduledTasks'));
     }
 
     /**

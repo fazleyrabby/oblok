@@ -1,5 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+    <div class="mb-4">
+        <x-project-switcher :projects="$projects" :current="$project" :route="'projects.incidents.index'" />
+    </div>
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="font-semibold text-xl text-gray-100 leading-tight">

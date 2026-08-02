@@ -21,7 +21,9 @@ class NotificationChannelController extends Controller
 
         $channels = $project->notificationChannels;
 
-        return view('notification-channels.index', compact('project', 'channels'));
+        $projects = $this->accessibleProjects();
+
+        return view('notification-channels.index', compact('projects', 'project', 'channels'));
     }
 
     /**

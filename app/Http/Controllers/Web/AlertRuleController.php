@@ -21,7 +21,9 @@ class AlertRuleController extends Controller
 
         $alertRules = $project->alertRules()->with('channels')->latest()->get();
 
-        return view('alert-rules.index', compact('project', 'alertRules'));
+        $projects = $this->accessibleProjects();
+
+        return view('alert-rules.index', compact('projects', 'project', 'alertRules'));
     }
 
     /**

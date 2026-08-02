@@ -22,7 +22,9 @@ class ApiKeyController extends Controller
 
         $keys = $project->apiKeys()->latest()->get();
 
-        return view('api-keys.index', compact('project', 'keys'));
+        $projects = $this->accessibleProjects();
+
+        return view('api-keys.index', compact('projects', 'project', 'keys'));
     }
 
     /**
