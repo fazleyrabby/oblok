@@ -22,7 +22,9 @@
 /public/storage
 
 # Vite & Node Build Artifacts
-/public/build
+# Note: /public/build is committed intentionally so self-hosted deploys
+# ship with a working frontend (no npm build step required).
+#/public/build
 /public/hot
 npm-debug.log*
 yarn-debug.log*
