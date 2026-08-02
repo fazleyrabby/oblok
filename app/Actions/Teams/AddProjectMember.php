@@ -31,6 +31,6 @@ class AddProjectMember
             $user->id => ['role' => $role],
         ]);
 
-        return $user;
+        return $project->members()->where('users.id', $user->id)->first();
     }
 }

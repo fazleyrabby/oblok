@@ -5,15 +5,18 @@ namespace App\Policies;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\User;
+use App\Policies\Concerns\ResolvesProjectMembership;
 
 class ServicePolicy
 {
+    use ResolvesProjectMembership;
+
     /**
      * Determine whether the user can view any services under the project.
      */
     public function viewAny(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project) !== null;
     }
 
     /**
@@ -21,7 +24,7 @@ class ServicePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        return $service->project->user_id === $user->id;
+        return $this->memberRole($user, $service->project) !== null;
     }
 
     /**
@@ -29,7 +32,7 @@ class ServicePolicy
      */
     public function create(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project)?->can('manageServices') ?? false;
     }
 
     /**
@@ -37,7 +40,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        return $service->project->user_id === $user->id;
+        return $this->memberRole($user, $service->project)?->can('manageServices') ?? false;
     }
 
     /**
@@ -45,6 +48,6 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service): bool
     {
-        return $service->project->user_id === $user->id;
+        return $this->memberRole($user, $service->project)?->can('manageServices') ?? false;
     }
 }

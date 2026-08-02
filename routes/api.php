@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AlertEventController;
+use App\Http\Controllers\Api\V1\AlertRuleController;
 use App\Http\Controllers\Api\V1\DeploymentController;
 use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\IncidentController;
 use App\Http\Controllers\Api\V1\LogController;
+use App\Http\Controllers\Api\V1\NotificationChannelController;
+use App\Http\Controllers\Api\V1\NotificationDeliveryController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ProjectMemberController;
 use App\Http\Controllers\Api\V1\QueueController;
@@ -48,16 +52,41 @@ Route::prefix('v1')->middleware('auth')->group(function () {
     ]);
     Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('api.v1.projects.incidents.resolve');
 
-    Route::apiResource('projects.members', ProjectMemberController::class)->only(['index', 'store', 'destroy'])->names([
-        'index' => 'api.v1.projects.members.index',
-        'store' => 'api.v1.projects.members.store',
-        'destroy' => 'api.v1.projects.members.destroy',
-    ]);
+    Route::scopeBindings()->group(function () {
+        Route::apiResource('projects.members', ProjectMemberController::class)->only(['index', 'store', 'update', 'destroy'])->names([
+            'index' => 'api.v1.projects.members.index',
+            'store' => 'api.v1.projects.members.store',
+            'update' => 'api.v1.projects.members.update',
+            'destroy' => 'api.v1.projects.members.destroy',
+        ]);
+    });
 
     Route::apiResource('projects.logs', LogController::class)->only(['index', 'store'])->names([
         'index' => 'api.v1.projects.logs.index',
         'store' => 'api.v1.projects.logs.store',
     ]);
+
+    Route::apiResource('projects.notification-channels', NotificationChannelController::class)->names([
+        'index' => 'api.v1.projects.notification-channels.index',
+        'store' => 'api.v1.projects.notification-channels.store',
+        'show' => 'api.v1.projects.notification-channels.show',
+        'update' => 'api.v1.projects.notification-channels.update',
+        'destroy' => 'api.v1.projects.notification-channels.destroy',
+    ]);
+
+    Route::apiResource('projects.alert-rules', AlertRuleController::class)->names([
+        'index' => 'api.v1.projects.alert-rules.index',
+        'store' => 'api.v1.projects.alert-rules.store',
+        'show' => 'api.v1.projects.alert-rules.show',
+        'update' => 'api.v1.projects.alert-rules.update',
+        'destroy' => 'api.v1.projects.alert-rules.destroy',
+    ]);
+
+    Route::get('projects/{project}/alerts', [AlertEventController::class, 'index'])->name('api.v1.projects.alerts.index');
+    Route::get('projects/{project}/alerts/{alertEvent}', [AlertEventController::class, 'show'])->name('api.v1.projects.alerts.show');
+    Route::get('projects/{project}/alerts/deliveries', [NotificationDeliveryController::class, 'index'])->name('api.v1.projects.alerts.deliveries.index');
+    Route::post('projects/{project}/alerts/deliveries/{delivery}/acknowledge', [NotificationDeliveryController::class, 'acknowledge'])->name('api.v1.projects.alerts.acknowledge');
+    Route::post('projects/{project}/alerts/deliveries/{delivery}/snooze', [NotificationDeliveryController::class, 'snooze'])->name('api.v1.projects.alerts.snooze');
 
     Route::get('queues/metrics', [QueueController::class, 'metrics'])->name('api.v1.queues.metrics');
 });

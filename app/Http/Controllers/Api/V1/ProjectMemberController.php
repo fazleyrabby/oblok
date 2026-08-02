@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Teams\AddProjectMember;
 use App\Actions\Teams\RemoveProjectMember;
+use App\Actions\Teams\UpdateProjectMemberRole;
+use App\Enums\ProjectRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectMemberRequest;
+use App\Http\Requests\UpdateProjectMemberRequest;
 use App\Http\Resources\ProjectMemberResource;
 use App\Models\Project;
 use App\Models\User;
@@ -38,11 +41,21 @@ class ProjectMemberController extends Controller
     }
 
     /**
+     * Update a team member's role.
+     */
+    public function update(UpdateProjectMemberRequest $request, Project $project, User $member, UpdateProjectMemberRole $updateRole): ProjectMemberResource
+    {
+        $updateRole->handle($project, $member, $request->enum('role', ProjectRole::class), $request->user());
+
+        return new ProjectMemberResource($project->members()->where('users.id', $member->id)->first());
+    }
+
+    /**
      * Remove a member from project team.
      */
     public function destroy(Project $project, User $member, RemoveProjectMember $removeMember): Response
     {
-        $this->authorize('update', $project);
+        $this->authorize('manageMembers', $project);
 
         $removeMember->handle($project, $member);
 

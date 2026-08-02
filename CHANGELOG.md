@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 10 — Alerting & Notifications (v0.4)
+- **Database & Models**: Created migrations for `alert_rules`, `notification_channels`, `alert_rule_channel`, `alert_events`, and `notification_deliveries`. Built `AlertRule`, `NotificationChannel`, `AlertEvent`, `NotificationDelivery`, and `AlertRuleChannel` (typed pivot with `recipient_filter`) Eloquent models, plus `AlertMetric`, `AlertComparison`, `AlertSeverity`, `DeliveryStatus`, and `NotificationChannelType` enums.
+- **Metric Sources**: Implemented `MetricSourceRegistry` and pluggable metric sources for `ServiceHealth`, `QueueBacklog`, `DeploymentStatus`, and `IncidentOpened`, producing `MetricReading` values with context.
+- **Actions & Jobs**: Built `DispatchAlertRule` (creates alert events and mail/webhook deliveries, respects cooldown and recipient filters) and `DeliverNotification` queued job. Added `EvaluateAlertRulesJob` scheduled to run every minute via `routes/console.php`.
+- **Controllers & Routes**: Built Web and REST API V1 controllers for alert rules, notification channels, alert events, and delivery acknowledge/snooze. Added nested `projects/{project}/alerts/*`, `alert-rules`, and `notification-channels` routes (web + `api/v1`), with delivery actions scoped to `{project}/{delivery}`.
+- **Validation & Authorization**: Added `StoreAlertRuleRequest`, `UpdateAlertRuleRequest`, `StoreNotificationChannelRequest`, `UpdateNotificationChannelRequest`, and `SnoozeNotificationDeliveryRequest`. Added `manageAlerts` ability for Owner/Admin roles and `AlertRulePolicy`, `NotificationChannelPolicy`, `AlertEventPolicy`.
+- **API Resources**: Added `AlertRuleResource`, `NotificationChannelResource`, `AlertEventResource`, and `NotificationDeliveryResource` with consistent JSON envelopes.
+- **Views & UI**: Built Blade views for alert rules (index/create/edit), notification channels (index/create/edit), and alerts center (index/show) with acknowledge/snooze actions. Added Alerts, Alert Rules, and Notification Channels to the sidebar and mobile navigation.
+- **Security**: Notification channel credentials stored encrypted at rest via `encrypted_config`; `recipient_filter` restricted to valid project roles; deliveries scoped to project.
+- **Testing**: Added Pest unit tests (`tests/Unit/AlertRuleTest.php`) and feature tests (`tests/Feature/Alerts/`) covering evaluation, cooldowns, dispatch, CRUD authorization, scheduler trigger, encryption, and delivery acknowledge/snooze (**131 total passing tests**, 393 assertions).
+
 #### Phase 9 — Team Members & Role Authorization (v0.3)
 - **Database & Relationships**: Created `project_members` pivot table migration (`2026_08_02_000005_create_project_members_table.php`). Added `members(): BelongsToMany` on `Project` and `memberProjects(): BelongsToMany` on `User` models with `role` attributes.
 - **Actions**: Built `AddProjectMember` (`app/Actions/Teams/AddProjectMember.php`) and `RemoveProjectMember` (`app/Actions/Teams/RemoveProjectMember.php`) actions.

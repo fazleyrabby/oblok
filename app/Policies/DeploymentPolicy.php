@@ -5,15 +5,18 @@ namespace App\Policies;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\User;
+use App\Policies\Concerns\ResolvesProjectMembership;
 
 class DeploymentPolicy
 {
+    use ResolvesProjectMembership;
+
     /**
      * Determine whether the user can view any deployments for the project.
      */
     public function viewAny(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project) !== null;
     }
 
     /**
@@ -21,7 +24,7 @@ class DeploymentPolicy
      */
     public function view(User $user, Deployment $deployment): bool
     {
-        return $deployment->project->user_id === $user->id;
+        return $this->memberRole($user, $deployment->project) !== null;
     }
 
     /**
@@ -29,6 +32,6 @@ class DeploymentPolicy
      */
     public function create(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project)?->can('manageDeployments') ?? false;
     }
 }

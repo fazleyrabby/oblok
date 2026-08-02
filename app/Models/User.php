@@ -45,11 +45,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the projects where the user is a team member.
      *
-     * @return BelongsToMany<Project, $this>
+     * @return BelongsToMany<Project, $this, ProjectMember, 'pivot'>
      */
     public function memberProjects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'project_members')
+            ->using(ProjectMember::class)
             ->withPivot('role')
             ->withTimestamps();
     }

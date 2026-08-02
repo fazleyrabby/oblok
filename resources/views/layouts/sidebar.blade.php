@@ -2,8 +2,8 @@
     $navProject = \App\Models\Project::where('user_id', Auth::id())->active()->first();
 @endphp
 
-<aside :class="{ 'transition-all duration-200 ease-in-out': animated, 'w-20': sidebarCollapsed, 'w-64': !sidebarCollapsed }"
-       class="hidden md:flex flex-col fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 text-gray-300 z-30">
+<aside :class="{ 'transition-all duration-200 ease-in-out': animated, 'w-20 max-md:-translate-x-full': sidebarCollapsed, 'w-64': !sidebarCollapsed }"
+       class="flex flex-col fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 text-gray-300 z-30">
 
     <!-- Top Logo & Collapse Toggle -->
     <div class="h-16 flex items-center justify-between px-4 border-b border-gray-800">
@@ -93,6 +93,15 @@
                     </svg>
                     <span x-show="!sidebarCollapsed" class="ml-3">Queues & Workers</span>
                 </a>
+
+                <a href="{{ $navProject ? route('projects.alerts.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.alerts.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Alerts</span>
+                </a>
             </nav>
         </div>
 
@@ -109,6 +118,33 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
                     <span x-show="!sidebarCollapsed" class="ml-3">Incidents</span>
+                </a>
+
+                <a href="{{ $navProject ? route('projects.alert-rules.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.alert-rules.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Alert Rules</span>
+                </a>
+
+                <a href="{{ $navProject ? route('projects.notification-channels.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.notification-channels.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Notification Channels</span>
+                </a>
+
+                <a href="{{ $navProject ? route('projects.members.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.members.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Team Members</span>
                 </a>
 
                 <a href="{{ route('profile.edit') }}"

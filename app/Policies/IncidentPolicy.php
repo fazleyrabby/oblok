@@ -5,15 +5,18 @@ namespace App\Policies;
 use App\Models\Incident;
 use App\Models\Project;
 use App\Models\User;
+use App\Policies\Concerns\ResolvesProjectMembership;
 
 class IncidentPolicy
 {
+    use ResolvesProjectMembership;
+
     /**
      * Determine whether the user can view any incidents for the project.
      */
     public function viewAny(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project) !== null;
     }
 
     /**
@@ -21,7 +24,7 @@ class IncidentPolicy
      */
     public function view(User $user, Incident $incident): bool
     {
-        return $incident->project->user_id === $user->id;
+        return $this->memberRole($user, $incident->project) !== null;
     }
 
     /**
@@ -29,7 +32,7 @@ class IncidentPolicy
      */
     public function create(User $user, Project $project): bool
     {
-        return $project->user_id === $user->id;
+        return $this->memberRole($user, $project)?->can('manageIncidents') ?? false;
     }
 
     /**
@@ -37,7 +40,7 @@ class IncidentPolicy
      */
     public function update(User $user, Incident $incident): bool
     {
-        return $incident->project->user_id === $user->id;
+        return $this->memberRole($user, $incident->project)?->can('manageIncidents') ?? false;
     }
 
     /**
@@ -45,6 +48,6 @@ class IncidentPolicy
      */
     public function delete(User $user, Incident $incident): bool
     {
-        return $incident->project->user_id === $user->id;
+        return $this->memberRole($user, $incident->project)?->can('manageIncidents') ?? false;
     }
 }

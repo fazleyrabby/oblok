@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\ProjectMember;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -10,7 +11,7 @@ use Illuminate\Support\Carbon;
 /**
  * @mixin User
  *
- * @property object{role?: string, created_at?: Carbon} $pivot
+ * @property ProjectMember $pivot
  */
 class ProjectMemberResource extends JsonResource
 {
@@ -23,8 +24,10 @@ class ProjectMemberResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->pivot->role ?? 'operator',
-            'added_at' => isset($this->pivot->created_at) ? $this->pivot->created_at->toIso8601String() : null,
+            'role' => $this->pivot->role->value,
+            'added_at' => isset($this->pivot->created_at)
+                ? Carbon::make($this->pivot->created_at)->toIso8601String()
+                : null,
         ];
     }
 }

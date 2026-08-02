@@ -97,13 +97,64 @@ class Project extends Model
     /**
      * Get the team members assigned to this project.
      *
-     * @return BelongsToMany<User, $this>
+     * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>
      */
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'project_members')
+            ->using(ProjectMember::class)
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the notification channels configured for this project.
+     *
+     * @return HasMany<NotificationChannel, $this>
+     */
+    public function notificationChannels(): HasMany
+    {
+        return $this->hasMany(NotificationChannel::class);
+    }
+
+    /**
+     * Get the alert rules configured for this project.
+     *
+     * @return HasMany<AlertRule, $this>
+     */
+    public function alertRules(): HasMany
+    {
+        return $this->hasMany(AlertRule::class);
+    }
+
+    /**
+     * Get the alert events fired for this project.
+     *
+     * @return HasMany<AlertEvent, $this>
+     */
+    public function alertEvents(): HasMany
+    {
+        return $this->hasMany(AlertEvent::class);
+    }
+
+    /**
+     * Get the notification deliveries created for this project.
+     *
+     * @return HasMany<NotificationDelivery, $this>
+     */
+    public function notificationDeliveries(): HasMany
+    {
+        return $this->hasMany(NotificationDelivery::class);
+    }
+
+    /**
+     * Resolve a single member of this project by user id (for scoped route binding).
+     *
+     * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>
+     */
+    public function member(): BelongsToMany
+    {
+        return $this->members();
     }
 
     /**

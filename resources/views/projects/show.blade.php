@@ -8,16 +8,23 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">slug: {{ $project->slug }}</p>
             </div>
             <div class="flex items-center space-x-3">
-                <a href="{{ route('projects.edit', $project) }}" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-xs font-semibold uppercase tracking-widest hover:bg-gray-300">
-                    Edit Project
-                </a>
-                <form method="POST" action="{{ route('projects.archive', $project) }}" class="inline">
-                    @csrf
-                    <input type="hidden" name="archive" value="{{ $project->isArchived() ? '0' : '1' }}">
-                    <button type="submit" class="px-3 py-1.5 bg-amber-500 text-white rounded text-xs font-semibold uppercase tracking-widest hover:bg-amber-600">
-                        {{ $project->isArchived() ? 'Unarchive' : 'Archive' }}
-                    </button>
-                </form>
+                @can('view', $project)
+                    <a href="{{ route('projects.members.index', $project) }}" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-xs font-semibold uppercase tracking-widest hover:bg-gray-300">
+                        Team Members
+                    </a>
+                @endcan
+                @can('update', $project)
+                    <a href="{{ route('projects.edit', $project) }}" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-xs font-semibold uppercase tracking-widest hover:bg-gray-300">
+                        Edit Project
+                    </a>
+                    <form method="POST" action="{{ route('projects.archive', $project) }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="archive" value="{{ $project->isArchived() ? '0' : '1' }}">
+                        <button type="submit" class="px-3 py-1.5 bg-amber-500 text-white rounded text-xs font-semibold uppercase tracking-widest hover:bg-amber-600">
+                            {{ $project->isArchived() ? 'Unarchive' : 'Archive' }}
+                        </button>
+                    </form>
+                @endcan
             </div>
         </div>
     </x-slot>

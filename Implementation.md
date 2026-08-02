@@ -176,12 +176,6 @@ No API authentication.
 
 No Sanctum.
 
-No Teams.
-
-No Multi-tenancy.
-
-No Roles & Permissions.
-
 Public registration should remain disabled unless documentation later requires it.
 
 Authentication includes only:
@@ -199,42 +193,36 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
-<<< Replace this section each time >>>
+Phase 10
 
-Example
+Alerting & Notifications
 
-Phase 0
+Built on top of the Phase 9.5 role authorization cleanup:
 
-Bootstrap Laravel project.
+- Alert rules with metrics (ServiceHealth, QueueBacklog, DeploymentStatus, IncidentOpened), comparisons, thresholds, consecutive-failure counts, severity, cooldowns, and enabled toggles
+- Notification channels (mail/webhook/Slack) with encrypted credentials and role-based recipient filters
+- Metric source registry producing point-in-time readings evaluated against rules
+- EvaluateAlertRulesJob scheduled every minute; DispatchAlertRule action honoring cooldown and recipient filters; DeliverNotification queued job
+- Alert events center with per-delivery acknowledge/snooze (web + API v1)
+- manageAlerts ability (Owner/Admin) and dedicated policies; delivery actions scoped to project
+- Pest unit + feature coverage for evaluation, dispatch, scheduling, CRUD, authorization, encryption, acknowledge/snooze (131 passing tests)
 
-Tasks
+Phase 9.5
 
-- Install Laravel
-- Configure Docker
-- Configure PostgreSQL
-- Configure Redis
-- Configure Pest
-- Configure Pint
-- Configure PHPStan
-- Configure GitHub Actions
+Team Members — Role Authorization Cleanup
 
-OR
-
-Phase 1
-
-Authentication
+Phase 9 shipped project membership (add/remove members with roles) but did not enforce role-based authorization. This phase fixes that:
 
 Tasks
 
-- Install Breeze
-- Configure authentication
-- Build login flow
-- Profile
-- Password reset
-
-Only build the current phase.
-
-Ignore every future feature.
+- Add ProjectRole enum (Owner/Admin/Operator/Viewer) with ability matrix
+- Add ProjectMember pivot model and ResolvesProjectMembership policy trait
+- Rewrite ProjectPolicy, ServicePolicy, DeploymentPolicy, IncidentPolicy, LogEntryPolicy to enforce roles
+- Add UpdateProjectMemberRole action and UpdateProjectMemberRequest (PATCH role)
+- Scope member routes to the project (non-members 404)
+- Fix ProjectMemberResource pivot loading bug
+- Add Team Members UI discoverability (project page + sidebar) and role-change dropdown
+- Write Pest tests for the full role × ability matrix and API/web role update
 
 ========================================================
 IMPLEMENTATION RULES

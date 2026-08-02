@@ -38,6 +38,7 @@ redis_data/
 Thumbs.db
 .idea/
 .vscode/
+.commandcode/
 *.sublime-project
 *.sublime-workspace
 

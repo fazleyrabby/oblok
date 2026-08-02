@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Web;
 
 use App\Actions\Teams\AddProjectMember;
 use App\Actions\Teams\RemoveProjectMember;
+use App\Actions\Teams\UpdateProjectMemberRole;
+use App\Enums\ProjectRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectMemberRequest;
+use App\Http\Requests\UpdateProjectMemberRequest;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -37,11 +40,22 @@ class ProjectMemberController extends Controller
     }
 
     /**
+     * Update team member role.
+     */
+    public function update(UpdateProjectMemberRequest $request, Project $project, User $member, UpdateProjectMemberRole $updateRole): RedirectResponse
+    {
+        $updateRole->handle($project, $member, $request->enum('role', ProjectRole::class), $request->user());
+
+        return redirect()->route('projects.members.index', $project)
+            ->with('status', 'Team member role updated.');
+    }
+
+    /**
      * Remove team member.
      */
     public function destroy(Project $project, User $member, RemoveProjectMember $removeMember): RedirectResponse
     {
-        $this->authorize('update', $project);
+        $this->authorize('manageMembers', $project);
 
         $removeMember->handle($project, $member);
 

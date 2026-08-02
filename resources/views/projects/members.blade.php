@@ -23,23 +23,27 @@
         <!-- Add Member Card -->
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
             <h3 class="text-base font-semibold text-white mb-4">Add Team Member</h3>
-            <form method="POST" action="{{ route('projects.members.store', $project) }}" class="flex flex-col sm:flex-row items-center gap-3">
-                @csrf
-                <div class="flex-1 w-full">
-                    <x-text-input id="email" name="email" type="email" class="w-full" placeholder="colleague@atlas.dev" required />
-                    <x-input-error class="mt-1" :messages="$errors->get('email')" />
-                </div>
-                <div class="w-full sm:w-48">
-                    <select name="role" class="w-full py-2 px-3 bg-gray-950 border border-gray-800 text-gray-200 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="operator">Operator (Read/Write)</option>
-                        <option value="admin">Admin (Full Control)</option>
-                        <option value="viewer">Viewer (Read Only)</option>
-                    </select>
-                </div>
-                <x-primary-button class="w-full sm:w-auto">
-                    Add Member
-                </x-primary-button>
-            </form>
+            @can('manageMembers', $project)
+                <form method="POST" action="{{ route('projects.members.store', $project) }}" class="flex flex-col sm:flex-row items-center gap-3">
+                    @csrf
+                    <div class="flex-1 w-full">
+                        <x-text-input id="email" name="email" type="email" class="w-full" placeholder="colleague@atlas.dev" required />
+                        <x-input-error class="mt-1" :messages="$errors->get('email')" />
+                    </div>
+                    <div class="w-full sm:w-48">
+                        <select name="role" class="w-full py-2 px-3 bg-gray-950 border border-gray-800 text-gray-200 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="operator">Operator (Read/Write)</option>
+                            <option value="admin">Admin (Full Control)</option>
+                            <option value="viewer">Viewer (Read Only)</option>
+                        </select>
+                    </div>
+                    <x-primary-button class="w-full sm:w-auto">
+                        Add Member
+                    </x-primary-button>
+                </form>
+            @else
+                <p class="text-sm text-gray-400">Only owners and admins can add team members.</p>
+            @endcan
         </div>
 
         <!-- Members Table -->
@@ -74,18 +78,34 @@
                                 <td class="py-3 px-4 font-semibold text-gray-200">{{ $member->name }}</td>
                                 <td class="py-3 px-4 text-xs text-gray-400">{{ $member->email }}</td>
                                 <td class="py-3 px-4">
-                                    <span class="px-2.5 py-1 text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full uppercase">
-                                        {{ $member->pivot->role }}
-                                    </span>
+                                    @can('manageMembers', $project)
+                                        <form method="POST" action="{{ route('projects.members.update', [$project, $member]) }}" class="flex items-center gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="role" onchange="this.form.submit()" class="py-1 px-2 bg-gray-950 border border-gray-800 text-gray-200 text-xs rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                                <option value="admin" @selected($member->pivot->role?->value === 'admin')>Admin</option>
+                                                <option value="operator" @selected($member->pivot->role?->value === 'operator')>Operator</option>
+                                                <option value="viewer" @selected($member->pivot->role?->value === 'viewer')>Viewer</option>
+                                            </select>
+                                        </form>
+                                    @else
+                                        <span class="px-2.5 py-1 text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full uppercase">
+                                            {{ $member->pivot->role?->label() ?? $member->pivot->role }}
+                                        </span>
+                                    @endcan
                                 </td>
                                 <td class="py-3 px-4 text-right">
-                                    <form method="POST" action="{{ route('projects.members.destroy', [$project, $member]) }}" onsubmit="return confirm('Remove team member?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-xs font-semibold text-red-400 hover:text-red-300">
-                                            Remove
-                                        </button>
-                                    </form>
+                                    @can('manageMembers', $project)
+                                        <form method="POST" action="{{ route('projects.members.destroy', [$project, $member]) }}" onsubmit="return confirm('Remove team member?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-xs font-semibold text-red-400 hover:text-red-300">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-xs text-gray-500">—</span>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

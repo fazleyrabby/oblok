@@ -4,9 +4,12 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Policies\Concerns\ResolvesProjectMembership;
 
 class ProjectPolicy
 {
+    use ResolvesProjectMembership;
+
     /**
      * Determine whether the user can view any models.
      */
@@ -20,7 +23,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->memberRole($user, $project) !== null;
     }
 
     /**
@@ -36,7 +39,15 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->memberRole($user, $project)?->can('update') ?? false;
+    }
+
+    /**
+     * Determine whether the user can manage project membership.
+     */
+    public function manageMembers(User $user, Project $project): bool
+    {
+        return $this->memberRole($user, $project)?->can('manageMembers') ?? false;
     }
 
     /**
@@ -44,7 +55,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->memberRole($user, $project)?->can('delete') ?? false;
     }
 
     /**
@@ -52,7 +63,7 @@ class ProjectPolicy
      */
     public function restore(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->memberRole($user, $project)?->can('restore') ?? false;
     }
 
     /**
@@ -60,6 +71,6 @@ class ProjectPolicy
      */
     public function forceDelete(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->memberRole($user, $project)?->can('forceDelete') ?? false;
     }
 }
