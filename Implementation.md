@@ -193,6 +193,19 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 17
+
+Atlas Agent
+
+Built on the Phase 16 metrics foundation:
+
+- atlas-agent/ standalone, dependency-free PHP CLI shipper; stack-independent, no app changes required
+- LogLineParser (JSON / Laravel text / plain lines) + FileTailer (tail-from-end, rotation-safe) → logs API
+- AccessLogParser (nginx combined) + RequestMetricsAggregator → http_requests_total + http_request_duration_seconds to the metrics API
+- Config from env (ATLAS_URL/API_KEY/PROJECT_ID/LOG_FILES/ACCESS_LOG); ApiClient uses Bearer API keys
+- Dockerfile + docker-compose sidecar example with read-only mounts; bin/atlas-agent CLI with --log/--access-log overrides
+- Pest unit coverage for parsers, aggregator, config, and tailer rotation (252 passing tests)
+
 Phase 16
 
 Custom Metrics, Prometheus Scrape & Dashboards

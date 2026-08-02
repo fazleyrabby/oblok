@@ -83,7 +83,7 @@ Atlas uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | GitHub Integration | Link projects to repositories, surface commit and PR context |
 | Slack Integration | Send notifications and alerts to Slack channels — ✅ delivered (Phase 15, driver framework ready for Discord/Telegram) |
 | Integration Framework | Extensible interface for adding new integrations |
-| Atlas Agent (atlas-agent) | Optional single binary that runs beside any project — tails stdout/log files, reads access logs, collects resource stats, and pushes logs, metrics, and request data to Atlas APIs with zero app-code injection |
+| Atlas Agent (atlas-agent) | Optional single binary that runs beside any project — ✅ delivered (Phase 17) tails stdout/log files, reads access logs, collects resource stats, and pushes logs, metrics, and request data to Atlas APIs with zero app-code injection |
 
 ---
 
@@ -168,6 +168,6 @@ Atlas treats every monitored project as a black box, regardless of framework (La
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates pending |
 | v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring planned |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15) |
+| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); Atlas Agent delivered (Phase 17) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |

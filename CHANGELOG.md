@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 17 — Atlas Agent (v0.4)
+- **Standalone Agent**: Built `atlas-agent/` — a dependency-free, stack-independent PHP CLI shipper that runs beside any project and pushes data to Atlas. No changes to the monitored application are required.
+- **Log Shipping**: `LogLineParser` handles JSON log lines, Laravel text lines (`[2026-08-02 12:00:00] production.ERROR: message`), and plain lines; `FileTailer` tails from the end, survives rotation/truncation, and forwards each line to `POST /api/v1/projects/{project}/logs`.
+- **Request Metrics**: `AccessLogParser` parses nginx combined-format lines (optional `$request_time`); `RequestMetricsAggregator` aggregates per-minute `http_requests_total{method,status}` and `http_request_duration_seconds{method,status}` samples to the metrics API.
+- **Config & Client**: `Config` reads env (`ATLAS_URL`, `ATLAS_API_KEY`, `ATLAS_PROJECT_ID`, `ATLAS_LOG_FILES`, `ATLAS_ACCESS_LOG`, poll/flush intervals); `ApiClient` authenticates with a Bearer API key. `bin/atlas-agent` supports `--log=` and `--access-log=` overrides.
+- **Deployment**: `Dockerfile` (php:8.3-cli-alpine + curl) and `docker-compose.atlas-agent.yml` sidecar example with read-only log/nginx mounts.
+- **Testing**: Added Pest unit tests (`tests/Unit/Agent/AgentTest.php`) covering the parsers, aggregator, config, and tailer rotation behavior (**252 total passing tests**, 782 assertions).
+
 #### Phase 16 — Custom Metrics, Prometheus Scrape & Dashboards (v0.3)
 - **Database & Models**: Created `metric_samples` and `metric_targets` migrations (`2026_08_02_000020_create_metric_tables.php`). Built `MetricSample` (labels, value, recorded_at) and `MetricTarget` (Prometheus scrape targets) Eloquent models with UUID keys and project relations.
 - **Ingestion**: Built `IngestMetrics` action (batched, cross-project) exposed as `POST /api/v1/projects/{project}/metrics`. Accepts counters/gauges with optional labels and timestamps; works with session auth or Bearer API keys.
