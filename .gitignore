@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# IDE / Antigravity
+.idea/
+.vscode/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Docker
+postgres_data/
+redis_data/
+
+# Environment
+.env
+
+# Vendor
+vendor/

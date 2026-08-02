@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: atlas_test
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_pgsql, redis, bcmath
+          coverage: none
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          composer install --prefer-dist --no-progress
+
+      - name: Copy Environment Configuration
+        run: |
+          cd backend
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Formatting Check (Pint)
+        run: |
+          cd backend
+          ./vendor/bin/pint --test
+
+      - name: Run Static Analysis (PHPStan)
+        run: |
+          cd backend
+          ./vendor/bin/phpstan analyse
+
+      - name: Run Pest Tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: atlas_test
+          DB_USERNAME: atlas
+          DB_PASSWORD: secret
+          REDIS_HOST: 127.0.0.1
+        run: |
+          cd backend
+          ./vendor/bin/pest
