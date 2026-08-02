@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\HealthCheckResult;
 use App\Models\Project;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,8 +25,8 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Seed demo projects
-        Project::factory()->create([
+        // Seed demo project 1
+        $project1 = Project::factory()->create([
             'user_id' => $user->id,
             'name' => 'Payment Processing Service',
             'slug' => 'payment-processing-service',
@@ -37,7 +39,23 @@ class DatabaseSeeder extends Seeder
             'archived_at' => null,
         ]);
 
-        Project::factory()->create([
+        $service1 = Service::factory()->create([
+            'project_id' => $project1->id,
+            'name' => 'Stripe Webhook Listener',
+            'type' => 'http',
+            'target' => 'https://httpbin.org/status/200',
+            'check_interval' => 60,
+            'status' => 'healthy',
+        ]);
+
+        HealthCheckResult::factory()->count(10)->create([
+            'service_id' => $service1->id,
+            'status' => 'healthy',
+            'status_code' => 200,
+        ]);
+
+        // Seed demo project 2
+        $project2 = Project::factory()->create([
             'user_id' => $user->id,
             'name' => 'Authentication & Identity API',
             'slug' => 'authentication-identity-api',
@@ -50,6 +68,22 @@ class DatabaseSeeder extends Seeder
             'archived_at' => null,
         ]);
 
+        $service2 = Service::factory()->create([
+            'project_id' => $project2->id,
+            'name' => 'OAuth2 Token Endpoint',
+            'type' => 'http',
+            'target' => 'https://httpbin.org/get',
+            'check_interval' => 60,
+            'status' => 'healthy',
+        ]);
+
+        HealthCheckResult::factory()->count(10)->create([
+            'service_id' => $service2->id,
+            'status' => 'healthy',
+            'status_code' => 200,
+        ]);
+
+        // Seed demo project 3
         Project::factory()->archived()->create([
             'user_id' => $user->id,
             'name' => 'Legacy Mailer Engine v1',

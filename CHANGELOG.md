@@ -7,16 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [v0.1.0] - 2026-08-02 — Milestone v0.1 Foundation Release
 
 ### Added
+
+#### Phase 4 — Service Health Monitoring (v0.1)
+- **Database & Models**: Created `services` and `health_check_results` migrations (`2026_08_02_000001_create_services_table.php`). Built `Service` and `HealthCheckResult` Eloquent models with UUID keys, soft deletes, and status scopes.
+- **Monitoring Driver**: Implemented `HttpHealthChecker` (`app/Services/Monitoring/HttpHealthChecker.php`) measuring precise millisecond response duration and expected HTTP status codes.
+- **Action & Events**: Built `PingServiceHealth` action (`app/Actions/Services/PingServiceHealth.php`) and `ServiceStatusChanged` event.
+- **Queued Monitoring**: Added `CheckServiceHealthJob` and `DispatchScheduledHealthChecksJob` queued background jobs. Scheduled automated checks every minute in `routes/console.php`.
+- **Controllers & API**: Built Web (`app/Http/Controllers/Web/ServiceController.php`) and REST API V1 (`app/Http/Controllers/Api/V1/ServiceController.php`) controllers with `StoreServiceRequest` and `UpdateServiceRequest` validation.
+- **Charts & Views**: Integrated **ApexCharts** response latency graph visualization in `resources/views/services/show.blade.php`, with healthy/failing status badges and manual probe trigger buttons.
+- **Testing**: Added Pest unit tests (`tests/Unit/ServiceTest.php`) and feature tests (`tests/Feature/Services/`) verifying HTTP probe checks, scheduled queue jobs, and CRUD authorization (**50 total passing tests**, 160 assertions).
 
 #### Phase 3 — Dashboard Overview & UI Shell (v0.1)
 - **UI Shell**: Built persistent collapsible left sidebar navigation component (`resources/views/layouts/sidebar.blade.php`) with dark mode default theme styling, group sections, user profile footer, and bracket key (`[`) toggle shortcut.
 - **Dashboard Action**: Added `GetDashboardOverview` Action (`app/Actions/Dashboard/GetDashboardOverview.php`) to aggregate project counts, active status, uptime metrics, and recent activity timelines.
 - **Web Controller**: Added `Web\DashboardController` (`app/Http/Controllers/Web/DashboardController.php`) to render the operational overview dashboard.
 - **Dashboard Interface**: Redesigned `resources/views/dashboard.blade.php` with 4 top summary metric cards (Total Projects, Active Projects, System Uptime, Open Incidents), ApexChart visualization container placeholder, and recent active projects data table.
-- **Testing**: Added Pest feature tests (`tests/Feature/DashboardTest.php`) verifying authenticated dashboard access, operational metrics data payload, and guest redirects (41 total passing tests, 139 assertions).
+- **Testing**: Added Pest feature tests (`tests/Feature/DashboardTest.php`) verifying authenticated dashboard access, operational metrics data payload, and guest redirects.
 
 #### Phase 2 — Project Management (v0.1)
 - **Database & Models**: Created `projects` migration with UUID primary keys, user foreign keys, unique slugs, metadata JSONB column, and soft deletes (`app/Models/Project.php`).
