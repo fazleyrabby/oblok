@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 11 — Webhook Inspector (v0.4)
+- **Database & Models**: Created `webhook_calls` migration (`2026_08_02_000011_create_webhook_calls_table.php`) and `WebhookCall` Eloquent model with UUID keys, JSON casts, `ofEvent` scope, and a `webhookCalls()` relation on `Project`.
+- **Capture**: Built `CaptureWebhook` action (`app/Actions/Webhooks/CaptureWebhook.php`). The deployment webhook receiver (`DeploymentWebhookController`) now records every incoming request — method, URL, headers, full payload, source IP, user agent, response status, and processing time.
+- **Replay**: Built `ReplayWebhook` action (`app/Actions/Webhooks/ReplayWebhook.php`) that re-processes a captured deployment payload into a new deployment, incrementing `replay_count` and stamping `replayed_at`. Unsupported events are rejected with a clear error.
+- **Controllers & Routes**: Built Web and REST API V1 `WebhookCallController` (index/show/replay). Added nested `projects/{project}/webhooks` routes (web + `api/v1`) with `{webhookCall}` scoped binding.
+- **Authorization**: Added `manageWebhooks` ability for Owner/Admin/Operator roles and `WebhookCallPolicy` (view for any member, replay for operators and above).
+- **API Resource**: Added `WebhookCallResource` with full payload/header details included on show/replay responses.
+- **Views & UI**: Built webhook inspector Blade views (`resources/views/webhooks/`) with event badges, delivery metadata, pretty-printed payload/header JSON, and a replay action. Added Webhooks to the sidebar navigation.
+- **Testing**: Added Pest unit tests (`tests/Unit/WebhookCallTest.php`) and feature tests (`tests/Feature/Webhooks/WebhookInspectorTest.php`) covering capture, listing, authorization, replay, and unsupported events (**142 total passing tests**, 433 assertions).
+
 #### Phase 10 — Alerting & Notifications (v0.4)
 - **Database & Models**: Created migrations for `alert_rules`, `notification_channels`, `alert_rule_channel`, `alert_events`, and `notification_deliveries`. Built `AlertRule`, `NotificationChannel`, `AlertEvent`, `NotificationDelivery`, and `AlertRuleChannel` (typed pivot with `recipient_filter`) Eloquent models, plus `AlertMetric`, `AlertComparison`, `AlertSeverity`, `DeliveryStatus`, and `NotificationChannelType` enums.
 - **Metric Sources**: Implemented `MetricSourceRegistry` and pluggable metric sources for `ServiceHealth`, `QueueBacklog`, `DeploymentStatus`, and `IncidentOpened`, producing `MetricReading` values with context.

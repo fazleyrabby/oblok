@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ProjectMemberController;
 use App\Http\Controllers\Api\V1\QueueController;
 use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\WebhookCallController;
 use Illuminate\Support\Facades\Route;
 
 // Public Webhooks endpoint
@@ -89,4 +90,15 @@ Route::prefix('v1')->middleware('auth')->group(function () {
     Route::post('projects/{project}/alerts/deliveries/{delivery}/snooze', [NotificationDeliveryController::class, 'snooze'])->name('api.v1.projects.alerts.snooze');
 
     Route::get('queues/metrics', [QueueController::class, 'metrics'])->name('api.v1.queues.metrics');
+
+    Route::scopeBindings()->group(function () {
+        Route::apiResource('projects.webhooks', WebhookCallController::class)
+            ->parameters(['webhooks' => 'webhookCall'])
+            ->only(['index', 'show'])
+            ->names([
+                'index' => 'api.v1.projects.webhooks.index',
+                'show' => 'api.v1.projects.webhooks.show',
+            ]);
+        Route::post('projects/{project}/webhooks/{webhookCall}/replay', [WebhookCallController::class, 'replay'])->name('api.v1.projects.webhooks.replay');
+    });
 });

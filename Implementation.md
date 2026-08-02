@@ -193,6 +193,19 @@ Keep authentication boring and reliable.
 CURRENT PHASE
 ========================================================
 
+Phase 11
+
+Webhook Inspector
+
+Built on the Phase 10 alerting foundation:
+
+- webhook_calls table capturing every incoming webhook request (method, URL, headers, full payload, IP, user agent, status, processing time)
+- Deployment webhook receiver integrated with CaptureWebhook so deployment deliveries are inspectable
+- ReplayWebhook action re-processes captured deployment payloads into new deployments with replay tracking
+- Webhook inspector views (index + show) with pretty-printed payload/header JSON and replay action
+- manageWebhooks ability (Owner/Admin/Operator) and WebhookCallPolicy; web + API v1 routes with scoped binding
+- Pest unit + feature coverage for capture, listing, authorization, replay, and unsupported events (142 passing tests)
+
 Phase 10
 
 Alerting & Notifications

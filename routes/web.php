@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\ProjectController;
 use App\Http\Controllers\Web\ProjectMemberController;
 use App\Http\Controllers\Web\QueueController;
 use App\Http\Controllers\Web\ServiceController;
+use App\Http\Controllers\Web\WebhookCallController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,6 +45,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('projects/{project}/logs', [LogController::class, 'index'])->name('projects.logs.index');
+
+    Route::scopeBindings()->group(function () {
+        Route::get('projects/{project}/webhooks', [WebhookCallController::class, 'index'])->name('projects.webhooks.index');
+        Route::get('projects/{project}/webhooks/{webhookCall}', [WebhookCallController::class, 'show'])->name('projects.webhooks.show');
+        Route::post('projects/{project}/webhooks/{webhookCall}/replay', [WebhookCallController::class, 'replay'])->name('projects.webhooks.replay');
+    });
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

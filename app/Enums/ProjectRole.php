@@ -42,6 +42,7 @@ enum ProjectRole: string
                 'manageAlerts',
                 'ingestLogs',
                 'manageDeployments',
+                'manageWebhooks',
             ],
             self::Admin => [
                 'view',
@@ -51,12 +52,14 @@ enum ProjectRole: string
                 'manageIncidents',
                 'manageAlerts',
                 'ingestLogs',
+                'manageWebhooks',
             ],
             self::Operator => [
                 'view',
                 'manageServices',
                 'manageIncidents',
                 'ingestLogs',
+                'manageWebhooks',
             ],
             self::Viewer => [
                 'view',

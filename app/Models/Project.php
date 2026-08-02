@@ -148,6 +148,16 @@ class Project extends Model
     }
 
     /**
+     * Get the webhook calls captured for this project.
+     *
+     * @return HasMany<WebhookCall, $this>
+     */
+    public function webhookCalls(): HasMany
+    {
+        return $this->hasMany(WebhookCall::class)->latest('created_at');
+    }
+
+    /**
      * Resolve a single member of this project by user id (for scoped route binding).
      *
      * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>
