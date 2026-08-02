@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Deployment;
 use App\Models\HealthCheckResult;
 use App\Models\Project;
 use App\Models\Service;
@@ -54,6 +55,15 @@ class DatabaseSeeder extends Seeder
             'status_code' => 200,
         ]);
 
+        Deployment::factory()->create([
+            'project_id' => $project1->id,
+            'environment' => 'production',
+            'commit_hash' => 'a40c443b4c8023b8ea1a899cafb4856caa35cafc',
+            'commit_message' => 'feat(services): implement phase 4 service health monitoring',
+            'author' => 'Fazley Rabbi',
+            'status' => 'successful',
+        ]);
+
         // Seed demo project 2
         $project2 = Project::factory()->create([
             'user_id' => $user->id,
@@ -81,6 +91,15 @@ class DatabaseSeeder extends Seeder
             'service_id' => $service2->id,
             'status' => 'healthy',
             'status_code' => 200,
+        ]);
+
+        Deployment::factory()->create([
+            'project_id' => $project2->id,
+            'environment' => 'production',
+            'commit_hash' => '7abb6a2ff840506ba584f6f3f3b8917cdfd334a8',
+            'commit_message' => 'fix(ui): synchronize sidebar collapse state with main layout container',
+            'author' => 'Fazley Rabbi',
+            'status' => 'successful',
         ]);
 
         // Seed demo project 3

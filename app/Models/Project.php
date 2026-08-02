@@ -64,6 +64,16 @@ class Project extends Model
     }
 
     /**
+     * Get the deployments recorded for this project.
+     *
+     * @return HasMany<Deployment, $this>
+     */
+    public function deployments(): HasMany
+    {
+        return $this->hasMany(Deployment::class)->latest('started_at');
+    }
+
+    /**
      * Scope a query to only include active (non-archived) projects.
      *
      * @param  Builder<$this>  $query

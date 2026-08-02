@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\ProjectController;
 use App\Http\Controllers\Web\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('projects.services', ServiceController::class);
     Route::post('projects/{project}/services/{service}/ping', [ServiceController::class, 'ping'])->name('projects.services.ping');
+
+    Route::resource('projects.deployments', DeploymentController::class)->only(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';

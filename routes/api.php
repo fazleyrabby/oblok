@@ -1,9 +1,16 @@
 <?php
 
+use App\Http\Controllers\Api\V1\DeploymentController;
+use App\Http\Controllers\Api\V1\DeploymentWebhookController;
 use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use Illuminate\Support\Facades\Route;
 
+// Public Webhooks endpoint
+Route::post('v1/webhooks/deployments/{project:slug}', DeploymentWebhookController::class)
+    ->name('api.v1.webhooks.deployments');
+
+// Authenticated REST API endpoints
 Route::prefix('v1')->middleware('auth')->group(function () {
     Route::apiResource('projects', ProjectController::class)->names([
         'index' => 'api.v1.projects.index',
@@ -22,4 +29,9 @@ Route::prefix('v1')->middleware('auth')->group(function () {
         'destroy' => 'api.v1.projects.services.destroy',
     ]);
     Route::post('projects/{project}/services/{service}/ping', [ServiceController::class, 'ping'])->name('api.v1.projects.services.ping');
+
+    Route::apiResource('projects.deployments', DeploymentController::class)->only(['index', 'show'])->names([
+        'index' => 'api.v1.projects.deployments.index',
+        'show' => 'api.v1.projects.deployments.show',
+    ]);
 });
