@@ -1,8 +1,8 @@
-<aside x-data="{ collapsed: localStorage.getItem('atlas_sidebar_collapsed') === 'true' }"
-       x-init="$watch('collapsed', val => localStorage.setItem('atlas_sidebar_collapsed', val))"
+<aside x-data="{ collapsed: localStorage.getItem('atlas_sidebar_collapsed') === 'true', animated: false }"
+       x-init="$watch('collapsed', val => localStorage.setItem('atlas_sidebar_collapsed', val)); setTimeout(() => animated = true, 100)"
        @keydown.window.bracket.prevent="collapsed = !collapsed"
-       :class="collapsed ? 'w-20' : 'w-64'"
-       class="hidden md:flex flex-col fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 text-gray-300 transition-all duration-200 ease-in-out z-30">
+       :class="{ 'transition-all duration-200 ease-in-out': animated, 'w-20': collapsed, 'w-64': !collapsed }"
+       class="hidden md:flex flex-col fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 text-gray-300 z-30">
 
     <!-- Top Logo & Collapse Toggle -->
     <div class="h-16 flex items-center justify-between px-4 border-b border-gray-800">
@@ -10,7 +10,7 @@
             <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-sm flex-shrink-0">
                 A
             </div>
-            <span x-show="!collapsed" x-transition.opacity class="font-bold text-lg text-white tracking-tight whitespace-nowrap">
+            <span x-show="!collapsed" class="font-bold text-lg text-white tracking-tight whitespace-nowrap">
                 Atlas
             </span>
         </a>
