@@ -33,16 +33,22 @@ Documents reference each other instead of duplicating content.
 
 ```
 atlas/
-├── backend/              # Laravel application
-├── docker/               # Docker configuration
+├── app/                  # Application code (Actions, Controllers, Models, Events)
+├── bootstrap/            # Application bootstrap configuration
+├── config/               # Application configuration
+├── database/             # Migrations, seeders, factories
+├── docker/               # Docker configuration (Nginx, PHP Dockerfile)
 ├── docs/                 # Project documentation
-├── infrastructure/       # Infrastructure configuration
-├── tests/                # Test suites
+├── resources/            # Views (Blade templates), CSS (Tailwind), JS (Alpine)
+├── routes/               # Route definitions (web.php, api.php, auth.php)
+├── storage/              # Application storage and logs
+├── tests/                # Pest test suites (Feature and Unit)
+├── .github/              # CI workflows (GitHub Actions)
+├── docker-compose.yml    # Root container orchestration
 ├── AGENTS.md             # AI agent engineering guide
-├── CHANGELOG.md          # Release history
 ├── DESIGN.md             # Design system
-├── LICENSE               # Project license
-└── README.md             # Project introduction
+├── README.md             # Project introduction
+└── composer.json         # Composer dependencies
 ```
 
 ---

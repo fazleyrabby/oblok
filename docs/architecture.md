@@ -116,38 +116,33 @@ graph TB
 ## Directory Structure
 
 ```
-backend/
-├── app/
-│   ├── Actions/                  # Single-purpose business use cases
-│   │   ├── Auth/
-│   │   ├── Projects/
-│   │   └── Monitoring/
-│   ├── Enums/                    # Typed Domain Enums
-│   ├── Events/                   # Domain & System Events
+atlas/
+├── app/                  # Single-purpose business actions & domain logic
+│   ├── Actions/          # Actions (Auth, Projects, Monitoring)
+│   ├── Enums/            # Typed Domain Enums
+│   ├── Events/           # Domain & System Events
 │   ├── Http/
-│   │   ├── Controllers/          # Orchestration Controllers
-│   │   ├── Requests/             # Input Validation
-│   │   └── Resources/            # Response Formatting
-│   ├── Jobs/                     # Queued Async Workloads
-│   ├── Listeners/                # Decoupled Event Listeners
-│   ├── Models/                   # Rich Eloquent Domain Models
-│   ├── Notifications/            # User Alerts
-│   ├── Policies/                 # Authorization Policies
-│   └── Services/                 # Drivers & External Integrations
-├── config/
-├── database/
-│   ├── factories/
-│   ├── migrations/
-│   └── seeders/
-├── resources/
-│   └── views/                    # Blade Templates & Components
-├── routes/
-│   ├── api.php
-│   ├── web.php
-│   └── channels.php
-└── tests/
-    ├── Feature/
-    └── Unit/
+│   │   ├── Controllers/  # Thin Controllers
+│   │   ├── Requests/     # Input Validation
+│   │   └── Resources/    # Response Envelopes
+│   ├── Jobs/             # Async Background Workloads
+│   ├── Listeners/        # Event Listeners
+│   ├── Models/           # Rich Eloquent Domain Models
+│   ├── Notifications/    # User & System Alerts
+│   ├── Policies/         # Authorization Policies
+│   └── Services/         # External Drivers & API Clients
+├── config/               # Application Configuration
+├── database/             # Migrations, Seeders, Factories
+├── docker/               # Docker Nginx & PHP Container Config
+├── docs/                 # System Documentation
+├── resources/            # Views (Blade), CSS (Tailwind), JS (Alpine)
+├── routes/               # Route Definitions (web.php, api.php, auth.php)
+├── storage/              # File Storage & Logs
+├── tests/                # Pest Test Suite (Feature & Unit)
+├── composer.json
+├── docker-compose.yml    # Root Container Orchestration
+├── phpstan.neon          # Larastan Static Analysis Config
+└── README.md
 ```
 
 ---

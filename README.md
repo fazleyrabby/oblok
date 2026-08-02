@@ -77,20 +77,25 @@ See [docs/tech-stack.md](docs/tech-stack.md) for detailed rationale and tradeoff
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/atlas.git
-cd atlas
+git clone https://github.com/fazleyrabby/project-atlas.git
+cd project-atlas
+
+# Install PHP & JS dependencies
+composer install
+npm install && npm run build
 
 # Copy environment configuration
 cp .env.example .env
+php artisan key:generate
 
-# Start all services
+# Start Docker containers (optional)
 docker compose up -d
 
 # Run database migrations
-docker compose exec app php artisan migrate
+php artisan migrate
 
-# Access Atlas
-open http://localhost:8080
+# Run Pest tests
+./vendor/bin/pest
 ```
 
 ---

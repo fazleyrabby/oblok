@@ -41,25 +41,18 @@ jobs:
           coverage: none
 
       - name: Install Dependencies
-        run: |
-          cd backend
-          composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
 
       - name: Copy Environment Configuration
         run: |
-          cd backend
           cp .env.example .env
           php artisan key:generate
 
       - name: Run Formatting Check (Pint)
-        run: |
-          cd backend
-          ./vendor/bin/pint --test
+        run: ./vendor/bin/pint --test
 
       - name: Run Static Analysis (PHPStan)
-        run: |
-          cd backend
-          ./vendor/bin/phpstan analyse
+        run: ./vendor/bin/phpstan analyse --memory-limit=512M
 
       - name: Run Pest Tests
         env:
@@ -70,6 +63,4 @@ jobs:
           DB_USERNAME: atlas
           DB_PASSWORD: secret
           REDIS_HOST: 127.0.0.1
-        run: |
-          cd backend
-          ./vendor/bin/pest
+        run: ./vendor/bin/pest
