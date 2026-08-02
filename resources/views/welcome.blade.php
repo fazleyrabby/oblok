@@ -46,8 +46,7 @@
         <main class="flex-1 flex items-center justify-center px-6 py-16 lg:px-8">
             <div class="max-w-4xl text-center space-y-8">
                 <!-- Pill Badge -->
-                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gray-900 border border-gray-800 text-xs font-medium text-indigo-400">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-gray-900 border border-gray-800 text-xs font-medium text-indigo-400">
                     <span>Self-Hosted Developer Operations Platform</span>
                 </div>
 
