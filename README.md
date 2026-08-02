@@ -14,29 +14,30 @@ oblok consolidates these operational concerns into a single, self-hosted platfor
 
 See [docs/vision.md](docs/vision.md) for the full project philosophy.
 
+> Want to connect your own application? See [docs/connect-your-project.md](docs/connect-your-project.md).
+
 ---
 
 ## Features
 
-### Available (MVP)
+### Available
 
 - **Authentication** — Registration, login, password reset, session management.
 - **Project Management** — Organize services by project with metadata and search.
 - **Dashboard** — Per-project operational overview with summary metrics and activity feed.
 - **Service Monitoring** — HTTP health checks with configurable intervals, uptime tracking, and status history.
-
-### Planned
-
-- Log Aggregation
-- Queue Monitoring
-- Notifications and Alerting
-- Deployment Tracking
-- Custom Metrics
-- API Key Management
-- Webhook Inspector
-- Scheduler Monitoring
-- Third-Party Integrations
-- AI-Assisted Operations
+- **Log Aggregation** — Ingestion API + log stream view with levels and search.
+- **Queue Monitoring** — Horizon/Redis-backed queue dashboard.
+- **Deployment Tracking** — Public webhook receiver + deployment timeline.
+- **Incidents** — Manual logging, resolution, and service-failure triggers.
+- **Alerting** — Alert rules, notification channels (mail/webhook/Slack), delivery history.
+- **Webhook Inspector** — Capture, inspect, and replay incoming webhooks.
+- **Scheduler Monitoring** — Cron task tracking and missed-run detection.
+- **Custom Metrics** — Push API, Prometheus-compatible scrape targets, and dashboards.
+- **API Key Management** — Per-project Bearer keys for machine-to-machine access.
+- **GitHub Integration** — Repository context (commits, pull requests).
+- **Messaging Integrations** — Slack via a driver framework (Discord/Telegram ready).
+- **oblok-agent** — Standalone log shipper and request monitor for any stack.
 
 See [docs/roadmap.md](docs/roadmap.md) for the full development timeline.
 
