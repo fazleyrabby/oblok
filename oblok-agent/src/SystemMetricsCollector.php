@@ -58,12 +58,19 @@ class SystemMetricsCollector
             ];
         }
 
-        // 4. CPU Load / Usage
+        // 4. CPU Load & Cores
         $cpuPercent = $this->readCpuUsage();
+        $cpuCores = $this->readCpuCores();
         if ($cpuPercent !== null) {
             $metrics[] = [
                 'name' => 'system_cpu_usage_percent',
                 'value' => $cpuPercent,
+                'labels' => ['type' => 'host', 'cores' => (string) $cpuCores],
+                'timestamp' => $now,
+            ];
+            $metrics[] = [
+                'name' => 'system_cpu_cores',
+                'value' => (float) $cpuCores,
                 'labels' => ['type' => 'host'],
                 'timestamp' => $now,
             ];
@@ -194,6 +201,7 @@ class SystemMetricsCollector
 
         if (self::$lastCpuState === null) {
             self::$lastCpuState = $current;
+
             return null; // Need a second sample to compute delta
         }
 
@@ -216,5 +224,23 @@ class SystemMetricsCollector
         }
 
         return round(($activeDiff / $totalDiff) * 100, 2);
+    }
+
+    /**
+     * Read total CPU core count.
+     */
+    private function readCpuCores(): int
+    {
+        if (is_readable('/proc/cpuinfo')) {
+            $content = @file_get_contents('/proc/cpuinfo');
+            if ($content) {
+                $count = preg_match_all('/^processor\s+:/m', $content);
+                if ($count > 0) {
+                    return $count;
+                }
+            }
+        }
+
+        return 1;
     }
 }

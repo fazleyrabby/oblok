@@ -20,6 +20,7 @@ class QueryResourceMetrics
             'system_memory_usage_percent',
             'container_memory_usage_percent',
             'system_disk_usage_percent',
+            'system_cpu_cores',
         ];
 
         $samples = MetricSample::query()
@@ -32,6 +33,7 @@ class QueryResourceMetrics
         $latestMem = 0.0;
         $latestContainerMem = 0.0;
         $latestDisk = 0.0;
+        $cpuCores = 1;
 
         $seriesData = [
             'cpu' => [],
@@ -45,9 +47,16 @@ class QueryResourceMetrics
             $ts = $sample->recorded_at->timestamp * 1000;
 
             match ($sample->name) {
-                'system_cpu_usage_percent' => (function () use ($val, $ts, &$latestCpu, &$seriesData) {
+                'system_cpu_usage_percent' => (function () use ($sample, $val, $ts, &$latestCpu, &$cpuCores, &$seriesData) {
                     $latestCpu = $val;
+                    $labels = $sample->labels ?? [];
+                    if (isset($labels['cores']) && is_numeric($labels['cores'])) {
+                        $cpuCores = (int) $labels['cores'];
+                    }
                     $seriesData['cpu'][] = ['x' => $ts, 'y' => $val];
+                })(),
+                'system_cpu_cores' => (function () use ($val, &$cpuCores) {
+                    $cpuCores = (int) $val;
                 })(),
                 'system_memory_usage_percent' => (function () use ($val, $ts, &$latestMem, &$seriesData) {
                     $latestMem = $val;
@@ -65,12 +74,32 @@ class QueryResourceMetrics
             };
         }
 
+        // Helper to compute avg & peak
+        $calcStats = function (array $series) {
+            if (empty($series)) {
+                return ['avg' => 0.0, 'peak' => 0.0];
+            }
+            $vals = array_column($series, 'y');
+
+            return [
+                'avg' => round(array_sum($vals) / count($vals), 1),
+                'peak' => round(max($vals), 1),
+            ];
+        };
+
         return [
             'latest' => [
                 'cpu_percent' => $latestCpu,
+                'cpu_cores' => $cpuCores,
                 'memory_percent' => $latestMem,
                 'container_memory_percent' => $latestContainerMem,
                 'disk_percent' => $latestDisk,
+            ],
+            'stats' => [
+                'cpu' => $calcStats($seriesData['cpu']),
+                'memory' => $calcStats($seriesData['memory']),
+                'container_memory' => $calcStats($seriesData['container_memory']),
+                'disk' => $calcStats($seriesData['disk']),
             ],
             'series' => [
                 ['name' => 'Host CPU Usage %', 'data' => $seriesData['cpu']],

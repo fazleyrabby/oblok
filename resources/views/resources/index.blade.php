@@ -27,11 +27,18 @@
             <!-- CPU Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host CPU Load</span>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host CPU Load</span>
+                        <span id="badge-cores" class="ml-1.5 px-1.5 py-0.5 text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded">⚡ 8 CPU Cores</span>
+                    </div>
                     <span id="stat-cpu" class="text-xl font-bold text-indigo-400">0%</span>
                 </div>
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
                     <div id="bar-cpu" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                    <span>avg <strong id="sub-cpu-avg" class="text-gray-400">0%</strong></span>
+                    <span>pk <strong id="sub-cpu-pk" class="text-gray-400">0%</strong></span>
                 </div>
             </div>
 
@@ -44,6 +51,10 @@
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
                     <div id="bar-container-mem" class="bg-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
+                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                    <span>avg <strong id="sub-cmem-avg" class="text-gray-400">0%</strong></span>
+                    <span>pk <strong id="sub-cmem-pk" class="text-gray-400">0%</strong></span>
+                </div>
             </div>
 
             <!-- Host Memory Card -->
@@ -55,6 +66,10 @@
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
                     <div id="bar-mem" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
+                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                    <span>avg <strong id="sub-mem-avg" class="text-gray-400">0%</strong></span>
+                    <span>pk <strong id="sub-mem-pk" class="text-gray-400">0%</strong></span>
+                </div>
             </div>
 
             <!-- Disk Card -->
@@ -65,6 +80,10 @@
                 </div>
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
                     <div id="bar-disk" class="bg-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                    <span>avg <strong id="sub-disk-avg" class="text-gray-400">0%</strong></span>
+                    <span>pk <strong id="sub-disk-pk" class="text-gray-400">0%</strong></span>
                 </div>
             </div>
         </div>
@@ -105,19 +124,30 @@
             if (loaderEl) loaderEl.style.display = 'none';
 
             // Update stats & progress bars
-            const latest = data.latest || { cpu_percent: 0, memory_percent: 0, container_memory_percent: 0, disk_percent: 0 };
+            const latest = data.latest || { cpu_percent: 0, memory_percent: 0, container_memory_percent: 0, disk_percent: 0, cpu_cores: 1 };
+            const stats = data.stats || { cpu: {avg: 0, peak: 0}, memory: {avg: 0, peak: 0}, container_memory: {avg: 0, peak: 0}, disk: {avg: 0, peak: 0} };
             
+            document.getElementById('badge-cores').innerText = `⚡ ${latest.cpu_cores || 1} CPU Cores`;
+
             document.getElementById('stat-cpu').innerText = `${latest.cpu_percent}%`;
             document.getElementById('bar-cpu').style.width = `${Math.min(latest.cpu_percent, 100)}%`;
+            document.getElementById('sub-cpu-avg').innerText = `${stats.cpu.avg}%`;
+            document.getElementById('sub-cpu-pk').innerText = `${stats.cpu.peak}%`;
 
             document.getElementById('stat-container-mem').innerText = `${latest.container_memory_percent}%`;
             document.getElementById('bar-container-mem').style.width = `${Math.min(latest.container_memory_percent, 100)}%`;
+            document.getElementById('sub-cmem-avg').innerText = `${stats.container_memory.avg}%`;
+            document.getElementById('sub-cmem-pk').innerText = `${stats.container_memory.peak}%`;
 
             document.getElementById('stat-mem').innerText = `${latest.memory_percent}%`;
             document.getElementById('bar-mem').style.width = `${Math.min(latest.memory_percent, 100)}%`;
+            document.getElementById('sub-mem-avg').innerText = `${stats.memory.avg}%`;
+            document.getElementById('sub-mem-pk').innerText = `${stats.memory.peak}%`;
 
             document.getElementById('stat-disk').innerText = `${latest.disk_percent}%`;
             document.getElementById('bar-disk').style.width = `${Math.min(latest.disk_percent, 100)}%`;
+            document.getElementById('sub-disk-avg').innerText = `${stats.disk.avg}%`;
+            document.getElementById('sub-disk-pk').innerText = `${stats.disk.peak}%`;
 
             // Render ApexChart
             if (chart) chart.destroy();
