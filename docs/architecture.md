@@ -109,7 +109,7 @@ graph TB
 - **Enums**: Strongly typed domain values (`ServiceStatus`, `CheckType`).
 
 **Infrastructure & Services Layer**
-- **Services / Drivers**: Used strictly when interfacing with external third-party APIs (GitHub, Slack) or when polymorphic drivers exist (e.g., `HealthCheckerInterface` implemented by `HttpHealthChecker` and `PingHealthChecker`).
+- **Services / Drivers**: Used strictly when interfacing with external third-party APIs (GitHub, Slack) or when polymorphic drivers exist (e.g., `HealthCheckerRegistry` resolving `HttpHealthChecker`, `TcpHealthChecker`, `TlsHealthChecker`, and `DnsHealthChecker` implementing `HealthCheckerInterface`).
 
 ---
 
