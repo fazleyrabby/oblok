@@ -11,17 +11,30 @@ class AccessLogParser
      */
     public function parse(string $line): ?array
     {
-        $pattern = '/^(\S+) - (\S+) \[[^\]]+\] "(\S+) ([^"]*)" (\d{3}) (\d+|-) "(?:[^"]*)" "(?:[^"]*)"(?: (\d+\.\d+))?$/';
+        // 1. Standard Nginx combined format with optional request_time float in seconds
+        $nginxPattern = '/^(\S+) - (\S+) \[[^\]]+\] "(\S+) ([^"]*)" (\d{3}) (\d+|-) "(?:[^"]*)" "(?:[^"]*)"(?: (\d+\.\d+))?$/';
 
-        if (! preg_match($pattern, trim($line), $matches)) {
-            return null;
+        if (preg_match($nginxPattern, trim($line), $matches)) {
+            return [
+                'method' => $matches[3],
+                'path' => $matches[4],
+                'status' => (int) $matches[5],
+                'request_time' => isset($matches[7]) && $matches[7] !== '' ? (float) $matches[7] : null,
+            ];
         }
 
-        return [
-            'method' => $matches[3],
-            'path' => $matches[4],
-            'status' => (int) $matches[5],
-            'request_time' => isset($matches[7]) && $matches[7] !== '' ? (float) $matches[7] : null,
-        ];
+        // 2. Traefik access log format: IP - - [date] "METHOD path HTTP/1.1" status bytes "-" "-" count "router@docker" "http://..." duration_ms
+        $traefikPattern = '/^(\S+) - (\S+) \[[^\]]+\] "(\S+) ([^"]*)" (\d{3}) (\d+|-) "(?:[^"]*)" "(?:[^"]*)" \d+ "(?:[^"]*)" "(?:[^"]*)" (\d+)ms$/';
+
+        if (preg_match($traefikPattern, trim($line), $matches)) {
+            return [
+                'method' => $matches[3],
+                'path' => $matches[4],
+                'status' => (int) $matches[5],
+                'request_time' => ((float) $matches[7]) / 1000.0, // Convert ms to seconds
+            ];
+        }
+
+        return null;
     }
 }
