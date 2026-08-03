@@ -2,6 +2,7 @@
 
 namespace App\Actions\Deployments;
 
+use App\Events\DeploymentStatusChanged;
 use App\Models\Deployment;
 use App\Models\Project;
 
@@ -20,7 +21,7 @@ class ProcessDeploymentWebhook
         $environment = $payload['environment'] ?? 'production';
         $status = $payload['status'] ?? 'successful';
 
-        return Deployment::create([
+        $deployment = Deployment::create([
             'project_id' => $project->id,
             'environment' => $environment,
             'commit_hash' => $commitHash,
@@ -31,5 +32,9 @@ class ProcessDeploymentWebhook
             'started_at' => now(),
             'finished_at' => in_array($status, ['successful', 'failed']) ? now() : null,
         ]);
+
+        DeploymentStatusChanged::dispatch($project, $deployment);
+
+        return $deployment;
     }
 }

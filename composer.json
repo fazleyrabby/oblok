@@ -6,10 +6,11 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "fakerphp/faker": "^1.23",
         "php": "^8.3",
+        "fakerphp/faker": "^1.23",
         "laravel/framework": "^13.8",
         "laravel/horizon": "^5.48",
+        "laravel/reverb": "^1.11",
         "laravel/tinker": "^3.0"
     },
     "require-dev": {

@@ -45,7 +45,7 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Queue Monitoring | Job queue visibility, job inspection, retry failed jobs — metrics ingested from any queue (Laravel, Bull, RQ, Kafka) via the metrics API, decoupled from oblok's own Redis |
 | Notifications | Multi-channel alerting (email, Slack, webhook) with configurable rules |
 | Alert Rules | Threshold-based alerts tied to monitoring and queue metrics |
-| Realtime Updates | WebSocket-powered live updates (Laravel Reverb) & auto-refresh streaming for dashboards, request metrics, server resources, and logs |
+| Realtime Updates | WebSocket-powered live updates (Laravel Reverb) & auto-refresh streaming for dashboards, request metrics, server resources, and logs — ✅ delivered (Phase 21) |
 
 ---
 
@@ -166,7 +166,7 @@ oblok treats every monitored project as a black box, regardless of framework (La
 | Version | Status　　　　　　| Notes |
 | ---------| -------------------| -------|
 | v0.1    | 🔵 In Development | MVP   |
-| v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates pending |
+| v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates delivered (Phase 21) |
 | v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring planned |
 | v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); oblok Agent delivered (Phase 17) |
 | v0.5    | ⚪ Planned　　　　 |       |

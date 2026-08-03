@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 21 — Realtime Data Streaming & Auto-Refresh (v0.2)
+- **Laravel Reverb WebSockets**: Installed and configured Reverb as the broadcast driver with authenticated private project channels (`projects.{id}`).
+- **Broadcast Events**: Added `ServiceHealthChanged`, `AlertTriggered`, and `DeploymentStatusChanged` broadcast events dispatched from health checks, alert rules, and deployment webhooks; each carries a rich payload on a per-project channel.
+- **Channel Authorization**: Registered `routes/channels.php` (owner or project member only) and wired it through `bootstrap/app.php`.
+- **Live Stream Indicator**: Added reusable `<x-live-indicator>` component with a pulsing green `Live: ON/OFF` toggle.
+- **Auto-Refresh Polling**: Server Resources and Request Analytics dashboards now refetch their data every 5s while Live is ON — no full page reload.
+- **Frontend Echo Client**: Added `resources/js/realtime.js` with a Laravel Echo (Reverb) client and toast notifications for health/alert/deployment events, injected via `data-project-id` on the layout body.
+- **Environment-Aware Agent** (from resource monitoring work): `SystemMetricsCollector` auto-detects container vs bare-metal, tags every sample, and only reports container RAM inside containers; the dashboard hides the Container RAM card and shows a Host/Container badge accordingly.
+- **Bare-Metal Docs**: Added section 4c with systemd/supervisor setup for non-Dockerized projects.
+- **Testing & Quality**: Added `tests/Feature/Realtime/RealtimeTest.php`; 270 Pest tests, zero PHPStan / Pint errors.
+
 #### Phase 20 — Resource & Server Monitoring (v0.3)
 - **Server Resources Dashboard**: Built `ResourceMonitoringController` and web view (`resources/views/resources/index.blade.php`) under **Observability > Server Resources**.
 - **Container & Host Metrics**: Updated `SystemMetricsCollector` to measure Docker cgroups memory limits (`/sys/fs/cgroup/memory.current` vs `memory.max`) alongside host system RAM, CPU load, and disk utilization.

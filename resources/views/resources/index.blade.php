@@ -10,13 +10,16 @@
                 </h2>
                 <p class="text-xs text-gray-400 mt-1">Host & Container CPU, Memory consumption, and Disk utilization</p>
             </div>
-            <div class="flex rounded-lg overflow-hidden border border-gray-700">
-                @foreach(['1h' => '1H', '6h' => '6H', '24h' => '24H', '7d' => '7D'] as $value => $label)
-                    <button type="button" data-range="{{ $value }}"
-                            class="range-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-white hover:bg-gray-800 transition {{ $value === '24h' ? 'bg-gray-800 text-white' : '' }}">
-                        {{ $label }}
-                    </button>
-                @endforeach
+            <div class="flex items-center gap-3">
+                <x-live-indicator :refresh-ms="5000" />
+                <div class="flex rounded-lg overflow-hidden border border-gray-700">
+                    @foreach(['1h' => '1H', '6h' => '6H', '24h' => '24H', '7d' => '7D'] as $value => $label)
+                        <button type="button" data-range="{{ $value }}"
+                                class="range-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-white hover:bg-gray-800 transition {{ $value === '24h' ? 'bg-gray-800 text-white' : '' }}">
+                            {{ $label }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
     </x-slot>
@@ -215,6 +218,8 @@
                 fetchResources();
             });
         });
+
+        window.addEventListener('live-tick', fetchResources);
 
         fetchResources();
     </script>

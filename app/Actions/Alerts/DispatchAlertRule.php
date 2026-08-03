@@ -5,6 +5,7 @@ namespace App\Actions\Alerts;
 use App\Enums\DeliveryStatus;
 use App\Enums\NotificationChannelType;
 use App\Enums\ProjectRole;
+use App\Events\AlertTriggered;
 use App\Jobs\DeliverNotification;
 use App\Models\AlertEvent;
 use App\Models\AlertRule;
@@ -41,6 +42,8 @@ class DispatchAlertRule
                 'last_triggered_at' => now(),
                 'last_evaluated_at' => now(),
             ]);
+
+            AlertTriggered::dispatch($rule->project, $event);
 
             foreach ($rule->channels as $channel) {
                 if ($channel->type === NotificationChannelType::Mail) {

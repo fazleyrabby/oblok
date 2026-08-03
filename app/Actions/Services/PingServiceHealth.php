@@ -2,6 +2,7 @@
 
 namespace App\Actions\Services;
 
+use App\Events\ServiceHealthChanged;
 use App\Events\ServiceStatusChanged;
 use App\Models\HealthCheckResult;
 use App\Models\Service;
@@ -37,6 +38,7 @@ class PingServiceHealth
 
         if ($previousStatus !== 'unknown' && $previousStatus !== $resultData->status) {
             event(new ServiceStatusChanged($service, $previousStatus, $resultData->status));
+            ServiceHealthChanged::dispatch($service->project, $service, $resultData->status);
         }
 
         return $result;

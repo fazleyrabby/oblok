@@ -14,7 +14,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-900 text-gray-100 min-h-screen">
+    <body class="font-sans antialiased bg-gray-900 text-gray-100 min-h-screen"
+          @php($activeProject = $project ?? request()->route('project'))
+          @if($activeProject) data-project-id="{{ $activeProject->id }}" @endif>
         <div x-data="{ sidebarCollapsed: localStorage.getItem('oblok_sidebar_collapsed') === 'true', animated: false }"
              x-init="$watch('sidebarCollapsed', val => localStorage.setItem('oblok_sidebar_collapsed', val)); setTimeout(() => animated = true, 100)"
              @keydown.window.bracket.prevent="sidebarCollapsed = !sidebarCollapsed"
