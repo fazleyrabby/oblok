@@ -29,6 +29,8 @@ class QueryRequestAnalytics
         // Time series bucket points
         $timeBuckets = [];
 
+        $bucketSeconds = max(1, (int) ceil(($to->timestamp - $from->timestamp) / 120));
+
         foreach ($samples as $sample) {
             $val = (float) $sample->value;
             $totalRequests += $val;
@@ -49,7 +51,7 @@ class QueryRequestAnalytics
 
             $methodCounts[$method] = ($methodCounts[$method] ?? 0) + $val;
 
-            $timestampMs = $sample->recorded_at->timestamp * 1000;
+            $timestampMs = (int) (floor($sample->recorded_at->timestamp / $bucketSeconds) * $bucketSeconds) * 1000;
             if (! isset($timeBuckets[$timestampMs])) {
                 $timeBuckets[$timestampMs] = ['2xx' => 0, '3xx' => 0, '4xx' => 0, '5xx' => 0];
             }
