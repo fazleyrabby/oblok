@@ -39,7 +39,7 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: oblok_worker
-    command: php artisan queue:work redis --queue=monitoring,notifications,broadcasts,default,low --tries=3 --timeout=90
+    command: php artisan horizon
     volumes:
       - .:/var/www/html
     environment:
