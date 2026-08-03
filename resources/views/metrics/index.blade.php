@@ -138,6 +138,17 @@
                     stroke: { curve: 'straight', width: 2 },
                     colors: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
                     xaxis: { type: 'datetime' },
+                    yaxis: {
+                        labels: {
+                            style: { colors: '#9ca3af' },
+                            formatter: val => Number.isInteger(val) ? val : val.toFixed(2),
+                        },
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: val => Number.isInteger(val) ? val : Number(val.toFixed(2)),
+                        },
+                    },
                     grid: { borderColor: '#1f2937' },
                     legend: { labels: { colors: '#9ca3af' } },
                 });
