@@ -41,8 +41,6 @@ class SystemMetricsCollector
                     'labels' => [
                         'type' => 'container',
                         'environment' => $environment,
-                        'used_bytes' => (string) $containerMem['used_bytes'],
-                        'limit_bytes' => (string) $containerMem['limit_bytes'],
                     ],
                     'timestamp' => $now,
                 ];

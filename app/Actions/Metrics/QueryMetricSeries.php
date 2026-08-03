@@ -21,7 +21,8 @@ class QueryMetricSeries
         Carbon $to,
         int $points = 60,
         string $aggregate = 'avg',
-        array $labelFilters = []
+        array $labelFilters = [],
+        int $maxSeries = 20
     ): array {
         $samples = MetricSample::query()
             ->forProject($project->id)
@@ -47,6 +48,14 @@ class QueryMetricSeries
 
             $series[$key]['labels'] = $sample->labels;
             $series[$key]['values'][$index][] = $sample->value;
+        }
+
+        // Guard against high-cardinality labels exploding the number of chart
+        // series (e.g. per-sample used_bytes/limit_bytes on container metrics).
+        // Keep only the most data-dense series so the chart stays responsive.
+        if (count($series) > $maxSeries) {
+            uasort($series, fn (array $a, array $b) => $this->pointCount($b) <=> $this->pointCount($a));
+            $series = array_slice($series, 0, $maxSeries, true);
         }
 
         $result = [];
@@ -92,6 +101,16 @@ class QueryMetricSeries
         }
 
         return true;
+    }
+
+    /**
+     * Count how many recorded values a series entry holds across all buckets.
+     *
+     * @param  array{labels: array<string, string|int|float>, values: array<int, array<int, float>>}  $entry
+     */
+    protected function pointCount(array $entry): int
+    {
+        return (int) array_sum(array_map('count', $entry['values']));
     }
 
     /**

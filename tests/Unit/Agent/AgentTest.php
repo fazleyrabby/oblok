@@ -191,3 +191,17 @@ test('system metrics collector always tags collected metrics with an environment
             ->and($metric['labels']['environment'])->toBeIn(['host', 'container']);
     }
 });
+
+test('container memory metric avoids high-cardinality labels', function () {
+    $collector = new SystemMetricsCollector;
+
+    foreach ($collector->collect() as $metric) {
+        if ($metric['name'] !== 'container_memory_usage_percent') {
+            continue;
+        }
+
+        expect($metric['labels'])->toHaveKeys(['type', 'environment'])
+            ->not->toHaveKey('used_bytes')
+            ->not->toHaveKey('limit_bytes');
+    }
+});

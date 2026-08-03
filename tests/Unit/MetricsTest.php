@@ -130,6 +130,35 @@ test('query action supports label filters', function () {
         ->and($series[0]['labels'])->toBe(['env' => 'prod']);
 });
 
+test('query action caps high-cardinality series to keep charts responsive', function () {
+    $project = Project::factory()->create();
+    $now = Carbon::parse('2026-08-02 12:00:00');
+
+    // 30 distinct label combos, each with a handful of samples.
+    foreach (range(0, 29) as $bucket) {
+        foreach (range(0, 4) as $n) {
+            MetricSample::factory()->create([
+                'project_id' => $project->id,
+                'name' => 'container_memory',
+                'labels' => ['type' => 'container', 'used_bytes' => (string) ($bucket * 1000 + $n)],
+                'value' => $bucket + $n,
+                'recorded_at' => $now->copy()->addMinutes($n),
+            ]);
+        }
+    }
+
+    $series = app(QueryMetricSeries::class)->handle(
+        $project,
+        'container_memory',
+        $now->copy()->subMinute(),
+        $now->copy()->addMinutes(10),
+        points: 10,
+        maxSeries: 20
+    );
+
+    expect($series)->toHaveCount(20);
+});
+
 test('scrape action ingests samples and updates target metadata', function () {
     Http::fake([
         'http://host:9100/metrics' => Http::response("# TYPE cpu_usage gauge\ncpu_usage 0.5\n"),
