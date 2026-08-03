@@ -125,8 +125,8 @@
                 const payload = await res.json();
 
                 const series = payload.series.map(s => ({
-                    name: Object.keys(s.labels).length
-                        ? s.labels.map((v, k) => `${k}=${v}`).join(', ')
+                    name: Object.keys(s.labels || {}).length
+                        ? Object.entries(s.labels).map(([k, v]) => `${k}=${v}`).join(', ')
                         : name,
                     data: s.points.map(p => ({ x: p[0], y: p[1] })),
                 }));
