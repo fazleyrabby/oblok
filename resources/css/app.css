@@ -23,9 +23,7 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #374151;
-}
-
-/* Firefox scrollbar support */
+}/* Firefox scrollbar support */
 * {
     scrollbar-width: thin;
     scrollbar-color: #1f2937 #030712;
@@ -51,5 +49,5 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #4f46e5;
+    background: #0f766e;
 }

@@ -124,7 +124,7 @@
                 animations: { enabled: true }
             },
             series: [],
-            colors: ['#10b981', '#6366f1', '#f59e0b', '#ef4444'],
+            colors: ['#10b981', '#46e1d5', '#f59e0b', '#ef4444'],
             stroke: { width: 1 },
             xaxis: { type: 'datetime' },
             yaxis: {

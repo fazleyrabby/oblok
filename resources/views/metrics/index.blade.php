@@ -137,7 +137,7 @@
                     chart: { type: 'line', height: 320, toolbar: { show: false }, animations: { enabled: true } },
                     series,
                     stroke: { curve: 'straight', width: 2 },
-                    colors: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
+                    colors: ['#46e1d5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
                     xaxis: { type: 'datetime' },
                     yaxis: {
                         labels: {

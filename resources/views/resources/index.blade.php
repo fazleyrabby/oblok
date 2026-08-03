@@ -142,7 +142,7 @@
                 animations: { enabled: true }
             },
             series: [],
-            colors: ['#6366f1', '#10b981', '#f59e0b'],
+            colors: ['#46e1d5', '#10b981', '#f59e0b'],
             stroke: { width: 2, curve: 'smooth' },
             xaxis: { type: 'datetime' },
             yaxis: {

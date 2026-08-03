@@ -106,7 +106,7 @@
                 },
                 theme: { mode: 'dark' },
                 series: [{ name: 'Latency (ms)', data: seriesData }],
-                colors: ['#6366f1'],
+                colors: ['#46e1d5'],
                 fill: {
                     type: 'gradient',
                     gradient: { opacityFrom: 0.4, opacityTo: 0.05 }
