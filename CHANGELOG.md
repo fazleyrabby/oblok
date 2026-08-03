@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Frontend Echo Client**: Added `resources/js/realtime.js` with a Laravel Echo (Reverb) client and toast notifications for health/alert/deployment events, injected via `data-project-id` on the layout body.
 - **Environment-Aware Agent** (from resource monitoring work): `SystemMetricsCollector` auto-detects container vs bare-metal, tags every sample, and only reports container RAM inside containers; the dashboard hides the Container RAM card and shows a Host/Container badge accordingly.
 - **Bare-Metal Docs**: Added section 4c with systemd/supervisor setup for non-Dockerized projects.
-- **Testing & Quality**: Added `tests/Feature/Realtime/RealtimeTest.php`; 270 Pest tests, zero PHPStan / Pint errors.
+- **Testing & Quality**: Added `tests/Feature/Realtime/RealtimeTest.php`; **273 Pest tests**, zero PHPStan / Pint errors.
 
 #### Phase 20 — Resource & Server Monitoring (v0.3)
 - **Server Resources Dashboard**: Built `ResourceMonitoringController` and web view (`resources/views/resources/index.blade.php`) under **Observability > Server Resources**.
@@ -112,6 +112,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **PostgreSQL compatibility**: Changed the `encrypted_config` column on `notification_channels` from `json` to `text` (`2026_08_02_000014_change_encrypted_config_to_text_on_notification_channels_table.php`). Laravel's `encrypted:array` cast stores an opaque base64 string that is not valid JSON, which PostgreSQL rejected at insert time (MySQL was lax). This resolves CI failures on the Phase 10/11 notification-channel tests.
+- **Resource dashboard chart freeze** (`Server Resources`): `QueryResourceMetrics` no longer streams raw samples into ApexCharts. It down-samples each metric into a single collapsed series capped to 60 points, so a busy agent (container memory posted ~every 11s with high-cardinality `used_bytes`/`limit_bytes` labels) now yields a ~1 KB response instead of a ~156 KB / 1,418‑point payload that froze the browser.
+- **Metric chart high-cardinality safeguard** (`Custom Metrics` page): `QueryMetricSeries` caps the number of returned label series (default `maxSeries = 20`, most data-dense first), preventing per-sample label combos from multiplying chart series.
+- **Volatile container memory labels**: `SystemMetricsCollector` now emits only `type` and `environment` for container memory instead of `used_bytes`/`limit_bytes`, which changed on every sample and created unbounded label cardinality.
+- **Dynamic Reverb WebSocket host**: The Echo client no longer bakes a fixed `127.0.0.1` host into the built bundle; it falls back to `window.location.hostname`, so realtime streams connect correctly over LAN, Tailscale, and local URLs without a rebuild.
+- **Realtime server wiring**: Added an `oblok_reverb` service (`php artisan reverb:start`) to `docker-compose.yml` and wired the `broadcasts` queue into the worker, with `package:discover` on container start to handle freshly-installed packages.
 
 #### Phase 11 — Webhook Inspector (v0.4)
 - **Database & Models**: Created `webhook_calls` migration (`2026_08_02_000011_create_webhook_calls_table.php`) and `WebhookCall` Eloquent model with UUID keys, JSON casts, `ofEvent` scope, and a `webhookCalls()` relation on `Project`.
