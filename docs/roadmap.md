@@ -57,8 +57,8 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 | Deliverable | Description |
 |-------------|-------------|
-| Deployment Tracking | Record deployments with metadata (commit, environment, status) |
-| Deployment History | Timeline view with rollback indicators |
+| Deployment Tracking | Record deployments with metadata (commit, environment, status) via webhook receiver (`POST /api/v1/webhooks/deployments/{project:slug}`) — ✅ delivered (Phase 5) |
+| Deployment History | Timeline view with rollback indicators and per-deployment detail — ✅ delivered (Phase 5) |
 | Custom Metrics | Ingest and store application-defined metrics — ✅ delivered (Phase 16) agentless push endpoint (POST counters/gauges/histograms) plus Prometheus-compatible scrape source |
 | Metric Dashboards | Configurable charts and time-range selectors — ✅ delivered (Phase 16) |
 | Resource Monitoring | Host and container CPU, memory, disk, and network metrics via Prometheus scrape (node_exporter, cAdvisor, app `/metrics`) or agent — ✅ delivered (Phase 20) |
@@ -167,7 +167,7 @@ oblok treats every monitored project as a black box, regardless of framework (La
 | ---------| -------------------| -------|
 | v0.1    | 🔵 In Development | MVP   |
 | v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates delivered (Phase 21) |
-| v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring planned |
+| v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring delivered (Phase 19); Advanced Check Types delivered (Phase 18) |
 | v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); oblok Agent delivered (Phase 17) |
 | v0.5    | ⚪ Planned　　　　 |       |
 | v1.0    | ⚪ Planned　　　　 |       |
