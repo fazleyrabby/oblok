@@ -5,6 +5,7 @@ use OblokAgent\Config;
 use OblokAgent\FileTailer;
 use OblokAgent\LogLineParser;
 use OblokAgent\RequestMetricsAggregator;
+use OblokAgent\SystemMetricsCollector;
 
 test('config reads environment values', function () {
     $config = Config::fromEnv([
@@ -174,4 +175,19 @@ test('file tailer resumes after truncation without re-reading old content', func
     expect($tailer->readNewLines())->toBe(['fresh start']);
 
     @unlink($file);
+});
+
+test('system metrics collector detects a container environment from docker markers', function () {
+    $collector = new SystemMetricsCollector;
+
+    expect($collector->detectEnvironment())->toBeIn(['host', 'container']);
+});
+
+test('system metrics collector always tags collected metrics with an environment label', function () {
+    $collector = new SystemMetricsCollector;
+
+    foreach ($collector->collect() as $metric) {
+        expect($metric['labels'])->toHaveKey('environment')
+            ->and($metric['labels']['environment'])->toBeIn(['host', 'container']);
+    }
 });

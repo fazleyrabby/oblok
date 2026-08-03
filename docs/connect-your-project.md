@@ -206,6 +206,77 @@ open the project → **Logs Stream** (entries appear within seconds) and **Metri
 
 ---
 
+## 4c. Bare-metal / non-Dockerized project
+
+oblok does not require your project to be containerized. The `oblok-agent` is a plain
+PHP CLI process that reads local files, so it works identically on a bare-metal server,
+VPS, or shared host. It auto-detects its environment (container vs host) and tags every
+resource sample accordingly.
+
+**What works without Docker:**
+
+| Monitoring | How | Docker required? |
+|------------|-----|------------------|
+| Health checks | outbound ping from oblok | No |
+| Logs | agent tails `OBLOK_LOG_FILES` | No |
+| Request analytics | agent parses the web-server access log | No |
+| CPU / RAM / Disk / cores | agent reads `/proc` directly on the host | No |
+| Container RAM | only when a cgroup limit exists (containers) | Only for this card |
+
+**1. Install the agent** — copy the `oblok-agent` directory to the server (it only needs
+PHP CLI; no framework, no Composer install, no Docker):
+
+```bash
+scp -r ./oblok-agent user@server:/opt/oblok-agent
+```
+
+**2. Configure it** via a systemd-style env file (any of the `OBLOK_*` variables from
+[`oblok-agent/README.md`](../oblok-agent/README.md)):
+
+```bash
+# /etc/oblok-agent/oblok-agent.env
+OBLOK_URL=http://your-oblok:8081
+OBLOK_API_KEY=atl_...
+OBLOK_PROJECT_ID=019f...-xxxx
+OBLOK_AGENT_NAME=my-app-agent
+OBLOK_LOG_FILES=/var/www/app/storage/logs/laravel-*.log
+OBLOK_ACCESS_LOG=/var/log/nginx/app-access.log
+```
+
+**3. Run it as a service (systemd):**
+
+```ini
+# /etc/systemd/system/oblok-agent.service
+[Unit]
+Description=oblok observability agent
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/oblok-agent/oblok-agent.env
+ExecStart=/usr/bin/php /opt/oblok-agent/bin/oblok-agent
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now oblok-agent
+journalctl -u oblok-agent -f   # watch it work
+```
+
+> **Supervisor instead of systemd?** The `ExecStart` line is the only thing that matters
+> — point any supervisor at `php /opt/oblok-agent/bin/oblok-agent`.
+
+**4. View in oblok** → **Resources**. On a bare-metal host the dashboard automatically
+hides the **Container RAM** card (no cgroup limit exists) and shows a `Host` badge;
+containerized agents get the full four-card layout with a `Container` badge.
+
+---
+
 ## 5. Deployments (webhook)
 
 oblok exposes a **public** webhook (no auth) so any CI/CD can record a deployment by

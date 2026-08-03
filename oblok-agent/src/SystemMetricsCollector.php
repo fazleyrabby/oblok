@@ -12,6 +12,7 @@ class SystemMetricsCollector
     public function collect(): array
     {
         $now = (new \DateTimeImmutable)->format('c');
+        $environment = $this->detectEnvironment();
         $metrics = [];
 
         // 1. Host Memory Usage
@@ -24,25 +25,28 @@ class SystemMetricsCollector
                 $metrics[] = [
                     'name' => 'system_memory_usage_percent',
                     'value' => $usedPercent,
-                    'labels' => ['type' => 'host'],
+                    'labels' => ['type' => 'host', 'environment' => $environment],
                     'timestamp' => $now,
                 ];
             }
         }
 
-        // 2. Container Memory Usage (cgroups v1 / v2)
-        $containerMem = $this->readContainerMemory();
-        if ($containerMem !== null) {
-            $metrics[] = [
-                'name' => 'container_memory_usage_percent',
-                'value' => $containerMem['percent'],
-                'labels' => [
-                    'type' => 'container',
-                    'used_bytes' => (string) $containerMem['used_bytes'],
-                    'limit_bytes' => (string) $containerMem['limit_bytes'],
-                ],
-                'timestamp' => $now,
-            ];
+        // 2. Container Memory Usage (cgroups v1 / v2) — only meaningful inside a container
+        if ($environment === 'container') {
+            $containerMem = $this->readContainerMemory();
+            if ($containerMem !== null) {
+                $metrics[] = [
+                    'name' => 'container_memory_usage_percent',
+                    'value' => $containerMem['percent'],
+                    'labels' => [
+                        'type' => 'container',
+                        'environment' => $environment,
+                        'used_bytes' => (string) $containerMem['used_bytes'],
+                        'limit_bytes' => (string) $containerMem['limit_bytes'],
+                    ],
+                    'timestamp' => $now,
+                ];
+            }
         }
 
         // 3. Disk Usage
@@ -53,7 +57,7 @@ class SystemMetricsCollector
             $metrics[] = [
                 'name' => 'system_disk_usage_percent',
                 'value' => $diskUsedPercent,
-                'labels' => ['mount' => '/'],
+                'labels' => ['mount' => '/', 'environment' => $environment],
                 'timestamp' => $now,
             ];
         }
@@ -65,13 +69,13 @@ class SystemMetricsCollector
             $metrics[] = [
                 'name' => 'system_cpu_usage_percent',
                 'value' => $cpuPercent,
-                'labels' => ['type' => 'host', 'cores' => (string) $cpuCores],
+                'labels' => ['type' => 'host', 'environment' => $environment, 'cores' => (string) $cpuCores],
                 'timestamp' => $now,
             ];
             $metrics[] = [
                 'name' => 'system_cpu_cores',
                 'value' => (float) $cpuCores,
-                'labels' => ['type' => 'host'],
+                'labels' => ['type' => 'host', 'environment' => $environment],
                 'timestamp' => $now,
             ];
         }
@@ -242,5 +246,32 @@ class SystemMetricsCollector
         }
 
         return 1;
+    }
+
+    /**
+     * Detect whether the agent runs inside a container (Docker, LXC, containerd)
+     * or on a bare-metal host by probing well-known container markers.
+     */
+    public function detectEnvironment(): string
+    {
+        if (is_file('/.dockerenv') || is_file('/run/.containerenv')) {
+            return 'container';
+        }
+
+        if (is_readable('/proc/1/cgroup')) {
+            $content = @file_get_contents('/proc/1/cgroup');
+            if ($content !== false && preg_match('/docker|containerd|kubepods|lxc|podman/i', $content)) {
+                return 'container';
+            }
+        }
+
+        if (is_readable('/proc/self/mountinfo')) {
+            $content = @file_get_contents('/proc/self/mountinfo');
+            if ($content !== false && str_contains($content, '/docker/containers')) {
+                return 'container';
+            }
+        }
+
+        return 'host';
     }
 }

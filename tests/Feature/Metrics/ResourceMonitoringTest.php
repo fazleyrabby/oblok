@@ -32,7 +32,7 @@ class ResourceMonitoringTest extends TestCase
             'project_id' => $project->id,
             'name' => 'system_cpu_usage_percent',
             'value' => 34.5,
-            'labels' => ['type' => 'host'],
+            'labels' => ['type' => 'host', 'environment' => 'host'],
             'recorded_at' => now(),
         ]);
 
@@ -43,9 +43,36 @@ class ResourceMonitoringTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure([
+            'environment',
+            'has_container_metrics',
             'latest' => ['cpu_percent', 'memory_percent', 'disk_percent'],
             'series',
         ]);
         $this->assertEquals(34.5, $response->json('latest.cpu_percent'));
+        $this->assertEquals('host', $response->json('environment'));
+        $this->assertFalse($response->json('has_container_metrics'));
+    }
+
+    public function test_resource_data_endpoint_flags_container_metrics_when_present(): void
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user->id]);
+
+        MetricSample::create([
+            'project_id' => $project->id,
+            'name' => 'container_memory_usage_percent',
+            'value' => 61.5,
+            'labels' => ['type' => 'container', 'environment' => 'container'],
+            'recorded_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)->get(route('projects.resources.data', [
+            'project' => $project,
+            'range' => '24h',
+        ]));
+
+        $response->assertOk();
+        $this->assertEquals('container', $response->json('environment'));
+        $this->assertTrue($response->json('has_container_metrics'));
     }
 }

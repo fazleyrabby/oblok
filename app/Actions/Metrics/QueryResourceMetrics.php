@@ -34,6 +34,7 @@ class QueryResourceMetrics
         $latestContainerMem = 0.0;
         $latestDisk = 0.0;
         $cpuCores = 1;
+        $environment = 'unknown';
 
         $seriesData = [
             'cpu' => [],
@@ -45,6 +46,11 @@ class QueryResourceMetrics
         foreach ($samples as $sample) {
             $val = round((float) $sample->value, 2);
             $ts = $sample->recorded_at->timestamp * 1000;
+            $labels = $sample->labels ?? [];
+
+            if (isset($labels['environment']) && in_array($labels['environment'], ['host', 'container'], true)) {
+                $environment = $labels['environment'];
+            }
 
             match ($sample->name) {
                 'system_cpu_usage_percent' => (function () use ($sample, $val, $ts, &$latestCpu, &$cpuCores, &$seriesData) {
@@ -88,6 +94,8 @@ class QueryResourceMetrics
         };
 
         return [
+            'environment' => $environment,
+            'has_container_metrics' => $seriesData['container_memory'] !== [],
             'latest' => [
                 'cpu_percent' => $latestCpu,
                 'cpu_cores' => $cpuCores,

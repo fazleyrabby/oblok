@@ -23,7 +23,7 @@
 
     <div class="space-y-6">
         <!-- Resource Gauge Overview Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- CPU Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
                 <div>
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Container Memory Card -->
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+            <div id="card-container-mem" class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">Container RAM</span>
@@ -141,11 +141,21 @@
             const loaderEl = document.getElementById('resources-loader');
             if (loaderEl) loaderEl.style.display = 'none';
 
+            // Show or hide the Container RAM card based on environment
+            const containerCard = document.getElementById('card-container-mem');
+            const hasContainer = data.has_container_metrics === true;
+            containerCard.style.display = hasContainer ? '' : 'none';
+
+            const grid = document.getElementById('cards-grid');
+            grid.classList.toggle('lg:grid-cols-4', hasContainer);
+            grid.classList.toggle('lg:grid-cols-3', !hasContainer);
+
             // Update stats & progress bars
             const latest = data.latest || { cpu_percent: 0, memory_percent: 0, container_memory_percent: 0, disk_percent: 0, cpu_cores: 1 };
             const stats = data.stats || { cpu: {avg: 0, peak: 0}, memory: {avg: 0, peak: 0}, container_memory: {avg: 0, peak: 0}, disk: {avg: 0, peak: 0} };
-            
-            document.getElementById('badge-cores').innerText = `⚡ ${latest.cpu_cores || 1} CPU Cores`;
+
+            // Environment badge on CPU card
+            document.getElementById('badge-cores').innerText = `⚡ ${latest.cpu_cores || 1} CPU Cores · ${data.environment === 'container' ? 'Container' : data.environment === 'host' ? 'Host' : 'Bare Metal'}`;
 
             document.getElementById('stat-cpu').innerText = `${latest.cpu_percent}%`;
             document.getElementById('bar-cpu').style.width = `${Math.min(latest.cpu_percent, 100)}%`;
