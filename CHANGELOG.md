@@ -13,15 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Phase 20 — Resource & Server Monitoring (v0.3)
 - **Server Resources Dashboard**: Built `ResourceMonitoringController` and web view (`resources/views/resources/index.blade.php`) under **Observability > Server Resources**.
-- **Metrics Aggregation**: Created `QueryResourceMetrics` action class to query and calculate CPU usage %, Memory consumption %, and Disk utilization % metrics across timeframe selectors (`1H`, `6H`, `24H`, `7D`).
-- **Sysinfo Agent Collector**: Created `SystemMetricsCollector` in `oblok-agent` to automatically measure Linux `/proc` memory info, CPU load, and disk utilization space.
+- **Container & Host Metrics**: Updated `SystemMetricsCollector` to measure Docker cgroups memory limits (`/sys/fs/cgroup/memory.current` vs `memory.max`) alongside host system RAM, CPU load, and disk utilization.
+- **Metrics Aggregation**: Created `QueryResourceMetrics` action class to query and calculate Host CPU %, Host RAM %, Container RAM %, and Disk utilization % across timeframe selectors (`1H`, `6H`, `24H`, `7D`).
 - **Sidebar Integration**: Added persistent **Server Resources** navigation link in `sidebar.blade.php`.
 - **Testing & Quality**: Passed 262 Pest tests with 0 PHPStan and Pint errors.
 
 #### Phase 19 — Request Analytics & HTTP Traffic Dashboard (v0.3)
 - **Dedicated Request Analytics View**: Built `RequestAnalyticsController` and web view (`resources/views/request-analytics/index.blade.php`) under **Observability > Request Analytics**.
-- **Metrics Aggregation**: Created `QueryRequestAnalytics` action to bucket HTTP traffic into stacked 2xx success, 3xx redirect, 4xx client error, and 5xx server error series over custom timeframes (`1H`, `6H`, `24H`, `7D`).
-- **HTTP Method Breakdown**: Added real-time counters for `GET`, `POST`, `PUT`, `DELETE` request methods.
+- **Metrics & Log Enrichment**: Extracted Client IP Address and User Agent headers in `AccessLogParser` (`oblok-agent`) and surfaced enriched request log history in the web UI table.
+- **Status & Method Breakdown**: Bucketed HTTP traffic into stacked 2xx success, 3xx redirect, 4xx client error, and 5xx server error series with real-time method counters (`GET`, `POST`, `PUT`, `DELETE`).
 - **Sidebar Integration**: Added persistent **Request Analytics** link in `sidebar.blade.php`.
 - **Testing & Quality**: Passed 260 Pest tests and zero PHPStan / Laravel Pint errors.
 
