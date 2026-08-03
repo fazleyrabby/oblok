@@ -86,10 +86,11 @@
         </div>
     </div>
 
-    <!-- ApexCharts JS Script Integration -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- ApexCharts JS Integration -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            if (typeof ApexCharts === 'undefined') return;
+
             const rawData = @json($results);
             const seriesData = rawData.slice().reverse().map(r => ({
                 x: new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),

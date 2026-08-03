@@ -109,7 +109,6 @@
     </div>
 
     @if(! $names->isEmpty())
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
             const projectUrl = @json(url('projects/'.$project->id.'/metrics/data'));
             const nameEl = document.getElementById('metric-name');
@@ -118,6 +117,8 @@
             let chart = null;
 
             async function load() {
+                if (typeof ApexCharts === 'undefined') return;
+
                 const to = new Date().toISOString();
                 const from = new Date(Date.now() - rangeToMs(range)).toISOString();
                 const name = nameEl.value;

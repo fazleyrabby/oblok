@@ -130,11 +130,47 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         const dataUrl = @json(route('projects.resources.data', $project));
         let currentRange = '24h';
         let chart = null;
+        let chartOptions = {
+            chart: {
+                type: 'line',
+                height: 320,
+                toolbar: { show: false },
+                animations: { enabled: true }
+            },
+            series: [],
+            colors: ['#6366f1', '#10b981', '#f59e0b'],
+            stroke: { width: 2, curve: 'smooth' },
+            xaxis: { type: 'datetime' },
+            yaxis: {
+                max: 100,
+                min: 0,
+                labels: {
+                    style: { colors: '#9ca3af' },
+                    formatter: val => `${val.toFixed(1)}%`
+                }
+            },
+            tooltip: {
+                y: { formatter: val => `${val.toFixed(2)}%` }
+            },
+            grid: { borderColor: '#1f2937' },
+            legend: { labels: { colors: '#9ca3af' } }
+        };
+
+        function updateChart(series) {
+            if (typeof ApexCharts === 'undefined') return;
+
+            if (chart) {
+                chart.updateSeries(series);
+                return;
+            }
+
+            chart = new ApexCharts(document.getElementById('resources-chart'), { ...chartOptions, series });
+            chart.render();
+        }
 
         async function fetchResources() {
             const res = await fetch(`${dataUrl}?range=${currentRange}`);
@@ -181,33 +217,7 @@
             document.getElementById('sub-disk-pk').innerText = `${stats.disk.peak}%`;
 
             // Render ApexChart
-            if (chart) chart.destroy();
-            chart = new ApexCharts(document.getElementById('resources-chart'), {
-                chart: {
-                    type: 'line',
-                    height: 320,
-                    toolbar: { show: false },
-                    animations: { enabled: true }
-                },
-                series: data.series,
-                colors: ['#6366f1', '#10b981', '#f59e0b'],
-                stroke: { width: 2, curve: 'smooth' },
-                xaxis: { type: 'datetime' },
-                yaxis: {
-                    max: 100,
-                    min: 0,
-                    labels: {
-                        style: { colors: '#9ca3af' },
-                        formatter: val => `${val.toFixed(1)}%`
-                    }
-                },
-                tooltip: {
-                    y: { formatter: val => `${val.toFixed(2)}%` }
-                },
-                grid: { borderColor: '#1f2937' },
-                legend: { labels: { colors: '#9ca3af' } }
-            });
-            chart.render();
+            updateChart(data.series);
         }
 
         document.querySelectorAll('.range-btn').forEach(btn => {

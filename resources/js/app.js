@@ -1,9 +1,12 @@
 
 import Alpine from 'alpinejs';
 
+import ApexCharts from 'apexcharts';
+
 import { getEcho, showToast } from './realtime';
 
 window.Alpine = Alpine;
+window.ApexCharts = ApexCharts;
 window.showRealtimeToast = showToast;
 
 // Reusable live-stream poller: toggles a pulsing Live badge and emits a

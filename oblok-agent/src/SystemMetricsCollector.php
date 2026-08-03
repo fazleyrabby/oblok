@@ -31,7 +31,10 @@ class SystemMetricsCollector
             }
         }
 
-        // 2. Container Memory Usage (cgroups v1 / v2) — only meaningful inside a container
+        // 2. Container Memory Usage (cgroups v1 / v2) — only meaningful inside a
+        //    container that actually has a memory limit. Without a real cgroup
+        //    limit the agent would fall back to host RAM as the denominator and
+        //    report a near-zero, flat percentage that means nothing.
         if ($environment === 'container') {
             $containerMem = $this->readContainerMemory();
             if ($containerMem !== null) {
@@ -100,14 +103,11 @@ class SystemMetricsCollector
                 $used = (int) $usedVal;
             }
 
+            // 'max' means the container is unlimited. There is no cgroup memory
+            // pressure to measure, so report nothing rather than a meaningless
+            // near-zero percent computed against the host's total RAM.
             if (is_numeric($limitVal)) {
                 $limit = (int) $limitVal;
-            } else {
-                // If limit is 'max' (unlimited container limit), fallback to host total memory
-                $memInfo = $this->readMemInfo();
-                if (isset($memInfo['MemTotal'])) {
-                    $limit = $memInfo['MemTotal'] * 1024; // KB to Bytes
-                }
             }
         }
         // cgroups v1 fallback

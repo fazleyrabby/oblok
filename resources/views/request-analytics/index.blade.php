@@ -111,11 +111,49 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         const dataUrl = @json(route('projects.request-analytics.data', $project));
         let currentRange = '24h';
         let chart = null;
+        let chartOptions = {
+            chart: {
+                type: 'bar',
+                stacked: true,
+                height: 320,
+                toolbar: { show: false },
+                animations: { enabled: true }
+            },
+            series: [],
+            colors: ['#10b981', '#6366f1', '#f59e0b', '#ef4444'],
+            stroke: { width: 1 },
+            xaxis: { type: 'datetime' },
+            yaxis: {
+                min: 0,
+                labels: {
+                    style: { colors: '#9ca3af' },
+                    formatter: val => Number.isInteger(val) ? val : val.toFixed(1)
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: val => Number.isInteger(val) ? val : Number(val.toFixed(1))
+                }
+            },
+            grid: { borderColor: '#1f2937' },
+            legend: { labels: { colors: '#9ca3af' } }
+        };
+
+        function updateChart(series) {
+            if (typeof ApexCharts === 'undefined') return;
+
+            if (chart) {
+                chart.updateSeries(series);
+                return;
+            }
+
+            chart = new ApexCharts(document.getElementById('requests-chart'), { ...chartOptions, series });
+            chart.render();
+        }
 
         async function fetchAnalytics() {
             const res = await fetch(`${dataUrl}?range=${currentRange}`);
@@ -160,34 +198,7 @@
             // Hide loader overlay & render ApexChart
             const loaderEl = document.getElementById('chart-loader');
             if (loaderEl) loaderEl.style.display = 'none';
-            if (chart) chart.destroy();
-            chart = new ApexCharts(document.getElementById('requests-chart'), {
-                chart: {
-                    type: 'bar',
-                    stacked: true,
-                    height: 320,
-                    toolbar: { show: false },
-                    animations: { enabled: true }
-                },
-                series: data.series,
-                colors: ['#10b981', '#6366f1', '#f59e0b', '#ef4444'],
-                stroke: { width: 1 },
-                xaxis: { type: 'datetime' },
-                yaxis: {
-                    labels: {
-                        style: { colors: '#9ca3af' },
-                        formatter: val => Number.isInteger(val) ? val : val.toFixed(1)
-                    }
-                },
-                tooltip: {
-                    y: {
-                        formatter: val => Number.isInteger(val) ? val : Number(val.toFixed(1))
-                    }
-                },
-                grid: { borderColor: '#1f2937' },
-                legend: { labels: { colors: '#9ca3af' } }
-            });
-            chart.render();
+            updateChart(data.series);
         }
 
         document.querySelectorAll('.range-btn').forEach(btn => {
