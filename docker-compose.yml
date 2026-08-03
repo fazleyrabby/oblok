@@ -92,8 +92,6 @@ services:
              php artisan reverb:start --host=0.0.0.0 --port=8080"
     volumes:
       - .:/var/www/html
-    ports:
-      - "8082:8080"
     environment:
       CONTAINER_ROLE: reverb
       DB_HOST: postgres
