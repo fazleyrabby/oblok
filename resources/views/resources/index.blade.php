@@ -25,63 +25,81 @@
         <!-- Resource Gauge Overview Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- CPU Card -->
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host CPU Load</span>
-                        <span id="badge-cores" class="ml-1.5 px-1.5 py-0.5 text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded">⚡ 8 CPU Cores</span>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">Host CPU</span>
+                        <span id="badge-cores" class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded flex-shrink-0">⚡ 8 Cores</span>
                     </div>
-                    <span id="stat-cpu" class="text-xl font-bold text-indigo-400">0%</span>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xs text-gray-500 font-medium">Load</span>
+                        <span id="stat-cpu" class="text-sm font-bold font-mono text-indigo-400">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-950 h-2 rounded-full mt-2 overflow-hidden border border-gray-800">
+                        <div id="bar-cpu" class="bg-indigo-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
-                    <div id="bar-cpu" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-800/60 text-[11px] font-mono text-gray-500">
                     <span>avg <strong id="sub-cpu-avg" class="text-gray-400">0%</strong></span>
                     <span>pk <strong id="sub-cpu-pk" class="text-gray-400">0%</strong></span>
                 </div>
             </div>
 
             <!-- Container Memory Card -->
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Container RAM</span>
-                    <span id="stat-container-mem" class="text-xl font-bold text-cyan-400">0%</span>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">Container RAM</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xs text-gray-500 font-medium">Usage</span>
+                        <span id="stat-container-mem" class="text-sm font-bold font-mono text-cyan-400">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-950 h-2 rounded-full mt-2 overflow-hidden border border-gray-800">
+                        <div id="bar-container-mem" class="bg-cyan-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
-                    <div id="bar-container-mem" class="bg-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-800/60 text-[11px] font-mono text-gray-500">
                     <span>avg <strong id="sub-cmem-avg" class="text-gray-400">0%</strong></span>
                     <span>pk <strong id="sub-cmem-pk" class="text-gray-400">0%</strong></span>
                 </div>
             </div>
 
             <!-- Host Memory Card -->
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host System RAM</span>
-                    <span id="stat-mem" class="text-xl font-bold text-emerald-400">0%</span>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">Host System RAM</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xs text-gray-500 font-medium">Usage</span>
+                        <span id="stat-mem" class="text-sm font-bold font-mono text-emerald-400">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-950 h-2 rounded-full mt-2 overflow-hidden border border-gray-800">
+                        <div id="bar-mem" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
-                    <div id="bar-mem" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-800/60 text-[11px] font-mono text-gray-500">
                     <span>avg <strong id="sub-mem-avg" class="text-gray-400">0%</strong></span>
                     <span>pk <strong id="sub-mem-pk" class="text-gray-400">0%</strong></span>
                 </div>
             </div>
 
             <!-- Disk Card -->
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host Disk Space</span>
-                    <span id="stat-disk" class="text-xl font-bold text-amber-400">0%</span>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">Host Disk</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xs text-gray-500 font-medium">Usage</span>
+                        <span id="stat-disk" class="text-sm font-bold font-mono text-amber-400">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-950 h-2 rounded-full mt-2 overflow-hidden border border-gray-800">
+                        <div id="bar-disk" class="bg-amber-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
-                    <div id="bar-disk" class="bg-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between mt-2 text-[11px] font-mono text-gray-500">
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-800/60 text-[11px] font-mono text-gray-500">
                     <span>avg <strong id="sub-disk-avg" class="text-gray-400">0%</strong></span>
                     <span>pk <strong id="sub-disk-pk" class="text-gray-400">0%</strong></span>
                 </div>
