@@ -154,19 +154,67 @@ class SystemMetricsCollector
         return $data;
     }
 
+    /** @var array{user: int, nice: int, system: int, idle: int, iowait: int, irq: int, softirq: int, steal: int}|null */
+    private static ?array $lastCpuState = null;
+
     /**
-     * Calculate CPU usage percent from sys_getloadavg or /proc/stat.
+     * Calculate true CPU usage percentage by measuring delta active vs total ticks from /proc/stat.
      */
     private function readCpuUsage(): ?float
     {
-        if (function_exists('sys_getloadavg')) {
-            $load = @sys_getloadavg();
-            if (is_array($load) && isset($load[0])) {
-                // Normalize 1-minute load average to a 0-100 percentage estimate
-                return round(min(100.0, $load[0] * 25.0), 2);
-            }
+        if (! is_readable('/proc/stat')) {
+            return null;
         }
 
-        return null;
+        $content = @file_get_contents('/proc/stat');
+        if (! $content) {
+            return null;
+        }
+
+        $lines = explode("\n", $content);
+        if (! isset($lines[0]) || ! str_starts_with($lines[0], 'cpu ')) {
+            return null;
+        }
+
+        $parts = preg_split('/\s+/', trim($lines[0]));
+        if (! $parts || count($parts) < 8) {
+            return null;
+        }
+
+        $user = (int) $parts[1];
+        $nice = (int) $parts[2];
+        $system = (int) $parts[3];
+        $idle = (int) $parts[4];
+        $iowait = (int) ($parts[5] ?? 0);
+        $irq = (int) ($parts[6] ?? 0);
+        $softirq = (int) ($parts[7] ?? 0);
+        $steal = (int) ($parts[8] ?? 0);
+
+        $current = compact('user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal');
+
+        if (self::$lastCpuState === null) {
+            self::$lastCpuState = $current;
+            return null; // Need a second sample to compute delta
+        }
+
+        $prev = self::$lastCpuState;
+        self::$lastCpuState = $current;
+
+        $prevActive = $prev['user'] + $prev['nice'] + $prev['system'] + $prev['irq'] + $prev['softirq'] + $prev['steal'];
+        $prevIdle = $prev['idle'] + $prev['iowait'];
+        $prevTotal = $prevActive + $prevIdle;
+
+        $curActive = $user + $nice + $system + $irq + $softirq + $steal;
+        $curIdle = $idle + $iowait;
+        $curTotal = $curActive + $curIdle;
+
+        $totalDiff = $curTotal - $prevTotal;
+        $activeDiff = $curActive - $prevActive;
+
+        if ($totalDiff <= 0) {
+            return 0.0;
+        }
+
+        return round(($activeDiff / $totalDiff) * 100, 2);
     }
 }
