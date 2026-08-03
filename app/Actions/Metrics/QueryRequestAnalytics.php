@@ -75,11 +75,23 @@ class QueryRequestAnalytics
             ? round((($statusCounts['2xx'] + $statusCounts['3xx']) / $totalRequests) * 100, 1)
             : 100.0;
 
+        $recentRequests = $samples->sortByDesc('recorded_at')->take(20)->values()->map(function ($sample) {
+            $labels = $sample->labels ?? [];
+
+            return [
+                'timestamp' => $sample->recorded_at->toDateTimeString(),
+                'method' => strtoupper((string) ($labels['method'] ?? 'GET')),
+                'status' => (string) ($labels['status'] ?? '200'),
+                'count' => (int) $sample->value,
+            ];
+        })->all();
+
         return [
             'total_requests' => (int) $totalRequests,
             'success_rate' => $successRate,
             'status_counts' => $statusCounts,
             'method_counts' => $methodCounts,
+            'recent_requests' => $recentRequests,
             'series' => [
                 ['name' => '2xx Success', 'data' => $series['2xx']],
                 ['name' => '3xx Redirect', 'data' => $series['3xx']],

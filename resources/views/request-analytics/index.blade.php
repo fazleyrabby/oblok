@@ -74,6 +74,26 @@
                     <p id="method-DELETE" class="text-lg font-semibold text-gray-200 mt-1">0</p>
                 </div>
             </div>
+        <!-- Recent HTTP Request Activity List Table -->
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+            <h3 class="text-base font-semibold text-white mb-4">Request Log History</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-950 text-xs text-gray-400 uppercase tracking-wider border-b border-gray-800">
+                        <tr>
+                            <th class="py-3 px-4">Timestamp</th>
+                            <th class="py-3 px-4">Method</th>
+                            <th class="py-3 px-4">Status Code</th>
+                            <th class="py-3 px-4">Request Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody id="request-history-body" class="divide-y divide-gray-800 text-gray-300 font-mono text-xs">
+                        <tr>
+                            <td colspan="4" class="text-center py-6 text-gray-500 font-sans text-sm">Loading request history...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -98,6 +118,26 @@
             document.getElementById('method-POST').innerText = (data.method_counts['POST'] || 0).toLocaleString();
             document.getElementById('method-PUT').innerText = ((data.method_counts['PUT'] || 0) + (data.method_counts['PATCH'] || 0)).toLocaleString();
             document.getElementById('method-DELETE').innerText = (data.method_counts['DELETE'] || 0).toLocaleString();
+
+            // Populate Request History Table
+            const tbody = document.getElementById('request-history-body');
+            const requests = data.recent_requests || [];
+            if (requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-gray-500 font-sans text-sm">No recent request logs recorded in this timeframe.</td></tr>';
+            } else {
+                tbody.innerHTML = requests.map(req => {
+                    const statusClass = req.status.startsWith('2') ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                        (req.status.startsWith('3') ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                        (req.status.startsWith('4') ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'));
+                    
+                    return `<tr class="hover:bg-gray-850 transition">
+                        <td class="py-3 px-4 text-gray-400">${req.timestamp}</td>
+                        <td class="py-3 px-4 font-bold text-gray-200">${req.method}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs rounded-full border font-semibold ${statusClass}">${req.status}</span></td>
+                        <td class="py-3 px-4 text-gray-200">${req.count} req/min</td>
+                    </tr>`;
+                }).join('');
+            }
 
             // Render ApexChart
             if (chart) chart.destroy();
