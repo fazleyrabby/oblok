@@ -14,7 +14,7 @@ class SystemMetricsCollector
         $now = (new \DateTimeImmutable)->format('c');
         $metrics = [];
 
-        // 1. Memory Usage
+        // 1. Host Memory Usage
         $memInfo = $this->readMemInfo();
         if ($memInfo !== null) {
             $total = $memInfo['MemTotal'] ?? 0;
@@ -30,7 +30,22 @@ class SystemMetricsCollector
             }
         }
 
-        // 2. Disk Usage
+        // 2. Container Memory Usage (cgroups v1 / v2)
+        $containerMem = $this->readContainerMemory();
+        if ($containerMem !== null) {
+            $metrics[] = [
+                'name' => 'container_memory_usage_percent',
+                'value' => $containerMem['percent'],
+                'labels' => [
+                    'type' => 'container',
+                    'used_bytes' => (string) $containerMem['used_bytes'],
+                    'limit_bytes' => (string) $containerMem['limit_bytes'],
+                ],
+                'timestamp' => $now,
+            ];
+        }
+
+        // 3. Disk Usage
         $diskTotal = @disk_total_space('/');
         $diskFree = @disk_free_space('/');
         if ($diskTotal !== false && $diskFree !== false && $diskTotal > 0) {
@@ -43,7 +58,7 @@ class SystemMetricsCollector
             ];
         }
 
-        // 3. CPU Load / Usage
+        // 4. CPU Load / Usage
         $cpuPercent = $this->readCpuUsage();
         if ($cpuPercent !== null) {
             $metrics[] = [
@@ -55,6 +70,56 @@ class SystemMetricsCollector
         }
 
         return $metrics;
+    }
+
+    /**
+     * Read Docker container memory usage & limit from cgroups (v1 or v2).
+     *
+     * @return array{used_bytes: int, limit_bytes: int, percent: float}|null
+     */
+    private function readContainerMemory(): ?array
+    {
+        $used = null;
+        $limit = null;
+
+        // cgroups v2
+        if (is_readable('/sys/fs/cgroup/memory.current') && is_readable('/sys/fs/cgroup/memory.max')) {
+            $usedVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory.current'));
+            $limitVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory.max'));
+
+            if (is_numeric($usedVal)) {
+                $used = (int) $usedVal;
+            }
+
+            if (is_numeric($limitVal)) {
+                $limit = (int) $limitVal;
+            }
+        }
+        // cgroups v1 fallback
+        elseif (is_readable('/sys/fs/cgroup/memory/memory.usage_in_bytes') && is_readable('/sys/fs/cgroup/memory/memory.limit_in_bytes')) {
+            $usedVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory/memory.usage_in_bytes'));
+            $limitVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory/memory.limit_in_bytes'));
+
+            if (is_numeric($usedVal)) {
+                $used = (int) $usedVal;
+            }
+
+            if (is_numeric($limitVal)) {
+                $limit = (int) $limitVal;
+            }
+        }
+
+        if ($used !== null && $limit !== null && $limit > 0 && $limit < 9223372036854770000) {
+            $percent = round(($used / $limit) * 100, 2);
+
+            return [
+                'used_bytes' => $used,
+                'limit_bytes' => $limit,
+                'percent' => $percent,
+            ];
+        }
+
+        return null;
     }
 
     /**

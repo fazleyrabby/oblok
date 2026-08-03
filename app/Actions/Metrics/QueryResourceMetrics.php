@@ -18,9 +18,8 @@ class QueryResourceMetrics
         $metricNames = [
             'system_cpu_usage_percent',
             'system_memory_usage_percent',
+            'container_memory_usage_percent',
             'system_disk_usage_percent',
-            'system_network_rx_bytes_total',
-            'system_network_tx_bytes_total',
         ];
 
         $samples = MetricSample::query()
@@ -31,11 +30,13 @@ class QueryResourceMetrics
 
         $latestCpu = 0.0;
         $latestMem = 0.0;
+        $latestContainerMem = 0.0;
         $latestDisk = 0.0;
 
         $seriesData = [
             'cpu' => [],
             'memory' => [],
+            'container_memory' => [],
             'disk' => [],
         ];
 
@@ -52,6 +53,10 @@ class QueryResourceMetrics
                     $latestMem = $val;
                     $seriesData['memory'][] = ['x' => $ts, 'y' => $val];
                 })(),
+                'container_memory_usage_percent' => (function () use ($val, $ts, &$latestContainerMem, &$seriesData) {
+                    $latestContainerMem = $val;
+                    $seriesData['container_memory'][] = ['x' => $ts, 'y' => $val];
+                })(),
                 'system_disk_usage_percent' => (function () use ($val, $ts, &$latestDisk, &$seriesData) {
                     $latestDisk = $val;
                     $seriesData['disk'][] = ['x' => $ts, 'y' => $val];
@@ -64,12 +69,14 @@ class QueryResourceMetrics
             'latest' => [
                 'cpu_percent' => $latestCpu,
                 'memory_percent' => $latestMem,
+                'container_memory_percent' => $latestContainerMem,
                 'disk_percent' => $latestDisk,
             ],
             'series' => [
-                ['name' => 'CPU Usage %', 'data' => $seriesData['cpu']],
-                ['name' => 'Memory Usage %', 'data' => $seriesData['memory']],
-                ['name' => 'Disk Usage %', 'data' => $seriesData['disk']],
+                ['name' => 'Host CPU Usage %', 'data' => $seriesData['cpu']],
+                ['name' => 'Host RAM Usage %', 'data' => $seriesData['memory']],
+                ['name' => 'Container RAM %', 'data' => $seriesData['container_memory']],
+                ['name' => 'Host Disk Usage %', 'data' => $seriesData['disk']],
             ],
         ];
     }

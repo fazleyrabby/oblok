@@ -23,11 +23,11 @@
 
     <div class="space-y-6">
         <!-- Resource Gauge Overview Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- CPU Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">CPU Usage</span>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host CPU Load</span>
                     <span id="stat-cpu" class="text-xl font-bold text-indigo-400">0%</span>
                 </div>
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
@@ -35,10 +35,21 @@
                 </div>
             </div>
 
-            <!-- Memory Card -->
+            <!-- Container Memory Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Memory Consumption</span>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Container RAM</span>
+                    <span id="stat-container-mem" class="text-xl font-bold text-cyan-400">0%</span>
+                </div>
+                <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
+                    <div id="bar-container-mem" class="bg-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Host Memory Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host System RAM</span>
                     <span id="stat-mem" class="text-xl font-bold text-emerald-400">0%</span>
                 </div>
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
@@ -49,7 +60,7 @@
             <!-- Disk Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Disk Utilization</span>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Host Disk Space</span>
                     <span id="stat-disk" class="text-xl font-bold text-amber-400">0%</span>
                 </div>
                 <div class="w-full bg-gray-950 h-2.5 rounded-full mt-3 overflow-hidden border border-gray-800">
@@ -94,10 +105,13 @@
             if (loaderEl) loaderEl.style.display = 'none';
 
             // Update stats & progress bars
-            const latest = data.latest || { cpu_percent: 0, memory_percent: 0, disk_percent: 0 };
+            const latest = data.latest || { cpu_percent: 0, memory_percent: 0, container_memory_percent: 0, disk_percent: 0 };
             
             document.getElementById('stat-cpu').innerText = `${latest.cpu_percent}%`;
             document.getElementById('bar-cpu').style.width = `${Math.min(latest.cpu_percent, 100)}%`;
+
+            document.getElementById('stat-container-mem').innerText = `${latest.container_memory_percent}%`;
+            document.getElementById('bar-container-mem').style.width = `${Math.min(latest.container_memory_percent, 100)}%`;
 
             document.getElementById('stat-mem').innerText = `${latest.memory_percent}%`;
             document.getElementById('bar-mem').style.width = `${Math.min(latest.memory_percent, 100)}%`;
