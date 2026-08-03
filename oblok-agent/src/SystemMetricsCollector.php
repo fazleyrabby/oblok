@@ -83,9 +83,9 @@ class SystemMetricsCollector
         $limit = null;
 
         // cgroups v2
-        if (is_readable('/sys/fs/cgroup/memory.current') && is_readable('/sys/fs/cgroup/memory.max')) {
+        if (is_readable('/sys/fs/cgroup/memory.current')) {
             $usedVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory.current'));
-            $limitVal = trim((string) @file_get_contents('/sys/fs/cgroup/memory.max'));
+            $limitVal = is_readable('/sys/fs/cgroup/memory.max') ? trim((string) @file_get_contents('/sys/fs/cgroup/memory.max')) : 'max';
 
             if (is_numeric($usedVal)) {
                 $used = (int) $usedVal;
@@ -93,6 +93,12 @@ class SystemMetricsCollector
 
             if (is_numeric($limitVal)) {
                 $limit = (int) $limitVal;
+            } else {
+                // If limit is 'max' (unlimited container limit), fallback to host total memory
+                $memInfo = $this->readMemInfo();
+                if (isset($memInfo['MemTotal'])) {
+                    $limit = $memInfo['MemTotal'] * 1024; // KB to Bytes
+                }
             }
         }
         // cgroups v1 fallback
