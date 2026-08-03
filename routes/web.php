@@ -29,7 +29,11 @@ Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+use App\Http\Controllers\Web\RequestAnalyticsController;
+
 Route::middleware('auth')->group(function () {
+    Route::get('projects/{project}/request-analytics', [RequestAnalyticsController::class, 'index'])->name('projects.request-analytics.index');
+    Route::get('projects/{project}/request-analytics/data', [RequestAnalyticsController::class, 'data'])->name('projects.request-analytics.data');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

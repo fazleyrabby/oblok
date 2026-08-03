@@ -62,7 +62,7 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Custom Metrics | Ingest and store application-defined metrics — ✅ delivered (Phase 16) agentless push endpoint (POST counters/gauges/histograms) plus Prometheus-compatible scrape source |
 | Metric Dashboards | Configurable charts and time-range selectors — ✅ delivered (Phase 16) |
 | Resource Monitoring | Host and container CPU, memory, disk, and network metrics via Prometheus scrape (node_exporter, cAdvisor, app `/metrics`) |
-| Request Monitoring | Per-endpoint request counts, status codes, and latency derived from access logs (agent) or injected middleware |
+| Request Monitoring | Per-endpoint request counts, status codes, and latency derived from access logs (agent) or injected middleware — ✅ delivered (Phase 19) |
 | Advanced Check Types | TCP, TLS/certificate-expiry, DNS, and HTTP-with-expectations health checks beyond plain HTTP — ✅ delivered (Phase 18) |
 | API Key Management | Issue, rotate, and revoke API keys per project — ✅ delivered (Phase 14) |
 | API Usage Tracking | Request counts and rate limiting per key — ✅ delivered (Phase 14) |

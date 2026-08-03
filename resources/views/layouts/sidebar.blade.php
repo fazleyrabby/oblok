@@ -93,6 +93,15 @@
                     <span x-show="!sidebarCollapsed" class="ml-3">Logs Stream</span>
                 </a>
 
+                <a href="{{ $navProject ? route('projects.request-analytics.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.request-analytics.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Request Analytics</span>
+                </a>
+
                 <a href="{{ route('queues.index') }}"
                    :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
                    class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('queues.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">

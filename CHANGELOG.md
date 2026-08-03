@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 19 — Request Analytics & HTTP Traffic Dashboard (v0.3)
+- **Dedicated Request Analytics View**: Built `RequestAnalyticsController` and web view (`resources/views/request-analytics/index.blade.php`) under **Observability > Request Analytics**.
+- **Metrics Aggregation**: Created `QueryRequestAnalytics` action to bucket HTTP traffic into stacked 2xx success, 3xx redirect, 4xx client error, and 5xx server error series over custom timeframes (`1H`, `6H`, `24H`, `7D`).
+- **HTTP Method Breakdown**: Added real-time counters for `GET`, `POST`, `PUT`, `DELETE` request methods.
+- **Sidebar Integration**: Added persistent **Request Analytics** link in `sidebar.blade.php`.
+- **Testing & Quality**: Passed 260 Pest tests and zero PHPStan / Laravel Pint errors.
+
 #### Phase 18 — Advanced Health Check Types (v0.3)
 - **Check Drivers & Registry**: Implemented `HealthCheckerRegistry` to dynamically resolve probes by type (`http`, `tcp`, `tls`, `dns`).
 - **TCP Port Probes**: Added `TcpHealthChecker` to verify raw socket connectivity and measure latency to any host/port.
