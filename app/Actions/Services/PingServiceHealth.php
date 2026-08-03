@@ -5,12 +5,12 @@ namespace App\Actions\Services;
 use App\Events\ServiceStatusChanged;
 use App\Models\HealthCheckResult;
 use App\Models\Service;
-use App\Services\Monitoring\HttpHealthChecker;
+use App\Services\Monitoring\HealthCheckerRegistry;
 
 class PingServiceHealth
 {
     public function __construct(
-        protected HttpHealthChecker $healthChecker,
+        protected HealthCheckerRegistry $healthCheckerRegistry,
     ) {}
 
     /**
@@ -19,7 +19,7 @@ class PingServiceHealth
     public function handle(Service $service): HealthCheckResult
     {
         $previousStatus = $service->status;
-        $resultData = $this->healthChecker->check($service);
+        $resultData = $this->healthCheckerRegistry->check($service);
 
         $result = HealthCheckResult::create([
             'service_id' => $service->id,

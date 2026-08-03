@@ -21,13 +21,48 @@ class HttpHealthChecker implements HealthCheckerInterface
             $durationMs = (int) round((microtime(true) - $startTime) * 1000);
             $statusCode = $response->status();
 
-            $isExpected = $statusCode === $service->expected_status_code;
+            $isExpectedStatus = $statusCode === $service->expected_status_code;
+            $errorMessage = null;
+
+            if (! $isExpectedStatus) {
+                $errorMessage = "HTTP status code {$statusCode} returned (Expected: {$service->expected_status_code})";
+            } else {
+                $config = is_array($service->config) ? $service->config : [];
+
+                // Check body assertions if configured
+                $expectedBodyPattern = isset($config['expected_body_pattern']) ? (string) $config['expected_body_pattern'] : null;
+                if ($expectedBodyPattern !== null && $expectedBodyPattern !== '') {
+                    $body = $response->body();
+                    if (@preg_match($expectedBodyPattern, '') !== false) {
+                        if (! preg_match($expectedBodyPattern, $body)) {
+                            $isExpectedStatus = false;
+                            $errorMessage = "HTTP response body did not match regex pattern '{$expectedBodyPattern}'";
+                        }
+                    } elseif (! str_contains($body, $expectedBodyPattern)) {
+                        $isExpectedStatus = false;
+                        $errorMessage = "HTTP response body did not contain expected substring '{$expectedBodyPattern}'";
+                    }
+                }
+
+                // Check header assertions if configured
+                $expectedHeaders = $config['expected_headers'] ?? null;
+                if ($isExpectedStatus && is_array($expectedHeaders)) {
+                    foreach ($expectedHeaders as $headerName => $expectedValue) {
+                        $headerVal = (string) $response->header((string) $headerName);
+                        if (! str_contains($headerVal, (string) $expectedValue)) {
+                            $isExpectedStatus = false;
+                            $errorMessage = "HTTP response header '{$headerName}' missing or did not match expected '{$expectedValue}'";
+                            break;
+                        }
+                    }
+                }
+            }
 
             return new HealthCheckResultData(
-                status: $isExpected ? 'healthy' : 'failing',
+                status: $isExpectedStatus ? 'healthy' : 'failing',
                 statusCode: $statusCode,
                 responseTimeMs: $durationMs,
-                errorMessage: $isExpected ? null : "HTTP status code {$statusCode} returned (Expected: {$service->expected_status_code})",
+                errorMessage: $errorMessage,
             );
         } catch (Throwable $e) {
             $durationMs = (int) round((microtime(true) - $startTime) * 1000);

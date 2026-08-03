@@ -22,12 +22,13 @@ use Illuminate\Support\Carbon;
  * @property int $check_interval
  * @property int $timeout
  * @property int $expected_status_code
+ * @property array<string, mixed>|null $config
  * @property string $status
  * @property Carbon|null $last_checked_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'status', 'last_checked_at'])]
+#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'config', 'status', 'last_checked_at'])]
 class Service extends Model
 {
     /** @use HasFactory<ServiceFactory> */
@@ -44,6 +45,7 @@ class Service extends Model
             'check_interval' => 'integer',
             'timeout' => 'integer',
             'expected_status_code' => 'integer',
+            'config' => 'array',
             'last_checked_at' => 'datetime',
         ];
     }

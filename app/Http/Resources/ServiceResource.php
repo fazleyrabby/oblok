@@ -25,6 +25,7 @@ class ServiceResource extends JsonResource
             'check_interval' => $this->check_interval,
             'timeout' => $this->timeout,
             'expected_status_code' => $this->expected_status_code,
+            'config' => $this->config,
             'status' => $this->status,
             'last_checked_at' => $this->last_checked_at?->toIso8601String(),
             'recent_results' => HealthCheckResultResource::collection($this->whenLoaded('healthCheckResults')),

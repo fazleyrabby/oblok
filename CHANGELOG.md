@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 18 — Advanced Health Check Types (v0.3)
+- **Check Drivers & Registry**: Implemented `HealthCheckerRegistry` to dynamically resolve probes by type (`http`, `tcp`, `tls`, `dns`).
+- **TCP Port Probes**: Added `TcpHealthChecker` to verify raw socket connectivity and measure latency to any host/port.
+- **TLS Certificate Expiry**: Added `TlsHealthChecker` to inspect SSL certificates and alert when remaining validity drops below configured thresholds (`min_cert_days`).
+- **DNS Record Probes**: Added `DnsHealthChecker` to verify DNS resolution (`A`, `AAAA`, `CNAME`, `MX`, `TXT`) and expected target value matching.
+- **HTTP Assertions**: Enhanced `HttpHealthChecker` to validate regex patterns or substrings in response bodies and verify custom response headers.
+- **Database & Requests**: Added `config` JSON column to `services` table and updated `StoreServiceRequest`/`UpdateServiceRequest` validation.
+- **Testing & Quality**: Passed 258 Pest tests and zero PHPStan / Laravel Pint errors.
+
 #### Phase 17 — oblok Agent (v0.4)
 - **Standalone Agent**: Built `oblok-agent/` — a dependency-free, stack-independent PHP CLI shipper that runs beside any project and pushes data to oblok. No changes to the monitored application are required.
 - **Log Shipping**: `LogLineParser` handles JSON log lines, Laravel text lines (`[2026-08-02 12:00:00] production.ERROR: message`), and plain lines; `FileTailer` tails from the end, survives rotation/truncation, and forwards each line to `POST /api/v1/projects/{project}/logs`.
