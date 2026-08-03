@@ -253,8 +253,9 @@ The service detail page provides a complete view: current status, historical per
 
 oblok dashboards support **zero-refresh real-time monitoring**:
 
-- **Realtime WebSockets (Laravel Reverb)**: Live event broadcasts for health check failures, alert triggers, and deployment status changes.
+- **Realtime WebSockets (Laravel Reverb)**: Live event broadcasts for health check failures, alert triggers, and deployment status changes. Broadcasts are queued on the `broadcasts` queue, published by the worker over HTTP to the Reverb server, then fanned out to browser clients on authenticated `projects.{id}` private channels.
 - **Polling / Auto-Refresh Stream**: Server Resources and Request Analytics dashboards maintain a background refresh ticker (every 5-10s) to update cards, ApexCharts series, and log history tables seamlessly without reloading the page.
+- **Server-Agnostic WebSocket Host**: The Echo client connects using the page's own `window.location.hostname` (port 8080) instead of a hardcoded host, so realtime works over LAN, Tailscale, and local dev URLs from one built bundle.
 - **Visual Stream Indicator**: A pulsing green `[Live: ON]` badge indicates an active real-time connection.
 
 ---

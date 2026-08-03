@@ -105,7 +105,8 @@ graph TB
 - **Policies**: Fine-grained resource authorization.
 - `app/Actions/Metrics/QueryMetrics.php`: Aggregates counter, gauge, and histogram metric samples for interactive custom charts.
 - `app/Actions/Metrics/QueryRequestAnalytics.php`: Aggregates HTTP status codes (`2xx`, `3xx`, `4xx`, `5xx`) and request volume time-series.
-- `app/Actions/Metrics/QueryResourceMetrics.php`: Aggregates system resource utilization (`system_cpu_usage_percent`, `system_memory_usage_percent`, `system_disk_usage_percent`).
+- `app/Actions/Metrics/QueryResourceMetrics.php`: Aggregates system resource utilization (`system_cpu_usage_percent`, `system_memory_usage_percent`, `container_memory_usage_percent`, `system_disk_usage_percent`) into a single down-sampled series per metric (capped to 60 points) so the Server Resources dashboard stays responsive even when the agent posts high-cardinality samples.
+- `app/Actions/Metrics/QueryMetricSeries.php`: Down-samples custom metric samples into per-label chart series, capped to `maxSeries = 20` by default, for the Custom Metrics page.
 - `app/Actions/Services/PingServiceHealth.php`: Executes polymophic probe checks (`HTTP`, `TCP`, `TLS/SSL`, `DNS`) via `HealthCheckerRegistry`. resolving `HttpHealthChecker`, `TcpHealthChecker`, `TlsHealthChecker`, and `DnsHealthChecker` implementing `HealthCheckerInterface`).
 
 **Domain & Persistence Layer**
@@ -207,6 +208,7 @@ graph LR
 - `default`: Standard application jobs
 - `monitoring`: High-priority health check execution
 - `notifications`: Alert delivery
+- `broadcasts`: Queued Laravel broadcast jobs. The worker drains this queue and publishes events to Reverb over HTTP; Reverb then fans them out to connected WebSocket clients over the `projects.{id}` private channels.
 - `low`: Maintenance and analytics cleanup
 
 ---
@@ -255,4 +257,6 @@ graph TB
     Worker --> RD
     Scheduler --> RD
     Reverb --> RD
+    Worker -. HTTP .-> Reverb
+    Reverb -. WebSocket .-> Browser
 ```
