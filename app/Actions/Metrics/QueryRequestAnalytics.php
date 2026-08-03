@@ -80,8 +80,10 @@ class QueryRequestAnalytics
 
             return [
                 'timestamp' => $sample->recorded_at->toDateTimeString(),
+                'ip' => (string) ($labels['ip'] ?? '127.0.0.1'),
                 'method' => strtoupper((string) ($labels['method'] ?? 'GET')),
                 'status' => (string) ($labels['status'] ?? '200'),
+                'user_agent' => (string) ($labels['user_agent'] ?? 'Browser / Agent'),
                 'count' => (int) $sample->value,
             ];
         })->all();
