@@ -17,6 +17,7 @@ class Runner
         $logParser = new LogLineParser;
         $accessParser = new AccessLogParser;
         $aggregator = new RequestMetricsAggregator;
+        $sysCollector = new SystemMetricsCollector;
 
         $tailers = [];
 
@@ -53,8 +54,12 @@ class Runner
             if ((microtime(true) - $lastFlush) >= $this->config->flushInterval) {
                 $metrics = $aggregator->flush('http_requests', (new \DateTimeImmutable)->format('c'));
 
-                if ($metrics !== []) {
-                    $this->client->pushMetrics($metrics);
+                // Add system metrics (CPU, Memory, Disk)
+                $sysMetrics = $sysCollector->collect();
+                $allMetrics = array_merge($metrics, $sysMetrics);
+
+                if ($allMetrics !== []) {
+                    $this->client->pushMetrics($allMetrics);
                 }
 
                 $lastFlush = microtime(true);

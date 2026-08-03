@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 20 — Resource & Server Monitoring (v0.3)
+- **Server Resources Dashboard**: Built `ResourceMonitoringController` and web view (`resources/views/resources/index.blade.php`) under **Observability > Server Resources**.
+- **Metrics Aggregation**: Created `QueryResourceMetrics` action class to query and calculate CPU usage %, Memory consumption %, and Disk utilization % metrics across timeframe selectors (`1H`, `6H`, `24H`, `7D`).
+- **Sysinfo Agent Collector**: Created `SystemMetricsCollector` in `oblok-agent` to automatically measure Linux `/proc` memory info, CPU load, and disk utilization space.
+- **Sidebar Integration**: Added persistent **Server Resources** navigation link in `sidebar.blade.php`.
+- **Testing & Quality**: Passed 262 Pest tests with 0 PHPStan and Pint errors.
+
 #### Phase 19 — Request Analytics & HTTP Traffic Dashboard (v0.3)
 - **Dedicated Request Analytics View**: Built `RequestAnalyticsController` and web view (`resources/views/request-analytics/index.blade.php`) under **Observability > Request Analytics**.
 - **Metrics Aggregation**: Created `QueryRequestAnalytics` action to bucket HTTP traffic into stacked 2xx success, 3xx redirect, 4xx client error, and 5xx server error series over custom timeframes (`1H`, `6H`, `24H`, `7D`).

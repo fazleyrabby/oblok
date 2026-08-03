@@ -30,8 +30,11 @@ Route::get('/dashboard', DashboardController::class)
     ->name('dashboard');
 
 use App\Http\Controllers\Web\RequestAnalyticsController;
+use App\Http\Controllers\Web\ResourceMonitoringController;
 
 Route::middleware('auth')->group(function () {
+    Route::get('projects/{project}/resources', [ResourceMonitoringController::class, 'index'])->name('projects.resources.index');
+    Route::get('projects/{project}/resources/data', [ResourceMonitoringController::class, 'data'])->name('projects.resources.data');
     Route::get('projects/{project}/request-analytics', [RequestAnalyticsController::class, 'index'])->name('projects.request-analytics.index');
     Route::get('projects/{project}/request-analytics/data', [RequestAnalyticsController::class, 'data'])->name('projects.request-analytics.data');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
