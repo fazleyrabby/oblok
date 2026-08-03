@@ -45,7 +45,7 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Queue Monitoring | Job queue visibility, job inspection, retry failed jobs — metrics ingested from any queue (Laravel, Bull, RQ, Kafka) via the metrics API, decoupled from oblok's own Redis |
 | Notifications | Multi-channel alerting (email, Slack, webhook) with configurable rules |
 | Alert Rules | Threshold-based alerts tied to monitoring and queue metrics |
-| Realtime Updates | WebSocket-powered live updates for dashboards and logs |
+| Realtime Updates | WebSocket-powered live updates (Laravel Reverb) & auto-refresh streaming for dashboards, request metrics, server resources, and logs |
 
 ---
 

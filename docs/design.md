@@ -249,6 +249,16 @@ The service detail page provides a complete view: current status, historical per
 
 ---
 
+## Realtime Data Streaming & Auto-Refresh
+
+oblok dashboards support **zero-refresh real-time monitoring**:
+
+- **Realtime WebSockets (Laravel Reverb)**: Live event broadcasts for health check failures, alert triggers, and deployment status changes.
+- **Polling / Auto-Refresh Stream**: Server Resources and Request Analytics dashboards maintain a background refresh ticker (every 5-10s) to update cards, ApexCharts series, and log history tables seamlessly without reloading the page.
+- **Visual Stream Indicator**: A pulsing green `[Live: ON]` badge indicates an active real-time connection.
+
+---
+
 ## Empty States
 
 Every view that can be empty must provide:
