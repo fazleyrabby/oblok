@@ -4,9 +4,9 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 const reverbKey = import.meta.env.VITE_REVERB_APP_KEY;
-const reverbHost = import.meta.env.VITE_REVERB_HOST ?? '127.0.0.1';
-const reverbPort = import.meta.env.VITE_REVERB_PORT ?? 8080;
-const reverbScheme = import.meta.env.VITE_REVERB_SCHEME ?? 'http';
+const reverbHost = import.meta.env.VITE_REVERB_HOST || window.location.hostname;
+const reverbPort = import.meta.env.VITE_REVERB_PORT || 8080;
+const reverbScheme = import.meta.env.VITE_REVERB_SCHEME || (window.location.protocol === 'https:' ? 'https' : 'http');
 
 let echo = null;
 
