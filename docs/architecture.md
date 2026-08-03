@@ -103,6 +103,10 @@ graph TB
 - **Jobs**: Queued async tasks (`ProcessHealthCheckPingJob`).
 - **Events & Listeners**: Decoupled domain notifications (e.g., `ServiceStatusChanged`).
 - **Policies**: Fine-grained resource authorization.
+- `app/Actions/Metrics/QueryMetrics.php`: Aggregates counter, gauge, and histogram metric samples for interactive custom charts.
+- `app/Actions/Metrics/QueryRequestAnalytics.php`: Aggregates HTTP status codes (`2xx`, `3xx`, `4xx`, `5xx`) and request volume time-series.
+- `app/Actions/Metrics/QueryResourceMetrics.php`: Aggregates system resource utilization (`system_cpu_usage_percent`, `system_memory_usage_percent`, `system_disk_usage_percent`).
+- `app/Actions/Services/PingServiceHealth.php`: Executes polymophic probe checks (`HTTP`, `TCP`, `TLS/SSL`, `DNS`) via `HealthCheckerRegistry`. resolving `HttpHealthChecker`, `TcpHealthChecker`, `TlsHealthChecker`, and `DnsHealthChecker` implementing `HealthCheckerInterface`).
 
 **Domain & Persistence Layer**
 - **Eloquent Models**: Rich Active Record entities handling relationships, casting, model scopes (`scopeActive()`), and domain query methods.

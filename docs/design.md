@@ -230,6 +230,25 @@ The service detail page provides a complete view: current status, historical per
 
 ---
 
+## Server Resources & Sysinfo View
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Server Resources — SignalStack          [1H] [6H] [24H] [7D]│
+├──────────────────────┬──────────────────────┬───────────────┤
+│ CPU Usage            │ Memory Consumption   │ Disk Space    │
+│ [████████░░] 74.2%   │ [██████░░░░] 61.5%   │ [███░░░░░] 32%│
+├──────────────────────┴──────────────────────┴───────────────┤
+│ Resource Utilization History (CPU, Mem, Disk % over time)   │
+│ ~~~~~~~~~~~~\/\/\/\/\/\/\/\/\/\/\/\------------------------- │
+└─────────────────────────────────────────────────────────────┘
+```
+
+- **Live Gauge Indicators**: Progress bar cards displaying real-time Host & Container CPU %, Memory %, and Disk % utilization.
+- **ApexCharts Time-Series**: Interactive line graph showing resource usage curves across configurable timeframes (`1H`, `6H`, `24H`, `7D`).
+
+---
+
 ## Empty States
 
 Every view that can be empty must provide:
