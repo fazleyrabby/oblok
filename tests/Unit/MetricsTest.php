@@ -2,6 +2,7 @@
 
 use App\Actions\Metrics\IngestMetrics;
 use App\Actions\Metrics\QueryMetricSeries;
+use App\Actions\Metrics\QueryResourceMetrics;
 use App\Actions\Metrics\ScrapeMetricTarget;
 use App\Models\MetricSample;
 use App\Models\MetricTarget;
@@ -157,6 +158,39 @@ test('query action caps high-cardinality series to keep charts responsive', func
     );
 
     expect($series)->toHaveCount(20);
+});
+
+test('resource dashboard down-samples dense, high-cardinality samples into one series per metric', function () {
+    $project = Project::factory()->create();
+    $now = Carbon::parse('2026-08-02 12:00:00');
+
+    // 30 distinct volatile label combos (used_bytes/limit_bytes), each with 10
+    // samples spread across the window — the exact shape that previously handed
+    // the browser ~1400 points and froze ApexCharts.
+    foreach (range(0, 29) as $bucket) {
+        foreach (range(0, 9) as $n) {
+            MetricSample::factory()->create([
+                'project_id' => $project->id,
+                'name' => 'container_memory_usage_percent',
+                'labels' => ['type' => 'container', 'used_bytes' => (string) ($bucket * 1000 + $n)],
+                'value' => $bucket + $n,
+                'recorded_at' => $now->copy()->addMinutes($n),
+            ]);
+        }
+    }
+
+    $data = app(QueryResourceMetrics::class)->handle(
+        $project,
+        $now->copy()->subMinute(),
+        $now->copy()->addMinutes(10),
+        points: 60
+    );
+
+    // One series per metric (labels collapsed), each capped to the requested
+    // number of points regardless of how many label combos exist.
+    expect($data['series'])->toHaveCount(4)
+        ->and($data['has_container_metrics'])->toBeTrue()
+        ->and(count($data['series'][2]['data']))->toBeLessThanOrEqual(60);
 });
 
 test('scrape action ingests samples and updates target metadata', function () {

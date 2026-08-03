@@ -9,111 +9,126 @@ use Illuminate\Support\Carbon;
 class QueryResourceMetrics
 {
     /**
-     * Get aggregated resource metrics (CPU, Memory, Disk, Network) for a project.
+     * Get aggregated resource metrics (CPU, Memory, Disk) for a project.
      *
+     * Unlike QueryMetricSeries (which preserves per-label series), this action
+     * collapses each metric into a single down-sampled chart series. This is
+     * intentional: the resource dashboard plots all four metrics on one shared
+     * axis, so per-label granularity is noise, and without down-sampling a busy
+     * agent (e.g. container memory posted every ~11s for weeks) would hand the
+     * browser hundreds of thousands of raw points — freezing ApexCharts and
+     * making the page unresponsive.
+     *
+     * @param  int  $points  Maximum number of data points per series.
      * @return array<string, mixed>
      */
-    public function handle(Project $project, Carbon $from, Carbon $to): array
+    public function handle(Project $project, Carbon $from, Carbon $to, int $points = 60): array
     {
         $metricNames = [
             'system_cpu_usage_percent',
             'system_memory_usage_percent',
             'container_memory_usage_percent',
             'system_disk_usage_percent',
-            'system_cpu_cores',
         ];
 
-        $samples = MetricSample::query()
-            ->where('project_id', $project->id)
+        $pointCount = max(1, $points);
+        $spanMs = (int) $to->getTimestampMs() - (int) $from->getTimestampMs();
+        $stepMs = $spanMs > 0 ? max(1, (int) ceil($spanMs / $pointCount)) : 1;
+
+        $raw = MetricSample::query()
+            ->forProject($project->id)
             ->whereIn('name', $metricNames)
             ->whereBetween('recorded_at', [$from, $to])
-            ->get();
+            ->orderBy('recorded_at')
+            ->get(['name', 'labels', 'value', 'recorded_at']);
 
-        $latestCpu = 0.0;
-        $latestMem = 0.0;
-        $latestContainerMem = 0.0;
-        $latestDisk = 0.0;
-        $cpuCores = 1;
-        $environment = 'unknown';
+        // Bucket each metric into a single series (labels collapsed) to avoid
+        // high-cardinality label combos multiplying the series count.
+        $buckets = [];
+        $environment = 'host';
 
-        $seriesData = [
-            'cpu' => [],
-            'memory' => [],
-            'container_memory' => [],
-            'disk' => [],
-        ];
-
-        foreach ($samples as $sample) {
-            $val = round((float) $sample->value, 2);
-            $ts = $sample->recorded_at->timestamp * 1000;
+        foreach ($raw as $sample) {
             $labels = $sample->labels ?? [];
 
             if (isset($labels['environment']) && in_array($labels['environment'], ['host', 'container'], true)) {
                 $environment = $labels['environment'];
             }
 
-            match ($sample->name) {
-                'system_cpu_usage_percent' => (function () use ($sample, $val, $ts, &$latestCpu, &$cpuCores, &$seriesData) {
-                    $latestCpu = $val;
-                    $labels = $sample->labels ?? [];
-                    if (isset($labels['cores']) && is_numeric($labels['cores'])) {
-                        $cpuCores = (int) $labels['cores'];
-                    }
-                    $seriesData['cpu'][] = ['x' => $ts, 'y' => $val];
-                })(),
-                'system_cpu_cores' => (function () use ($val, &$cpuCores) {
-                    $cpuCores = (int) $val;
-                })(),
-                'system_memory_usage_percent' => (function () use ($val, $ts, &$latestMem, &$seriesData) {
-                    $latestMem = $val;
-                    $seriesData['memory'][] = ['x' => $ts, 'y' => $val];
-                })(),
-                'container_memory_usage_percent' => (function () use ($val, $ts, &$latestContainerMem, &$seriesData) {
-                    $latestContainerMem = $val;
-                    $seriesData['container_memory'][] = ['x' => $ts, 'y' => $val];
-                })(),
-                'system_disk_usage_percent' => (function () use ($val, $ts, &$latestDisk, &$seriesData) {
-                    $latestDisk = $val;
-                    $seriesData['disk'][] = ['x' => $ts, 'y' => $val];
-                })(),
-                default => null,
-            };
+            $index = (int) floor((float) ($sample->recorded_at->getTimestampMs() - $from->getTimestampMs()) / $stepMs);
+            $index = min(max($index, 0), $pointCount - 1);
+
+            $buckets[$sample->name][$index][] = (float) $sample->value;
         }
 
-        // Helper to compute avg & peak
-        $calcStats = function (array $series) {
-            if (empty($series)) {
-                return ['avg' => 0.0, 'peak' => 0.0];
-            }
-            $vals = array_column($series, 'y');
+        $buildSeries = function (string $metric) use ($from, $stepMs, $pointCount, $buckets): array {
+            $data = [];
+            $samples = $buckets[$metric] ?? [];
 
-            return [
-                'avg' => round(array_sum($vals) / count($vals), 1),
-                'peak' => round(max($vals), 1),
-            ];
+            for ($i = 0; $i < $pointCount; $i++) {
+                $values = $samples[$i] ?? [];
+                if ($values === []) {
+                    continue;
+                }
+
+                $data[] = [
+                    $from->getTimestampMs() + ($stepMs * $i),
+                    round(array_sum($values) / count($values), 2),
+                ];
+            }
+
+            return ['name' => $metric, 'data' => $data];
         };
+
+        $series = [
+            $buildSeries('system_cpu_usage_percent'),
+            $buildSeries('system_memory_usage_percent'),
+            $buildSeries('container_memory_usage_percent'),
+            $buildSeries('system_disk_usage_percent'),
+        ];
+
+        $latestCpuCores = (float) (MetricSample::query()
+            ->forProject($project->id)
+            ->named('system_cpu_cores')
+            ->whereBetween('recorded_at', [$from, $to])
+            ->latest('recorded_at')
+            ->value('value') ?: 1);
+
+        $latest = [];
+        $stats = [];
+        $names = ['cpu', 'memory', 'container_memory', 'disk'];
+        $metrics = ['system_cpu_usage_percent', 'system_memory_usage_percent', 'container_memory_usage_percent', 'system_disk_usage_percent'];
+
+        foreach ($metrics as $i => $metric) {
+            $entry = $series[$i]['data'];
+            $vals = array_column($entry, 1);
+            $latest[$names[$i]] = empty($vals) ? 0.0 : (float) end($vals);
+            $stats[$names[$i]] = [
+                'avg' => empty($vals) ? 0.0 : round(array_sum($vals) / count($vals), 1),
+                'peak' => empty($vals) ? 0.0 : round(max($vals), 1),
+            ];
+        }
 
         return [
             'environment' => $environment,
-            'has_container_metrics' => $seriesData['container_memory'] !== [],
+            'has_container_metrics' => $series[2]['data'] !== [],
             'latest' => [
-                'cpu_percent' => $latestCpu,
-                'cpu_cores' => $cpuCores,
-                'memory_percent' => $latestMem,
-                'container_memory_percent' => $latestContainerMem,
-                'disk_percent' => $latestDisk,
+                'cpu_percent' => $latest['cpu'],
+                'cpu_cores' => $latestCpuCores ?: 1,
+                'memory_percent' => $latest['memory'],
+                'container_memory_percent' => $latest['container_memory'],
+                'disk_percent' => $latest['disk'],
             ],
             'stats' => [
-                'cpu' => $calcStats($seriesData['cpu']),
-                'memory' => $calcStats($seriesData['memory']),
-                'container_memory' => $calcStats($seriesData['container_memory']),
-                'disk' => $calcStats($seriesData['disk']),
+                'cpu' => $stats['cpu'],
+                'memory' => $stats['memory'],
+                'container_memory' => $stats['container_memory'],
+                'disk' => $stats['disk'],
             ],
             'series' => [
-                ['name' => 'Host CPU Usage %', 'data' => $seriesData['cpu']],
-                ['name' => 'Host RAM Usage %', 'data' => $seriesData['memory']],
-                ['name' => 'Container RAM %', 'data' => $seriesData['container_memory']],
-                ['name' => 'Host Disk Usage %', 'data' => $seriesData['disk']],
+                ['name' => 'Host CPU Usage %', 'data' => $series[0]['data']],
+                ['name' => 'Host RAM Usage %', 'data' => $series[1]['data']],
+                ['name' => 'Container RAM %', 'data' => $series[2]['data']],
+                ['name' => 'Host Disk Usage %', 'data' => $series[3]['data']],
             ],
         ];
     }
