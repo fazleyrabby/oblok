@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 22 — Frontend Performance & Brand Polish
+- **ApexCharts bundled locally**: Removed the render-blocking `cdn.jsdelivr.net` ApexCharts script from the Metrics, Request Analytics, Server Resources, and Services pages. The library is now bundled via Vite and exposed as `window.ApexCharts` (`resources/js/app.js`), with guards so charts degrade gracefully if the library is ever unavailable. Fixes the "UI freezes and the chart never renders" behavior when the CDN is slow or unreachable.
+- **Smooth analytics live-refresh**: Request Analytics and Server Resources no longer destroy and recreate their charts on every 5s live tick. They update in place via `chart.updateSeries()` (no full re-render blink), and the request-count chart pins `yaxis.min: 0` to avoid ApexCharts' `RangeError: Invalid array length` on flat/empty data.
+- **Agent container memory fix**: `SystemMetricsCollector` no longer emits `container_memory_usage_percent` when the container has no real cgroup memory limit (`memory.max = 'max'`). It previously fell back to host RAM as the denominator and pushed a meaningless flat ~0.07% series.
+- **Homepage redesign**: Rewrote `resources/views/welcome.blade.php` as a self-hosted positioning page — hero with a real console preview chart, capability bento grid, self-hosted trust section, real Docker install snippet, and corrected GitHub URL (`fazleyrabby/oblok`). No fabricated metrics or testimonials.
+- **Render-inspired teal palette**: Remapped the `indigo` scale in `tailwind.config.js` to a teal accent (`#46e1d5` highlights, `#0f766e` button fills for AA contrast), re-theming the homepage and every dashboard page. Updated ApexCharts series colors and scrollbar hover accents accordingly.
+- **Subtle corners & calmer motion**: Reduced homepage corner radii to `rounded-md`/`rounded`, and removed the animated pulse dots from the hero badge and console preview.
+
 #### Phase 21 — Realtime Data Streaming & Auto-Refresh (v0.2)
 - **Laravel Reverb WebSockets**: Installed and configured Reverb as the broadcast driver with authenticated private project channels (`projects.{id}`).
 - **Broadcast Events**: Added `ServiceHealthChanged`, `AlertTriggered`, and `DeploymentStatusChanged` broadcast events dispatched from health checks, alert rules, and deployment webhooks; each carries a rich payload on a per-project channel.

@@ -214,6 +214,9 @@
 - Interactive tooltips, zooming, and time-range selection.
 - No framework dependency — works with vanilla JavaScript and Blade.
 
+**Distribution:**
+- Bundled locally via Vite (`apexcharts` npm dependency, exposed as `window.ApexCharts`). Charts are not loaded from a third-party CDN, so the dashboards work on networks where external CDNs are blocked or slow.
+
 **Alternatives considered:**
 
 | Alternative | Reason Not Selected |

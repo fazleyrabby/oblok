@@ -121,7 +121,7 @@ Do not rely on color alone to communicate state.
 
 Primary
 
-Blue
+Teal (#46e1d5)
 
 Success
 
