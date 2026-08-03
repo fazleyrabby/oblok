@@ -209,6 +209,27 @@ The service detail page provides a complete view: current status, historical per
 
 ---
 
+## Log Inspector & HTTP Request Logs View
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Log Stream — SignalStack              [Live: ON] [API Info] │
+├─────────────────────────────────────────────────────────────┤
+│ [Search request or URL...]  [Status: All ▼] [Method: All ▼] │
+├──────┬────────┬────────┬──────────────────────────┬─────────┤
+│ Time │ Status │ Method │ URL / Message            │ Latency │
+├──────┼────────┼────────┼──────────────────────────┼─────────┤
+│ 19:17│  200   │  GET   │ https://example.com/api  │  42ms   │
+│ 19:17│  404   │  POST  │ https://example.com/test │  12ms   │
+└──────┴────────┴────────┴──────────────────────────┴─────────┘
+```
+
+- **Dual View**: Supports both raw application logs (`app.log`) and structured HTTP request logs (method, status badge, endpoint URL, user agent, latency).
+- **Realtime Stream**: Toggleable auto-refresh interval for live traffic monitoring.
+- **Filters**: Filter by HTTP Status Code (`2xx`, `4xx`, `5xx`), HTTP Method (`GET`, `POST`, `PUT`, `DELETE`), or string query.
+
+---
+
 ## Empty States
 
 Every view that can be empty must provide:

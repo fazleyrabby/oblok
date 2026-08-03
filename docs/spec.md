@@ -253,7 +253,7 @@ These modules are planned for post-MVP development. See [roadmap.md](roadmap.md)
 
 | Module | Description |
 |--------|-------------|
-| Logs | Centralized log aggregation and search |
+| Logs | Centralized log aggregation, real-time log stream, and HTTP access log inspection (method, status, latency, user-agent filters) |
 | Queue Monitoring | Job queue visibility with inspection and retry |
 | Notifications | Multi-channel alerting (email, Slack, webhooks) |
 | Deployments | Deployment tracking and history |
