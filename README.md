@@ -1,7 +1,7 @@
 # oblok
 
-<img width="1260" height="772" alt="CleanShot 2026-08-03 at 01 01 46" src="https://github.com/user-attachments/assets/359a0685-35d6-4ab5-b6b1-9b63060c0c47" />
-
+<!-- <img width="2290" height="1970" alt="CleanShot 2026-08-04 at 10 31 53@2x" src="https://github.com/user-attachments/assets/2373fff6-8b37-4941-abda-cad753b38717" /> -->
+<img width="2382" height="1694" alt="CleanShot 2026-08-04 at 10 33 14@2x" src="https://github.com/user-attachments/assets/9860008f-2902-4fdb-83b2-0cfbda5192c2" />
 
 A self-hosted Developer Operations Platform for engineering teams.
 
