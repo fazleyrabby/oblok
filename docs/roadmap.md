@@ -165,9 +165,9 @@ oblok treats every monitored project as a black box, regardless of framework (La
 
 | Version | Status　　　　　　| Notes |
 | ---------| -------------------| -------|
-| v0.1    | 🔵 In Development | MVP   |
-| v0.2    | 🔵 In Development | Log Aggregation, Queue Monitoring, Notifications, Alert Rules delivered (Phases 5–10); Realtime Updates delivered (Phase 21) |
-| v0.3    | 🔵 In Development | Deployment Tracking + History delivered (Phase 5); API Key Management + Usage Tracking delivered (Phase 14); Custom Metrics + Metric Dashboards delivered (Phase 16); Resource + Request Monitoring delivered (Phase 19); Advanced Check Types delivered (Phase 18) |
-| v0.4    | 🔵 In Development | Webhook Inspector + Replay delivered (Phase 11); Scheduler Monitoring delivered (Phase 12); GitHub Integration delivered (Phase 13); API Key Management + Usage Tracking delivered (Phase 14); Slack Integration delivered (Phase 15); oblok Agent delivered (Phase 17) |
-| v0.5    | ⚪ Planned　　　　 |       |
-| v1.0    | ⚪ Planned　　　　 |       |
+| v0.1    | ✅ Delivered | Auth, Projects, Dashboard, Service Monitoring (Phases 0–4) |
+| v0.2    | ✅ Delivered | Log Aggregation, Queue Monitoring, Notifications, Alert Rules (Phases 5–10); Realtime Updates (Phase 21) |
+| v0.3    | ✅ Delivered | Deployment Tracking (Phase 5); API Key Management (Phase 14); Custom Metrics + Dashboards (Phase 16); Resource + Request Monitoring (Phases 19–20); Advanced Check Types (Phase 18) |
+| v0.4    | ✅ Delivered | Webhook Inspector + Replay (Phase 11); Scheduler Monitoring (Phase 12); GitHub Integration (Phase 13); Slack Integration (Phase 15); oblok Agent (Phase 17) |
+| v0.5    | ⚪ Planned　　　　 | Intelligence — AI Assistant, anomaly detection, incident suggestions |
+| v1.0    | ⚪ Planned　　　　 | Stability, security/perf audit, WCAG AA, onboarding wizard, complete API v1 |

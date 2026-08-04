@@ -124,10 +124,10 @@ php artisan migrate
 
 | Version | Theme | Status |
 |---------|-------|--------|
-| v0.1 | Foundation — Auth, Projects, Dashboard, Monitoring | 🔵 In Development |
-| v0.2 | Observability — Logs, Queues, Notifications | ⚪ Planned |
-| v0.3 | Control Plane — Deployments, Metrics, API Keys | ⚪ Planned |
-| v0.4 | Integrations — Webhooks, Scheduler, Third-Party | 🔵 In Development |
+| v0.1 | Foundation — Auth, Projects, Dashboard, Monitoring | ✅ Delivered |
+| v0.2 | Observability — Logs, Queues, Notifications | ✅ Delivered |
+| v0.3 | Control Plane — Deployments, Metrics, API Keys | ✅ Delivered |
+| v0.4 | Integrations — Webhooks, Scheduler, Third-Party | ✅ Delivered |
 | v0.5 | Intelligence — AI Assistant | ⚪ Planned |
 | v1.0 | Public Release — Stability, Docs, Hardening | ⚪ Planned |
 

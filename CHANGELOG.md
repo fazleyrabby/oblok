@@ -155,6 +155,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v0.4.0] — Milestone v0.4 Integrations
+
+### Added
+
+#### Phase 17 — oblok Agent (v0.4)
+- **Standalone log/metric shipper**: `oblok-agent` — a dependency-free PHP CLI that tails log files (JSON, Laravel text, plain) and nginx access logs, collects host/container resource stats, and pushes to oblok's REST APIs. No application code changes required.
+- **Deployment & Docs**: `Dockerfile`, `docker-compose.oblok-agent.yml`, and a systemd/supervisor walkthrough for bare-metal hosts. Auto-detects container vs host and tags every sample accordingly.
+
+#### Phase 15 — Slack Integration (v0.4)
+- **Messaging driver framework**: `MessagingIntegration` with a Slack driver; Discord/Telegram ready via the same interface. Supports notification channels and alert delivery.
+
+#### Phase 13 — GitHub Integration (v0.4)
+- Link a project to a repository (`owner/name`) with a GitHub token; commits and pull requests sync automatically every 15 minutes and surface in the project context.
+
+#### Phase 12 — Scheduler Monitoring (v0.4)
+- Track scheduled/cron tasks and their recent runs (pass/fail), with missed-run detection.
+
+#### Phase 11 — Webhook Inspector & Replay (v0.4)
+- Capture inbound webhooks with full payload and headers; inspect and replay them for debugging.
+
+---
+
+## [v0.3.0] — Milestone v0.3 Control Plane
+
+### Added
+
+#### Phase 20 — Resource Monitoring (v0.3)
+- Host and container CPU, memory, disk, and network metrics via Prometheus-compatible scrape (node_exporter, cAdvisor, app `/metrics`) or the agent. Dashboard shows a `Host`/`Container` badge and hides the container card when no cgroup limit exists.
+
+#### Phase 19 — Request Monitoring (v0.3)
+- Per-endpoint request counts, status codes, and latency derived from access logs (via the agent) or injected middleware.
+
+#### Phase 18 — Advanced Check Types (v0.3)
+- Beyond plain HTTP: TCP, TLS/certificate-expiry, DNS, and HTTP-with-expectations health checks.
+
+#### Phase 16 — Custom Metrics & Metric Dashboards (v0.3)
+- Agentless push endpoint for counters/gauges/histograms and Prometheus-compatible scrape targets. Configurable charts with 1H/6H/24H/7D time ranges.
+
+#### Phase 14 — API Key Management & Usage Tracking (v0.3)
+- Issue, rotate, and revoke per-project Bearer API keys; request counts and rate limiting per key.
+
+---
+
 ## [v0.2.0] - 2026-08-02 — Milestone v0.2 Queue & Deployment Operations Release
 
 ### Added
@@ -183,7 +226,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Database & Models**: Created `deployments` migration (`2026_08_02_000002_create_deployments_table.php`) and `Deployment` Eloquent model with UUID keys, soft deletes, and environment scopes.
 - **Webhook Receiver**: Implemented `ProcessDeploymentWebhook` action (`app/Actions/Deployments/ProcessDeploymentWebhook.php`) parsing GitHub, Vercel, and Railway CI/CD payload metadata.
 - **Controllers & Views**: Built `DeploymentWebhookController` (`POST /api/v1/webhooks/deployments/{project:slug}`), Web controller, and deployment history timeline Blade views (`resources/views/deployments/`).
-- **Testing**: Added Pest unit and feature tests (`tests/Unit/DeploymentTest.php`, `tests/Feature/Deployments/*`).
+- **Testing**: Added Pest unit and feature tests (`tests/Unit/DeploymentTest.php`, `tests/Feature/Deploys/*`).
+
+#### Phase 10 — Notification Channels & Delivery (v0.2)
+- **Channels**: Email, webhook, and Slack notification channels configured per project.
+- **Delivery & History**: `NotificationDelivery` records every send with status; consumers built for each channel driver.
+
+#### Phase 9 — Alert Rules & Threshold Alerts (v0.2)
+- **Rules engine**: Threshold-based `AlertRule` tied to monitoring and queue metrics; triggers `AlertEvent` and dispatches through notification channels.
+- **UI & API**: Web and API V1 controllers for managing rules and viewing alert events; reject noisy alerts via configurable thresholds.
 
 ---
 

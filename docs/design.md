@@ -36,11 +36,16 @@ oblok uses a persistent left sidebar as the primary navigation mechanism.
 │          │                                  │
 │ ─ Dashboard                                 │
 │ ─ Services                                  │
-│ ─ Monitoring                                │
-│ ─ Logs       (future)                       │
-│ ─ Queues     (future)                       │
-│ ─ Deploys    (future)                       │
-│ ─ Webhooks   (future)                       │
+│ ─ Logs                                      │
+│ ─ Queues                                    │
+│ ─ Deployments                               │
+│ ─ Webhooks                                  │
+│ ─ Scheduler                                 │
+│ ─ Incidents                                 │
+│ ─ Metrics                                   │
+│ ─ API Keys                                  │
+│ ─ Integrations (GitHub, Slack)              │
+│ ─ Alerts                                    │
 │ ─ Settings                                  │
 │          │                                  │
 │          │                                  │
@@ -64,7 +69,7 @@ The top bar contains:
 - Project selector (dropdown to switch between projects).
 - Breadcrumbs showing current location.
 - Search trigger (opens command palette).
-- Notification bell (future).
+- Notification bell.
 - User avatar and dropdown menu.
 
 **Why a project selector in the top bar?** Engineers often manage multiple projects. The project context should be switchable without navigating away from the current section.
@@ -139,9 +144,9 @@ Navigation items are grouped by function:
 | Group | Items |
 |-------|-------|
 | Core | Dashboard, Services |
-| Observability | Monitoring, Logs (future), Queues (future) |
-| Operations | Deployments (future), Webhooks (future), Scheduler (future) |
-| Management | Settings, API Keys (future) |
+| Observability | Monitoring, Logs, Queues |
+| Operations | Deployments, Webhooks, Scheduler |
+| Management | Settings, API Keys |
 
 Sections have subtle dividers. Group labels are visible in expanded mode only.
 
