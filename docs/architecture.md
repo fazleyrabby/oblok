@@ -279,6 +279,25 @@ All settings live in `config/oblok.php` under the `ai` key, backed by `OBLOK_AI_
 environment variables: `provider`, `endpoint`, `key`, `model`, `timeout`, `context_limit`.
 The API key is optional — local providers (Ollama, LM Studio) can leave it empty.
 
+### Operational Context Snapshot
+
+Both the chat assistant and incident suggestions are grounded in the same
+operational context, built by `App\Services\AiAssistant\ProjectContextBuilder`. It
+compiles a compact text snapshot of the project: its most recent services, incidents,
+deployments, alert events, and log entries (each bounded by `oblok.ai.context_limit`,
+default 12). The chat assistant sends this alongside a free-form question; incident
+suggestions send it alongside the incident's own fields (title, severity, status,
+description, service) and ask the model for a root-cause hypothesis and next steps.
+
+### Incident Suggestions
+
+The incident detail page exposes an "AI Insight" panel wired to
+`POST projects/{project}/incidents/{incident}/suggest` (`projects.incidents.suggest`,
+`IncidentController::suggest`). It authorizes via the `view` incident policy, calls
+`App\Actions\AiAssistant\SuggestIncidentActions`, and returns `{data: {suggestion}}`
+(or `502` on provider failure). The panel shows a typing-dot loader and renders the
+result inline, with a Regenerate action.
+
 ---
 
 ## Deployment Topology

@@ -97,7 +97,7 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 |-------------|-------------|
 | AI Assistant | Natural language queries against operational data — ✅ delivered (Phase 23) |
 | Anomaly Detection | Automatic detection of unusual metric patterns |
-| Incident Suggestions | AI-generated root cause hypotheses based on correlated data |
+| Incident Suggestions | AI-generated root cause hypotheses based on correlated data — ✅ delivered (Phase 24) |
 | Runbook Automation | Execute predefined operational procedures from natural language commands |
 | Smart Alerts | Reduce alert noise through pattern recognition and deduplication |
 
@@ -169,5 +169,5 @@ oblok treats every monitored project as a black box, regardless of framework (La
 | v0.2    | ✅ Delivered | Log Aggregation, Queue Monitoring, Notifications, Alert Rules (Phases 5–10); Realtime Updates (Phase 21) |
 | v0.3    | ✅ Delivered | Deployment Tracking (Phase 5); API Key Management (Phase 14); Custom Metrics + Dashboards (Phase 16); Resource + Request Monitoring (Phases 19–20); Advanced Check Types (Phase 18) |
 | v0.4    | ✅ Delivered | Webhook Inspector + Replay (Phase 11); Scheduler Monitoring (Phase 12); GitHub Integration (Phase 13); Slack Integration (Phase 15); oblok Agent (Phase 17) |
-| v0.5    | 🔄 In Progress | AI Assistant delivered (Phase 23); anomaly detection, incident suggestions, runbook automation, smart alerts remaining |
+| v0.5    | 🔄 In Progress | AI Assistant + Incident Suggestions delivered (Phases 23–24); anomaly detection, runbook automation, smart alerts remaining |
 | v1.0    | ⚪ Planned　　　　 | Stability, security/perf audit, WCAG AA, onboarding wizard, complete API v1 |

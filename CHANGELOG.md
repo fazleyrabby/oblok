@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Testing & Quality**: Added `tests/Feature/AiAssistant/AiAssistantTest.php`; **278 Pest tests passing** (one pre-existing `ExampleTest` redirect assertion remains).
 - **Reliable default model**: Defaults to Groq's free tier (`https://api.groq.com/openai/v1`, `openai/gpt-oss-120b`). Free-tier OpenRouter models (`:free`) can emit degenerate output (`<unk>` token soup) under load, so the driver now rejects unknown-token or repetitive output instead of surfacing it, returning a `502` with a clean error message.
 
+#### Phase 24 — AI Incident Suggestions (v0.5)
+- **Incident Suggestions**: The incident detail page now has an "AI Insight" panel that generates a root-cause hypothesis and concrete next steps for the incident, grounded in the project's live operational context (services, incidents, deployments, alerts, logs).
+- **Context reuse**: Extracted `App\Services\AiAssistant\ProjectContextBuilder` from `AskAssistant` so the chat and incident suggestions share one operational snapshot builder.
+- **Endpoint**: `POST projects/{project}/incidents/{incident}/suggest` (`projects.incidents.suggest`) returns `{data: {suggestion}}`; 502 on provider failure; authorized via the `view` incident policy. Surfaced in the incident show view with a typing-dot loader and inline errors.
+- **Testing & Quality**: Added `tests/Feature/Incidents/IncidentSuggestionTest.php`; **285 Pest tests passing** (one pre-existing `ExampleTest` redirect assertion remains).
+
 #### Phase 22 — Frontend Performance & Brand Polish
 - **ApexCharts bundled locally**: Removed the render-blocking `cdn.jsdelivr.net` ApexCharts script from the Metrics, Request Analytics, Server Resources, and Services pages. The library is now bundled via Vite and exposed as `window.ApexCharts` (`resources/js/app.js`), with guards so charts degrade gracefully if the library is ever unavailable. Fixes the "UI freezes and the chart never renders" behavior when the CDN is slow or unreachable.
 - **Smooth analytics live-refresh**: Request Analytics and Server Resources no longer destroy and recreate their charts on every 5s live tick. They update in place via `chart.updateSeries()` (no full re-render blink), and the request-count chart pins `yaxis.min: 0` to avoid ApexCharts' `RangeError: Invalid array length` on flat/empty data.

@@ -62,5 +62,101 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm" x-data="incidentSuggestion()">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-300 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider">AI Insight</h3>
+                        <p class="text-xs text-gray-500">Hypothesis &amp; next steps from live project context</p>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    @click="generate()"
+                    :disabled="loading"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition flex items-center gap-2"
+                >
+                    <svg x-show="loading" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                    </svg>
+                    <span x-text="loading ? 'Analyzing…' : (suggestion ? 'Regenerate' : 'Generate')"></span>
+                </button>
+            </div>
+
+            <div x-show="loading" class="flex items-center gap-2.5 px-1 py-2">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="text-xs text-gray-500 ml-1">Thinking…</span>
+            </div>
+
+            <div x-show="!loading && suggestion" x-cloak class="p-4 bg-gray-950 border border-gray-800 rounded-lg text-sm text-gray-200 whitespace-pre-wrap" x-text="suggestion"></div>
+
+            <p x-show="error" x-cloak x-text="error" class="mt-3 text-xs text-red-400"></p>
+        </div>
     </div>
+
+    <style>
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 9999px;
+            background-color: #46e1d5;
+            display: inline-block;
+            animation: typing-bounce 1.2s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typing-bounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+    </style>
+
+    <script>
+        function incidentSuggestion() {
+            return {
+                loading: false,
+                suggestion: null,
+                error: null,
+
+                async generate() {
+                    if (this.loading) {
+                        return;
+                    }
+
+                    this.loading = true;
+                    this.error = null;
+
+                    try {
+                        const response = await fetch(@json(route('projects.incidents.suggest', [$project, $incident])), {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                        });
+
+                        const payload = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(payload.message ?? 'The request failed.');
+                        }
+
+                        this.suggestion = payload.data.suggestion;
+                    } catch (e) {
+                        this.error = e.message || 'Something went wrong.';
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            };
+        }
+    </script>
 </x-app-layout>

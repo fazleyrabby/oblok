@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Actions\AiAssistant\SuggestIncidentActions;
 use App\Actions\Incidents\CreateIncident;
 use App\Actions\Incidents\ResolveIncident;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIncidentRequest;
 use App\Models\Incident;
 use App\Models\Project;
+use App\Services\AiAssistant\Exceptions\AiProviderException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -71,5 +74,28 @@ class IncidentController extends Controller
 
         return redirect()->route('projects.incidents.show', [$project, $incident])
             ->with('status', 'Incident marked as resolved.');
+    }
+
+    /**
+     * Generate an AI root-cause hypothesis and next steps for an incident.
+     */
+    public function suggest(Project $project, Incident $incident, SuggestIncidentActions $suggest): JsonResponse
+    {
+        $this->authorize('view', $incident);
+
+        try {
+            $suggestion = $suggest->handle($project, $incident);
+        } catch (AiProviderException $e) {
+            return response()->json([
+                'message' => 'The AI assistant could not be reached.',
+                'error' => $e->getMessage(),
+            ], 502);
+        }
+
+        return response()->json([
+            'data' => [
+                'suggestion' => $suggestion,
+            ],
+        ]);
     }
 }

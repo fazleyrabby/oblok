@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('projects.incidents', IncidentController::class);
     Route::post('projects/{project}/incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('projects.incidents.resolve');
+    Route::post('projects/{project}/incidents/{incident}/suggest', [IncidentController::class, 'suggest'])->name('projects.incidents.suggest');
 
     Route::scopeBindings()->group(function () {
         Route::resource('projects.members', ProjectMemberController::class)->only(['index', 'store', 'update', 'destroy']);
