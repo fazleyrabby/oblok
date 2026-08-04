@@ -97,7 +97,7 @@ return [
         'provider' => env('OBLOK_AI_PROVIDER', 'openai-compatible'),
         'endpoint' => env('OBLOK_AI_ENDPOINT', 'https://api.openai.com/v1'),
         'key' => env('OBLOK_AI_API_KEY'),
-        'model' => env('OBLOK_AI_MODEL', 'nvidia/nemotron-3-super-120b-a12b:free'),
+        'model' => env('OBLOK_AI_MODEL', 'google/gemini-2.5-flash'),
         'timeout' => env('OBLOK_AI_TIMEOUT', 60),
         'context_limit' => env('OBLOK_AI_CONTEXT_LIMIT', 12),
     ],

@@ -38,10 +38,34 @@ class OpenAiCompatibleDriver implements AiProvider
                 throw new AiProviderException('The AI provider returned an empty response.');
             }
 
-            return trim($content);
+            return $this->sanitize($content);
         } catch (ConnectionException|RequestException $e) {
             throw new AiProviderException('AI provider request failed: '.$e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * Reject degenerate model output (unknown tokens, repetitive loops) so it is
+     * never surfaced to the user. Free-tier providers occasionally emit garbage.
+     *
+     * @throws AiProviderException
+     */
+    protected function sanitize(string $content): string
+    {
+        if (stripos($content, '<unk>') !== false) {
+            throw new AiProviderException('The AI provider returned unreadable output.');
+        }
+
+        $words = preg_split('/\s+/', trim($content)) ?: [];
+        $unique = count(array_unique($words));
+        $total = count($words);
+
+        // Degenerate loop: very few unique tokens across a long reply.
+        if ($total >= 30 && $unique <= 5) {
+            throw new AiProviderException('The AI provider returned repetitive output.');
+        }
+
+        return trim($content);
     }
 
     /**

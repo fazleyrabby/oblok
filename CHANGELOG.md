@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **API endpoint**: `POST api/v1/projects/{project}/ai/assistant` returning `{data: {answer}}`; returns `502` with an error body when the provider fails. Authorized via the new `useAssistant` project policy (any project member).
 - **Chat UI**: New `AI Assistant` page (`projects.ai-assistant`) with an Alpine-driven chat panel — message history, suggested prompts, loading state, and inline error handling — wired to the API endpoint through the authenticated session.
 - **Testing & Quality**: Added `tests/Feature/AiAssistant/AiAssistantTest.php`; **278 Pest tests passing** (one pre-existing `ExampleTest` redirect assertion remains).
+- **Reliable default model**: Switched the default provider model to `google/gemini-2.5-flash` (cheap + reliable). Free-tier OpenRouter models (`:free`) can emit degenerate output (`<unk>` token soup) under load, so the driver now rejects unknown-token or repetitive output instead of surfacing it, returning a `502` with a clean error message.
 
 #### Phase 22 — Frontend Performance & Brand Polish
 - **ApexCharts bundled locally**: Removed the render-blocking `cdn.jsdelivr.net` ApexCharts script from the Metrics, Request Analytics, Server Resources, and Services pages. The library is now bundled via Vite and exposed as `window.ApexCharts` (`resources/js/app.js`), with guards so charts degrade gracefully if the library is ever unavailable. Fixes the "UI freezes and the chart never renders" behavior when the CDN is slow or unreachable.

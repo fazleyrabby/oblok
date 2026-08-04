@@ -133,3 +133,23 @@ test('unauthenticated users cannot ask via the web endpoint', function () {
     $this->post(route('projects.ai-assistant.ask', $project), ['message' => 'hi'])
         ->assertRedirect(route('login'));
 });
+
+test('degenerate provider output is rejected instead of surfaced', function () {
+    Http::fake([
+        'openrouter.ai/api/v1/chat/completions' => Http::response([
+            'choices' => [
+                ['message' => ['content' => 'We need to summarize the<unk><unk><unk>urp Zap urp Zap urp Zap']],
+            ],
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user)->post(
+        route('projects.ai-assistant.ask', $project),
+        ['message' => 'Summarize the project']
+    );
+
+    $response->assertStatus(502);
+});
