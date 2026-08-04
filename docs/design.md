@@ -282,8 +282,25 @@ sidebar under "AI Assistant") is a project-scoped conversational panel.
 - **Grounding**: Answers are generated from the project's live operational context
   (services, incidents, deployments, alerts, logs); the assistant is instructed not to
   invent data beyond that context.
-- **Interaction model**: The panel posts to the authenticated `api.v1.projects.ai.assistant`
-  endpoint with the CSRF token, so no separate AI credentials are needed by the browser.
+- **Interaction model**: The panel posts to the authenticated `projects.ai-assistant.ask`
+  web endpoint with the CSRF token (session auth), so no separate AI credentials are
+  needed by the browser. The same endpoint is reachable over the API as
+  `api.v1.projects.ai.assistant` for programmatic use.
+
+### AI Incident Insights
+
+The incident detail view (`/projects/{project}/incidents/{incident}`) includes an
+**"AI Insight"** panel for the active incident.
+
+- **Generate**: A "Generate" button calls the `projects.incidents.suggest` endpoint, which
+  asks the model for a **root-cause hypothesis** and a **bulleted list of next steps**,
+  grounded in the project's live operational context (services, incidents, deployments,
+  alerts, logs) plus the incident's own fields (title, severity, status, description, service).
+- **Loading & error states**: While the model thinks, a typing-dot loader ("Thinking…")
+  is shown; provider failures surface an inline error. The button becomes "Regenerate"
+  once a suggestion exists.
+- **Presentation**: The result renders in a dark card with the same styling as the chat
+  assistant, keeping the two AI surfaces visually consistent.
 
 ---
 

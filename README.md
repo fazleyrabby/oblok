@@ -128,7 +128,7 @@ php artisan migrate
 | v0.2 | Observability — Logs, Queues, Notifications | ✅ Delivered |
 | v0.3 | Control Plane — Deployments, Metrics, API Keys | ✅ Delivered |
 | v0.4 | Integrations — Webhooks, Scheduler, Third-Party | ✅ Delivered |
-| v0.5 | Intelligence — AI Assistant | ⚪ Planned |
+| v0.5 | Intelligence — AI Assistant, Incident Suggestions | 🔄 In Progress |
 | v1.0 | Public Release — Stability, Docs, Hardening | ⚪ Planned |
 
 See [docs/roadmap.md](docs/roadmap.md) for detailed milestone contents.

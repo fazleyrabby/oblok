@@ -257,10 +257,13 @@ graph LR
 
 ### Request Path
 
-1. A request arrives at `POST api/v1/projects/{project}/ai/assistant` (authenticated
-   via session or project API key) or the web chat page posts to that endpoint.
-2. `AiAssistantController` runs the `AskAssistantRequest`, which authorizes through
-   the `useAssistant` policy method (any project member).
+1. A request arrives either at the API endpoint `POST api/v1/projects/{project}/ai/assistant`
+   (authenticated via session or project API key) or at the web endpoint
+   `POST projects/{project}/ai-assistant` (`projects.ai-assistant.ask`), which the chat
+   UI uses with session auth. Both share the `AskAssistantRequest`.
+2. The request runs the `AskAssistantRequest`, which authorizes through the `useAssistant`
+   policy method (any project member). The web controller (`Web\AiAssistantController::ask`)
+   and API controller (`Api\V1\AiAssistantController`) both use it.
 3. `AskAssistant::handle` builds a **system prompt** that constrains the model
    ("never invent data that is not present in the provided context") and a **context
    snapshot** of the project: its most recent services, incidents, deployments, alert
