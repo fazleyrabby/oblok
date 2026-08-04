@@ -51,6 +51,14 @@ class ProjectPolicy
     }
 
     /**
+     * Determine whether the user can ask the AI assistant about the project.
+     */
+    public function useAssistant(User $user, Project $project): bool
+    {
+        return $this->memberRole($user, $project) !== null;
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Project $project): bool

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
+use App\Http\Controllers\Web\AiAssistantController;
 use App\Http\Controllers\Web\ApiKeyController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;
@@ -82,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('projects.messaging.destroy');
 
     Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('projects.metrics.index');
+    Route::get('projects/{project}/ai-assistant', [AiAssistantController::class, 'index'])->name('projects.ai-assistant');
     Route::get('projects/{project}/metrics/data', [MetricController::class, 'data'])->name('projects.metrics.data');
     Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('projects.metrics.targets.store');
     Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('projects.metrics.targets.destroy');

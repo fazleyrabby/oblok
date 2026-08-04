@@ -234,6 +234,51 @@ APIs are versioned via URL prefix (`/api/v1/`).
 
 ---
 
+## AI Assistant Architecture
+
+The operational assistant answers natural-language questions about a project using
+its live operational data. It is deliberately provider-agnostic: oblok speaks to any
+OpenAI-compatible `/chat/completions` endpoint and never depends on a vendor SDK.
+
+### Data Flow
+
+```mermaid
+graph LR
+    UI[Web Chat / API] --> C[AiAssistantController]
+    C --> A[AskAssistant Action]
+    A --> B[Context Builder]
+    A --> M[AiProviderManager]
+    M --> D[OpenAiCompatibleDriver]
+    D --> E[OpenAI-Compatible Endpoint]
+    E -->|answer| C -->|data.answer| UI
+```
+
+### Request Path
+
+1. A request arrives at `POST api/v1/projects/{project}/ai/assistant` (authenticated
+   via session or project API key) or the web chat page posts to that endpoint.
+2. `AiAssistantController` runs the `AskAssistantRequest`, which authorizes through
+   the `useAssistant` policy method (any project member).
+3. `AskAssistant::handle` builds a **system prompt** that constrains the model
+   ("never invent data that is not present in the provided context") and a **context
+   snapshot** of the project: its most recent services, incidents, deployments, alert
+   events, and log entries (bounded by `oblok.ai.context_limit`, default 12 each).
+4. `AiProviderManager::driver` resolves the configured provider (currently only
+   `openai-compatible`; new providers implement `AiProvider` and register a `match`
+   arm).
+5. `OpenAiCompatibleDriver` POSTs `{model, messages, temperature, max_tokens}` to
+   `{oblok.ai.endpoint}/chat/completions`, throwing `AiProviderException` on transport
+   failures, non-2xx responses, or empty content.
+6. The controller returns `{data: {answer}}`; on provider failure it returns `502`.
+
+### Configuration
+
+All settings live in `config/oblok.php` under the `ai` key, backed by `OBLOK_AI_*`
+environment variables: `provider`, `endpoint`, `key`, `model`, `timeout`, `context_limit`.
+The API key is optional — local providers (Ollama, LM Studio) can leave it empty.
+
+---
+
 ## Deployment Topology
 
 ```mermaid

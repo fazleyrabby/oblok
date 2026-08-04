@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 23 — AI Operational Assistant (v0.5)
+- **AI Assistant**: Users can ask natural-language questions about a project and get answers grounded in its live operational context (services, incidents, deployments, alerts, and recent logs). First deliverable of the v0.5 "Intelligence" roadmap.
+- **Provider abstraction**: Added an `AiProvider` interface with an `OpenAiCompatibleDriver`, resolved through `AiProviderManager`. Any OpenAI-compatible `/chat/completions` endpoint works — OpenAI, OpenRouter, Ollama, LM Studio, vLLM — with no vendor SDK dependency. Configured via `config/oblok.php` (`OBLOK_AI_*` env keys).
+- **Context building**: `AskAssistant` action compiles a compact operational snapshot of the project (bounded by `OBLOK_AI_CONTEXT_LIMIT`) into the prompt, with a system prompt that forbids inventing data not present in context.
+- **API endpoint**: `POST api/v1/projects/{project}/ai/assistant` returning `{data: {answer}}`; returns `502` with an error body when the provider fails. Authorized via the new `useAssistant` project policy (any project member).
+- **Chat UI**: New `AI Assistant` page (`projects.ai-assistant`) with an Alpine-driven chat panel — message history, suggested prompts, loading state, and inline error handling — wired to the API endpoint through the authenticated session.
+- **Testing & Quality**: Added `tests/Feature/AiAssistant/AiAssistantTest.php`; **278 Pest tests passing** (one pre-existing `ExampleTest` redirect assertion remains).
+
 #### Phase 22 — Frontend Performance & Brand Polish
 - **ApexCharts bundled locally**: Removed the render-blocking `cdn.jsdelivr.net` ApexCharts script from the Metrics, Request Analytics, Server Resources, and Services pages. The library is now bundled via Vite and exposed as `window.ApexCharts` (`resources/js/app.js`), with guards so charts degrade gracefully if the library is ever unavailable. Fixes the "UI freezes and the chart never renders" behavior when the CDN is slow or unreachable.
 - **Smooth analytics live-refresh**: Request Analytics and Server Resources no longer destroy and recreate their charts on every 5s live tick. They update in place via `chart.updateSeries()` (no full re-render blink), and the request-count chart pins `yaxis.min: 0` to avoid ApexCharts' `RangeError: Invalid array length` on flat/empty data.

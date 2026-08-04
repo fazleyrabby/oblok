@@ -265,6 +265,28 @@ oblok dashboards support **zero-refresh real-time monitoring**:
 
 ---
 
+## AI Assistant
+
+The **AI Assistant** page (`/projects/{project}/ai-assistant`, reachable from the
+sidebar under "AI Assistant") is a project-scoped conversational panel.
+
+- **Conversation layout**: A scrollable message history (user messages in indigo,
+  assistant replies in emerald) rendered above a textarea + "Send" button, in the same
+  dark card style as the rest of the platform.
+- **Suggested prompts**: When the conversation is empty, tappable example questions
+  ("What services are currently unhealthy?", "Summarize recent deployments.") seed the
+  first exchange.
+- **Loading & error states**: While a request is in flight the button shows
+  "Asking…" and is disabled; provider failures surface an inline error message rather
+  than a silent failure.
+- **Grounding**: Answers are generated from the project's live operational context
+  (services, incidents, deployments, alerts, logs); the assistant is instructed not to
+  invent data beyond that context.
+- **Interaction model**: The panel posts to the authenticated `api.v1.projects.ai.assistant`
+  endpoint with the CSRF token, so no separate AI credentials are needed by the browser.
+
+---
+
 ## Empty States
 
 Every view that can be empty must provide:

@@ -262,7 +262,7 @@ These modules are planned for post-MVP development. See [roadmap.md](roadmap.md)
 | Webhook Inspector | Incoming webhook logging and replay |
 | Scheduler | Cron job monitoring and failure detection |
 | Integrations | Third-party service connections (GitHub, Slack, PagerDuty) |
-| AI Assistant | Natural language operational queries, anomaly detection, automated runbooks |
+| AI Assistant | Natural language operational queries, anomaly detection, automated runbooks — natural-language Q&A over project context delivered (Phase 23) |
 | Incident Management | Incident lifecycle tracking with timeline and postmortems |
 | Team Collaboration | Multi-user access, roles, permissions, and activity feeds |
 | Analytics | Operational analytics and trend reporting |

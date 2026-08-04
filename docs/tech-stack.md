@@ -231,6 +231,26 @@
 
 ---
 
+## AI Assistant
+
+**Purpose:** Power natural-language queries against a project's operational data.
+
+**Approach:** oblok does **not** depend on a vendor AI SDK. The assistant talks to any
+OpenAI-compatible `/chat/completions` endpoint over Laravel's HTTP client, behind an
+`AiProvider` interface resolved by `AiProviderManager`. This keeps the provider swappable
+(OpenAI, OpenRouter, Ollama, LM Studio, vLLM) and adds zero composer dependencies.
+
+**Provider:** OpenRouter is the default tested provider (`OBLOK_AI_ENDPOINT=https://openrouter.ai/api/v1`).
+Free-tier models are used by default (the `:free` suffix), e.g.
+`nvidia/nemotron-3-super-120b-a12b:free`, keeping the self-hosted platform free to operate.
+
+**Why selected:**
+- No SDK dependency — one thin HTTP driver serves every compatible provider.
+- `:free` OpenRouter models deliver a zero-cost operational assistant.
+- The action layer (prompt construction, context building) is provider-agnostic and unit-testable with `Http::fake()`.
+
+---
+
 ## Authentication
 
 ### Laravel Breeze

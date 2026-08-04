@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AiAssistantController;
 use App\Http\Controllers\Api\V1\AlertEventController;
 use App\Http\Controllers\Api\V1\AlertRuleController;
 use App\Http\Controllers\Api\V1\ApiKeyController;
@@ -141,6 +142,8 @@ Route::prefix('v1')->middleware(['auth:web,api_key', 'throttle:api_key', 'api_ke
     Route::get('projects/{project}/messaging/channels/{integration}', [MessagingIntegrationController::class, 'channels'])->name('api.v1.projects.messaging.channels');
     Route::post('projects/{project}/messaging/{integration}/send', [MessagingIntegrationController::class, 'send'])->name('api.v1.projects.messaging.send');
     Route::delete('projects/{project}/messaging/{integration}', [MessagingIntegrationController::class, 'destroy'])->name('api.v1.projects.messaging.destroy');
+
+    Route::post('projects/{project}/ai/assistant', [AiAssistantController::class, 'ask'])->name('api.v1.projects.ai.assistant');
 
     Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('api.v1.projects.metrics.index');
     Route::post('projects/{project}/metrics', [MetricController::class, 'store'])->name('api.v1.projects.metrics.store');
