@@ -81,8 +81,8 @@ See [docs/tech-stack.md](docs/tech-stack.md) for detailed rationale and tradeoff
 
 ```bash
 # Clone the repository
-git clone https://github.com/fazleyrabby/project-oblok.git
-cd project-oblok
+git clone https://github.com/fazleyrabby/oblok.git
+cd oblok
 
 # Install PHP & JS dependencies
 composer install

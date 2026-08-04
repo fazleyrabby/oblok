@@ -461,6 +461,7 @@
                     <span>&copy; {{ date('Y') }} oblok. Built with Laravel &amp; PHP.</span>
                 </div>
                 <div class="flex items-center gap-5">
+                    <a href="{{ route('docs.index') }}" class="hover:text-gray-300 transition">Docs</a>
                     <a href="https://github.com/fazleyrabby/oblok" target="_blank" rel="noopener" class="hover:text-gray-300 transition">GitHub</a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="hover:text-gray-300 transition">Dashboard</a>
