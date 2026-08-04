@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('projects.metrics.index');
     Route::get('projects/{project}/ai-assistant', [AiAssistantController::class, 'index'])->name('projects.ai-assistant');
+    Route::post('projects/{project}/ai-assistant', [AiAssistantController::class, 'ask'])->name('projects.ai-assistant.ask');
     Route::get('projects/{project}/metrics/data', [MetricController::class, 'data'])->name('projects.metrics.data');
     Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('projects.metrics.targets.store');
     Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('projects.metrics.targets.destroy');

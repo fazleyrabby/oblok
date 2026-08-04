@@ -102,7 +102,7 @@
                     this.loading = true;
 
                     try {
-                        const response = await fetch(@json(route('api.v1.projects.ai.assistant', $project)), {
+                        const response = await fetch(@json(route('projects.ai-assistant.ask', $project)), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

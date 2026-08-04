@@ -89,3 +89,47 @@ test('message is required and limited to 2000 characters', function () {
     );
     $tooLong->assertStatus(422);
 });
+
+test('web chat endpoint answers via the authenticated session', function () {
+    Http::fake([
+        'openrouter.ai/api/v1/chat/completions' => Http::response([
+            'choices' => [
+                ['message' => ['content' => 'The payment service is healthy.']],
+            ],
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user)->post(
+        route('projects.ai-assistant.ask', $project),
+        ['message' => 'Is the payment service healthy?']
+    );
+
+    $response->assertOk();
+    $response->assertJsonPath('data.answer', 'The payment service is healthy.');
+});
+
+test('web chat endpoint returns 502 when the provider fails', function () {
+    Http::fake([
+        'openrouter.ai/api/v1/chat/completions' => Http::response('upstream error', 503),
+    ]);
+
+    $user = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user)->post(
+        route('projects.ai-assistant.ask', $project),
+        ['message' => 'What is going on?']
+    );
+
+    $response->assertStatus(502);
+});
+
+test('unauthenticated users cannot ask via the web endpoint', function () {
+    $project = Project::factory()->create();
+
+    $this->post(route('projects.ai-assistant.ask', $project), ['message' => 'hi'])
+        ->assertRedirect(route('login'));
+});
