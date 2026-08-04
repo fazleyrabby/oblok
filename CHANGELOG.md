@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Sidebar auto-scroll to active item**: When a navigation page loads, the sidebar now scrolls its active link into view if it is outside the visible area (e.g. deep items like Metrics or Team Members on short viewports), improving orientation without manual scrolling.
+- **Fixed root-path test**: Updated `tests/Feature/ExampleTest` to assert the app's actual behavior — `/` redirects to the login page — instead of the default Laravel assertion that expected a 200, which had been failing since the landing page was removed. Full suite now passes (286/286).
 
 ### Added
 
