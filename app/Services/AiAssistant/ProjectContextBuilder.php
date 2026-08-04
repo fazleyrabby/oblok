@@ -41,7 +41,7 @@ class ProjectContextBuilder
                 $incident->title,
                 $incident->severity,
                 $incident->status,
-                $incident->started_at?->toIso8601String() ?? 'unknown',
+                $incident->started_at->toIso8601String(),
                 $incident->resolved_at ? ' resolved '.$incident->resolved_at->toIso8601String() : ''
             );
         }
@@ -63,9 +63,9 @@ class ProjectContextBuilder
         foreach ($alerts as $alert) {
             $lines[] = sprintf(
                 '- [%s] %s (%s)',
-                $alert->severity,
+                $alert->severity->value,
                 $alert->subject,
-                $alert->triggered_at?->toIso8601String() ?? 'unknown'
+                $alert->triggered_at->toIso8601String()
             );
         }
 

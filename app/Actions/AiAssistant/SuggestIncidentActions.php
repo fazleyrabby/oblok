@@ -41,7 +41,7 @@ class SuggestIncidentActions
             $incident->severity,
             $incident->status,
             $incident->description ?? 'n/a',
-            $incident->service?->name ?? 'n/a',
+            $incident->service_id ? $incident->service->name : 'n/a',
             $this->context->build($project)
         );
 
