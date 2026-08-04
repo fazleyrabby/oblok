@@ -41,11 +41,6 @@
                     </x-dropdown>
                 </div>
 
-                <!-- Docs Link -->
-                <a href="{{ route('docs.index') }}"
-                   class="hidden sm:inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg transition">
-                    Docs
-                </a>
             </div>
 
             <!-- Right Side: User Dropdown -->

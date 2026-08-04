@@ -47,3 +47,9 @@ Thumbs.db
 # Testing & Coverage
 .phpunit.result.cache
 .pest/
+
+# local tooling / ephemeral
+.playwright-mcp/
+dump.rdb
+opencode.json
+realtime-toast.png

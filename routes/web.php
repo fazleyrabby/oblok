@@ -5,7 +5,6 @@ use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
 use App\Http\Controllers\Web\ApiKeyController;
 use App\Http\Controllers\Web\DashboardController;
-use App\Http\Controllers\Web\DocsController;
 use App\Http\Controllers\Web\DeploymentController;
 use App\Http\Controllers\Web\GitHubIntegrationController;
 use App\Http\Controllers\Web\IncidentController;
@@ -23,11 +22,8 @@ use App\Http\Controllers\Web\WebhookCallController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
-
-Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
-Route::get('/docs/{page}', [DocsController::class, 'show'])->name('docs.show');
 
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
