@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Sidebar auto-scroll to active item**: When a navigation page loads, the sidebar now scrolls its active link into view if it is outside the visible area (e.g. deep items like Metrics or Team Members on short viewports), improving orientation without manual scrolling.
+
 ### Added
 
 #### Phase 23 — AI Operational Assistant (v0.5)

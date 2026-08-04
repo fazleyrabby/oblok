@@ -33,7 +33,12 @@
     </div>
 
     <!-- Navigation Items -->
-    <div class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-6">
+    <div class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-6"
+         x-init="$nextTick(() => {
+             if (sidebarCollapsed) return;
+             const active = $el.querySelector('a.bg-indigo-600');
+             if (active) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+         })">
         <!-- Core Section -->
         <div>
             <div x-show="!sidebarCollapsed" class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
