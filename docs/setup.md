@@ -65,6 +65,27 @@ QUEUE_CONNECTION=redis
 > `redis`). Keep `DB_HOST=postgres` and `REDIS_HOST=redis` as-is unless you run
 > those services outside of Compose.
 
+### AI Assistant configuration (optional)
+
+The AI Assistant is enabled out of the box and answers operational questions about a
+project using its live context (services, incidents, deployments, alerts, logs). It
+speaks to any OpenAI-compatible `/chat/completions` endpoint.
+
+```dotenv
+# AI Assistant — default is Groq's free tier (no cost)
+OBLOK_AI_PROVIDER=openai-compatible
+OBLOK_AI_ENDPOINT=https://api.groq.com/openai/v1
+OBLOK_AI_API_KEY=your-groq-api-key          # get one free at https://console.groq.com
+OBLOK_AI_MODEL=openai/gpt-oss-120b          # free alternatives: llama-3.3-70b-versatile, llama-3.1-8b-instant
+OBLOK_AI_TIMEOUT=60                          # seconds before the provider call times out
+OBLOK_AI_CONTEXT_LIMIT=12                    # entries per category included in the context snapshot
+```
+
+Pointing at another provider (OpenAI, OpenRouter, Ollama, LM Studio, vLLM) is just a
+matter of changing `OBLOK_AI_ENDPOINT`, `OBLOK_AI_API_KEY`, and `OBLOK_AI_MODEL`.
+Leave `OBLOK_AI_API_KEY` empty for local providers that need no auth. For a local
+llama.cpp server: `OBLOK_AI_ENDPOINT=http://<host>:8080/v1` with `--api-key` empty.
+
 ---
 
 ## 3. Build and start
