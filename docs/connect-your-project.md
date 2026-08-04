@@ -231,7 +231,7 @@ scp -r ./oblok-agent user@server:/opt/oblok-agent
 ```
 
 **2. Configure it** via a systemd-style env file (any of the `OBLOK_*` variables from
-[`oblok-agent/README.md`](../oblok-agent/README.md)):
+[`oblok-agent/README.md`](https://github.com/fazleyrabby/oblok/blob/main/oblok-agent/README.md)):
 
 ```bash
 # /etc/oblok-agent/oblok-agent.env
@@ -326,4 +326,4 @@ oblok syncs commit/PR context automatically every 15 minutes.
 | `PROJECT_ID` | project UUID from the address bar |
 | `YOUR-PROJECT-SLUG` | project slug used by the public deployment webhook |
 
-Agent variables are documented in [`oblok-agent/README.md`](../oblok-agent/README.md).
+Agent variables are documented in [`oblok-agent/README.md`](https://github.com/fazleyrabby/oblok/blob/main/oblok-agent/README.md).
