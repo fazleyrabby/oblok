@@ -13,8 +13,7 @@ class SuggestIncidentActions
     public function __construct(
         private AiProviderManager $manager,
         private ProjectContextBuilder $context,
-    ) {
-    }
+    ) {}
 
     /**
      * Generate an AI root-cause hypothesis and concrete next steps for an active
@@ -37,7 +36,7 @@ class SuggestIncidentActions
             "Incident details:\n"
             ."Title: %s\nSeverity: %s\nStatus: %s\nDescription: %s\nService: %s\n\n"
             ."Project operational context:\n\n%s\n\n"
-            ."Based on the above, provide a root-cause hypothesis and suggested next steps.",
+            .'Based on the above, provide a root-cause hypothesis and suggested next steps.',
             $incident->title,
             $incident->severity,
             $incident->status,

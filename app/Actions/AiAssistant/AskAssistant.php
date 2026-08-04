@@ -12,8 +12,7 @@ class AskAssistant
     public function __construct(
         private AiProviderManager $manager,
         private ProjectContextBuilder $context,
-    ) {
-    }
+    ) {}
 
     /**
      * Answer a natural-language question about the project using its live

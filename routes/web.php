@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Web\AiAssistantController;
 use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
-use App\Http\Controllers\Web\AiAssistantController;
 use App\Http\Controllers\Web\ApiKeyController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DeploymentController;

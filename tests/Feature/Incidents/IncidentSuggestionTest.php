@@ -2,8 +2,8 @@
 
 use App\Models\Incident;
 use App\Models\Project;
-use App\Models\User;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 
