@@ -239,6 +239,8 @@ APIs are versioned via URL prefix (`/api/v1/`).
 The operational assistant answers natural-language questions about a project using
 its live operational data. It is deliberately provider-agnostic: oblok speaks to any
 OpenAI-compatible `/chat/completions` endpoint and never depends on a vendor SDK.
+The default deployment uses **Groq's free tier** (`https://api.groq.com/openai/v1`)
+with the `openai/gpt-oss-120b` model.
 
 ### Data Flow
 

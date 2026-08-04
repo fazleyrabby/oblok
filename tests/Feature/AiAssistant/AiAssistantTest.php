@@ -28,7 +28,7 @@ test('non-members cannot view the AI assistant page', function () {
 
 test('authenticated user can ask the assistant about their project', function () {
     Http::fake([
-        'openrouter.ai/api/v1/chat/completions' => Http::response([
+        'api.groq.com/openai/v1/chat/completions' => Http::response([
             'choices' => [
                 ['message' => ['content' => 'Your payment service is healthy.']],
             ],
@@ -59,7 +59,7 @@ test('authenticated user can ask the assistant about their project', function ()
 
 test('assistant endpoint returns 502 when the provider fails', function () {
     Http::fake([
-        'openrouter.ai/api/v1/chat/completions' => Http::response('upstream error', 503),
+        'api.groq.com/openai/v1/chat/completions' => Http::response('upstream error', 503),
     ]);
 
     $user = User::factory()->create();
@@ -92,7 +92,7 @@ test('message is required and limited to 2000 characters', function () {
 
 test('web chat endpoint answers via the authenticated session', function () {
     Http::fake([
-        'openrouter.ai/api/v1/chat/completions' => Http::response([
+        'api.groq.com/openai/v1/chat/completions' => Http::response([
             'choices' => [
                 ['message' => ['content' => 'The payment service is healthy.']],
             ],
@@ -113,7 +113,7 @@ test('web chat endpoint answers via the authenticated session', function () {
 
 test('web chat endpoint returns 502 when the provider fails', function () {
     Http::fake([
-        'openrouter.ai/api/v1/chat/completions' => Http::response('upstream error', 503),
+        'api.groq.com/openai/v1/chat/completions' => Http::response('upstream error', 503),
     ]);
 
     $user = User::factory()->create();
@@ -136,7 +136,7 @@ test('unauthenticated users cannot ask via the web endpoint', function () {
 
 test('degenerate provider output is rejected instead of surfaced', function () {
     Http::fake([
-        'openrouter.ai/api/v1/chat/completions' => Http::response([
+        'api.groq.com/openai/v1/chat/completions' => Http::response([
             'choices' => [
                 ['message' => ['content' => 'We need to summarize the<unk><unk><unk>urp Zap urp Zap urp Zap']],
             ],

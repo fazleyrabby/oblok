@@ -238,15 +238,16 @@
 **Approach:** oblok does **not** depend on a vendor AI SDK. The assistant talks to any
 OpenAI-compatible `/chat/completions` endpoint over Laravel's HTTP client, behind an
 `AiProvider` interface resolved by `AiProviderManager`. This keeps the provider swappable
-(OpenAI, OpenRouter, Ollama, LM Studio, vLLM) and adds zero composer dependencies.
+(Groq, OpenAI, OpenRouter, Ollama, LM Studio, vLLM) and adds zero composer dependencies.
 
-**Provider:** OpenRouter is the default tested provider (`OBLOK_AI_ENDPOINT=https://openrouter.ai/api/v1`).
-Free-tier models are used by default (the `:free` suffix), e.g.
-`nvidia/nemotron-3-super-120b-a12b:free`, keeping the self-hosted platform free to operate.
+**Provider:** Groq is the default tested provider (`OBLOK_AI_ENDPOINT=https://api.groq.com/openai/v1`).
+It offers strong models on a free tier, keeping the self-hosted platform free to operate.
+Default model: `openai/gpt-oss-120b`; alternatives on the same free tier include
+`llama-3.3-70b-versatile` and `llama-3.1-8b-instant`.
 
 **Why selected:**
 - No SDK dependency — one thin HTTP driver serves every compatible provider.
-- `:free` OpenRouter models deliver a zero-cost operational assistant.
+- Groq's free tier provides fast, reliable inference at no cost.
 - The action layer (prompt construction, context building) is provider-agnostic and unit-testable with `Http::fake()`.
 
 ---
