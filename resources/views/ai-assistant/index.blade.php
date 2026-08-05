@@ -265,7 +265,7 @@
                                 }
 
                                 if (eventLine.includes('token')) {
-                                    this.messages[this.messages.length - 1].content += payload.data?.answer ?? '';
+                                    this.messages[this.messages.length - 1].content += payload.answer ?? '';
                                     this.$nextTick(() => this.scrollToBottom());
                                 } else if (eventLine.includes('error')) {
                                     throw new Error(payload.message ?? 'The AI assistant could not be reached.');
