@@ -17,7 +17,7 @@ class AiAssistantController extends Controller
     public function ask(AskAssistantRequest $request, Project $project, AskAssistant $assistant): JsonResponse
     {
         try {
-            $answer = $assistant->handle($project, $request->validated('message'));
+            $answer = $assistant->handle($project, $request->user(), $request->validated('message'));
         } catch (AiProviderException $e) {
             return response()->json([
                 'message' => 'The AI assistant could not be reached.',

@@ -12,4 +12,13 @@ interface AiProvider
      * @throws AiProviderException
      */
     public function ask(string $system, string $prompt): string;
+
+    /**
+     * Stream the provider's answer token-by-token.
+     *
+     * @return \Generator<int, string, void, void> Yields content chunks as they arrive.
+     *
+     * @throws AiProviderException
+     */
+    public function stream(string $system, string $prompt): \Generator;
 }

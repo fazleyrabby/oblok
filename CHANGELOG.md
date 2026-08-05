@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 25 — Streaming Chat, Persistent History & Anomaly Detection (v0.5)
+- **Streaming chat responses**: The web chat endpoint now streams answers token-by-token as Server-Sent Events. The provider driver (`OpenAiCompatibleDriver`) requests a streaming `/chat/completions`, parses the SSE stream, and yields content deltas which the controller forwards to the browser (`event: token` → `event: done`, or `event: error`). The chat UI consumes the stream via the Fetch `ReadableStream` API and renders tokens as they arrive.
+- **Persistent chat history**: New `conversations` and `conversation_messages` tables store every exchange per project and user. `AskAssistant` now records the question and answer, the chat page reloads history on visit, and a `Clear` action (`POST projects/{project}/ai-assistant/clear`) wipes the conversation. The API endpoint persists history too; repeat questions reuse the same conversation.
+- **Anomaly detection**: New `AnomalyDetector` service and `DetectAnomalies` action flag metric series whose recent window deviates from their own baseline by more than `OBLOK_ANOMALY_Z_THRESHOLD` standard deviations (default 3σ), provided the series has at least `OBLOK_ANOMALY_MIN_SAMPLES` samples. Results include direction (spike/drop), z-score, percent change, and severity (warning/critical).
+- **Anomaly surfacing**: The Metrics dashboard gained a "Detected anomalies" table (with live refresh via `GET projects/{project}/metrics/anomalies`), and the AI assistant's operational context now includes active metric anomalies so chat answers can reason about them.
+- **Testing & Quality**: Added `tests/Unit/AnomalyDetectorTest.php`, expanded `tests/Feature/Metrics/MetricsTest.php` with anomaly endpoint/dashboard coverage, and rewrote `tests/Feature/AiAssistant/AiAssistantTest.php` for streaming + persistence (including a `clear` endpoint test).
+
 #### Phase 23 — AI Operational Assistant (v0.5)
 - **AI Assistant**: Users can ask natural-language questions about a project and get answers grounded in its live operational context (services, incidents, deployments, alerts, and recent logs). First deliverable of the v0.5 "Intelligence" roadmap.
 - **Provider abstraction**: Added an `AiProvider` interface with an `OpenAiCompatibleDriver`, resolved through `AiProviderManager`. Any OpenAI-compatible `/chat/completions` endpoint works — OpenAI, OpenRouter, Ollama, LM Studio, vLLM — with no vendor SDK dependency. Configured via `config/oblok.php` (`OBLOK_AI_*` env keys).

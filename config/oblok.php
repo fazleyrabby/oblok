@@ -83,6 +83,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Anomaly Detection
+    |--------------------------------------------------------------------------
+    |
+    | Statistical anomaly detection compares the most recent portion of a
+    | metric series against its own earlier baseline. A series is flagged when
+    | its recent mean deviates from the baseline by at least `z_threshold`
+    | standard deviations, provided the series has enough recorded samples.
+    |
+    */
+
+    'anomaly' => [
+        'z_threshold' => env('OBLOK_ANOMALY_Z_THRESHOLD', 3.0),
+        'min_samples' => env('OBLOK_ANOMALY_MIN_SAMPLES', 12),
+        'window_hours' => env('OBLOK_ANOMALY_WINDOW_HOURS', 24),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | AI Assistant
     |--------------------------------------------------------------------------
     |

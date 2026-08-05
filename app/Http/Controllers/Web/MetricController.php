@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Actions\Metrics\DetectAnomalies;
 use App\Actions\Metrics\QueryMetricSeries;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMetricTargetRequest;
@@ -25,10 +26,11 @@ class MetricController extends Controller
 
         $names = $project->metricSamples()->distinct()->orderBy('name')->pluck('name');
         $targets = $project->metricTargets()->latest()->get();
+        $anomalies = app(DetectAnomalies::class)->handle($project);
 
         $projects = $this->accessibleProjects();
 
-        return view('metrics.index', compact('projects', 'project', 'names', 'targets'));
+        return view('metrics.index', compact('projects', 'project', 'names', 'targets', 'anomalies'));
     }
 
     /**
@@ -55,6 +57,18 @@ class MetricController extends Controller
             'from' => $from->toIso8601String(),
             'to' => $to->toIso8601String(),
             'series' => $series,
+        ]);
+    }
+
+    /**
+     * Return detected anomalies for a project's metrics.
+     */
+    public function anomalies(Project $project, DetectAnomalies $detect): JsonResponse
+    {
+        $this->authorize('viewAny', [MetricSample::class, $project]);
+
+        return response()->json([
+            'data' => $detect->handle($project),
         ]);
     }
 

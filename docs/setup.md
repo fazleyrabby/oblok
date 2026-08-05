@@ -86,6 +86,22 @@ matter of changing `OBLOK_AI_ENDPOINT`, `OBLOK_AI_API_KEY`, and `OBLOK_AI_MODEL`
 Leave `OBLOK_AI_API_KEY` empty for local providers that need no auth. For a local
 llama.cpp server: `OBLOK_AI_ENDPOINT=http://<host>:8080/v1` with `--api-key` empty.
 
+Chat replies stream token-by-token over Server-Sent Events, and every exchange is
+saved to per-project chat history (clearable from the chat panel).
+
+### Anomaly detection configuration (optional)
+
+Anomaly detection compares the most recent portion of each metric series against
+its own earlier baseline and flags series that deviate significantly. It is
+enabled by default and needs no configuration to work.
+
+```dotenv
+# Anomaly detection — sensible defaults shown
+OBLOK_ANOMALY_Z_THRESHOLD=3          # z-scores beyond this flag a series
+OBLOK_ANOMALY_MIN_SAMPLES=12         # minimum samples per series to evaluate
+OBLOK_ANOMALY_WINDOW_HOURS=24        # lookback window for analysis
+```
+
 ---
 
 ## 3. Build and start

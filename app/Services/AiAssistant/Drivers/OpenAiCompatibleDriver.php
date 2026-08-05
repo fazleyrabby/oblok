@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\Http;
 
 class OpenAiCompatibleDriver implements AiProvider
 {
+    protected string $endpoint;
+    protected string $model;
+    protected ?string $key;
+    protected int $timeout;
+
+    public function __construct(
+        ?string $endpoint = null,
+        ?string $model = null,
+        ?string $key = null,
+        ?int $timeout = null
+    ) {
+        $this->endpoint = $endpoint ?? (string) config('oblok.ai.endpoint');
+        $this->model = $model ?? (string) config('oblok.ai.model');
+        $this->key = $key ?? (string) config('oblok.ai.key');
+        $this->timeout = $timeout ?? (int) config('oblok.ai.timeout', 60);
+    }
+
     /**
      * Ask the configured OpenAI-compatible chat completions endpoint.
      *
@@ -20,7 +37,7 @@ class OpenAiCompatibleDriver implements AiProvider
     {
         try {
             $response = $this->client()->post('/chat/completions', [
-                'model' => (string) config('oblok.ai.model'),
+                'model' => $this->model,
                 'messages' => [
                     ['role' => 'system', 'content' => $system],
                     ['role' => 'user', 'content' => $prompt],
@@ -69,19 +86,114 @@ class OpenAiCompatibleDriver implements AiProvider
     }
 
     /**
+     * Stream the provider's answer token-by-token by requesting a streaming
+     * chat completion and parsing the Server-Sent Events the endpoint returns.
+     *
+     * @return \Generator<int, string, void, void>
+     *
+     * @throws AiProviderException
+     */
+    public function stream(string $system, string $prompt): \Generator
+    {
+        try {
+            $response = $this->client()
+                ->withOptions(['stream' => true])
+                ->post('/chat/completions', [
+                    'model' => $this->model,
+                    'messages' => [
+                        ['role' => 'system', 'content' => $system],
+                        ['role' => 'user', 'content' => $prompt],
+                    ],
+                    'temperature' => 0.2,
+                    'max_tokens' => 1200,
+                    'stream' => true,
+                ]);
+
+            $response->throw();
+
+            $body = $response->toPsrResponse()->getBody();
+            $buffer = '';
+
+            while (! $body->eof()) {
+                $buffer .= $body->read(1024);
+
+                while (($newline = strpos($buffer, "\n")) !== false) {
+                    $line = trim(substr($buffer, 0, $newline));
+                    $buffer = substr($buffer, $newline + 1);
+
+                    $chunk = $this->parseChunk($line);
+
+                    if ($chunk === null) {
+                        continue;
+                    }
+
+                    if ($chunk === self::DONE) {
+                        return;
+                    }
+
+                    if ($chunk !== '') {
+                        yield $chunk;
+                    }
+                }
+            }
+
+            // A final data line without a trailing newline (rare but legal).
+            if (trim($buffer) !== '') {
+                $chunk = $this->parseChunk(trim($buffer));
+
+                if (is_string($chunk) && $chunk !== self::DONE && $chunk !== '') {
+                    yield $chunk;
+                }
+            }
+        } catch (ConnectionException|RequestException $e) {
+            throw new AiProviderException('AI provider request failed: '.$e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * Sentinel marking the end of a streaming completion.
+     */
+    private const DONE = '[DONE]';
+
+    /**
+     * Extract the content delta from a single SSE line, or return null when the
+     * line carries no content.
+     */
+    protected function parseChunk(string $line): ?string
+    {
+        if (! str_starts_with($line, 'data:')) {
+            return null;
+        }
+
+        $data = trim(substr($line, strlen('data:')));
+
+        if ($data === self::DONE) {
+            return self::DONE;
+        }
+
+        $json = json_decode($data, true);
+
+        if (! is_array($json)) {
+            return null;
+        }
+
+        $content = $json['choices'][0]['delta']['content'] ?? null;
+
+        return is_string($content) ? $content : '';
+    }
+
+    /**
      * Build an HTTP client pointed at the configured endpoint.
      */
     protected function client(): PendingRequest
     {
-        $client = Http::baseUrl((string) config('oblok.ai.endpoint'))
+        $client = Http::baseUrl($this->endpoint)
             ->acceptJson()
             ->asJson()
-            ->timeout((int) config('oblok.ai.timeout', 60));
+            ->timeout($this->timeout);
 
-        $key = (string) config('oblok.ai.key');
-
-        if ($key !== '') {
-            $client->withToken($key);
+        if ($this->key !== null && $this->key !== '') {
+            $client->withToken($this->key);
         }
 
         return $client;

@@ -264,17 +264,24 @@ graph LR
 2. The request runs the `AskAssistantRequest`, which authorizes through the `useAssistant`
    policy method (any project member). The web controller (`Web\AiAssistantController::ask`)
    and API controller (`Api\V1\AiAssistantController`) both use it.
-3. `AskAssistant::handle` builds a **system prompt** that constrains the model
+3. `AskAssistant` builds a **system prompt** that constrains the model
    ("never invent data that is not present in the provided context") and a **context
    snapshot** of the project: its most recent services, incidents, deployments, alert
-   events, and log entries (bounded by `oblok.ai.context_limit`, default 12 each).
+   events, and log entries (bounded by `oblok.ai.context_limit`, default 12 each), plus
+   any currently detected metric anomalies.
 4. `AiProviderManager::driver` resolves the configured provider (currently only
    `openai-compatible`; new providers implement `AiProvider` and register a `match`
    arm).
 5. `OpenAiCompatibleDriver` POSTs `{model, messages, temperature, max_tokens}` to
    `{oblok.ai.endpoint}/chat/completions`, throwing `AiProviderException` on transport
    failures, non-2xx responses, or empty content.
-6. The controller returns `{data: {answer}}`; on provider failure it returns `502`.
+6. The API controller returns `{data: {answer}}`; on provider failure it returns `502`.
+   The web controller streams instead: it requests a streaming completion
+   (`stream: true`), parses the SSE `data:` lines, and forwards each token as an SSE
+   `event: token`, finishing with `event: done` (or `event: error` on failure).
+7. Every exchange is persisted to `conversation_messages` under the project's
+   conversation (one per user). The chat page reloads this history on visit and a
+   `POST projects/{project}/ai-assistant/clear` endpoint deletes it.
 
 ### Configuration
 
@@ -282,13 +289,25 @@ All settings live in `config/oblok.php` under the `ai` key, backed by `OBLOK_AI_
 environment variables: `provider`, `endpoint`, `key`, `model`, `timeout`, `context_limit`.
 The API key is optional — local providers (Ollama, LM Studio) can leave it empty.
 
+### Anomaly Detection
+
+`App\Services\Metrics\AnomalyDetector` and `App\Actions\Metrics\DetectAnomalies` provide
+statistical anomaly detection over `metric_samples`. For each metric series (grouped by
+name and labels), the most recent portion of the series is compared against its own
+earlier baseline using a z-score; a series is flagged when the recent mean deviates by
+more than `oblok.anomaly.z_threshold` standard deviations (floored at 5% of the baseline
+mean so flat series are not over-sensitive), provided it has at least
+`oblok.anomaly.min_samples` samples. Results surface on the Metrics dashboard
+(`GET projects/{project}/metrics/anomalies`) and are included in the AI operational
+context snapshot.
+
 ### Operational Context Snapshot
 
 Both the chat assistant and incident suggestions are grounded in the same
 operational context, built by `App\Services\AiAssistant\ProjectContextBuilder`. It
 compiles a compact text snapshot of the project: its most recent services, incidents,
-deployments, alert events, and log entries (each bounded by `oblok.ai.context_limit`,
-default 12). The chat assistant sends this alongside a free-form question; incident
+deployments, alert events, metric anomalies, and log entries (each bounded by
+`oblok.ai.context_limit`, default 12). The chat assistant sends this alongside a free-form question; incident
 suggestions send it alongside the incident's own fields (title, severity, status,
 description, service) and ask the model for a root-cause hypothesis and next steps.
 

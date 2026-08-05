@@ -2,10 +2,15 @@
 
 namespace App\Services\AiAssistant;
 
+use App\Actions\Metrics\DetectAnomalies;
 use App\Models\Project;
 
 class ProjectContextBuilder
 {
+    public function __construct(
+        private DetectAnomalies $detectAnomalies,
+    ) {}
+
     /**
      * Build a compact snapshot of the project's operational state for the AI
      * assistant. Reused by both the chat action and incident suggestions.
@@ -67,6 +72,24 @@ class ProjectContextBuilder
                 $alert->subject,
                 $alert->triggered_at->toIso8601String()
             );
+        }
+
+        $anomalies = $this->detectAnomalies->handle($project);
+
+        if ($anomalies !== []) {
+            $lines[] = '';
+            $lines[] = 'Metric anomalies ('.count($anomalies).'):';
+            foreach (array_slice($anomalies, 0, $limit) as $anomaly) {
+                $lines[] = sprintf(
+                    '- %s %s by %s%% (z-score %s, recent mean %s vs baseline %s)',
+                    $anomaly['name'],
+                    $anomaly['direction'] === 'up' ? 'spiked' : 'dropped',
+                    $anomaly['percent_change'] ?? 0,
+                    $anomaly['z_score'],
+                    $anomaly['current_mean'],
+                    $anomaly['baseline_mean']
+                );
+            }
         }
 
         $lines[] = '';

@@ -279,9 +279,14 @@ sidebar under "AI Assistant") is a project-scoped conversational panel.
 - **Loading & error states**: While a request is in flight the button shows
   "Asking…" and is disabled; provider failures surface an inline error message rather
   than a silent failure.
+- **Token streaming**: Replies stream token-by-token over Server-Sent Events from
+  `projects.ai-assistant.ask`, so text appears as it is generated instead of after a
+  long pause.
+- **Persistent history**: Every exchange is saved per project and user. Revisiting the
+  page reloads the conversation, and "Clear" deletes it from the server as well as the UI.
 - **Grounding**: Answers are generated from the project's live operational context
-  (services, incidents, deployments, alerts, logs); the assistant is instructed not to
-  invent data beyond that context.
+  (services, incidents, deployments, alerts, logs, metric anomalies); the assistant is
+  instructed not to invent data beyond that context.
 - **Interaction model**: The panel posts to the authenticated `projects.ai-assistant.ask`
   web endpoint with the CSRF token (session auth), so no separate AI credentials are
   needed by the browser. The same endpoint is reachable over the API as

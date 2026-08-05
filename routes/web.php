@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\AiAssistantController;
+use App\Http\Controllers\Web\AiSettingsController;
 use App\Http\Controllers\Web\AlertEventController;
 use App\Http\Controllers\Web\AlertRuleController;
 use App\Http\Controllers\Web\ApiKeyController;
@@ -86,7 +87,13 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/metrics', [MetricController::class, 'index'])->name('projects.metrics.index');
     Route::get('projects/{project}/ai-assistant', [AiAssistantController::class, 'index'])->name('projects.ai-assistant');
     Route::post('projects/{project}/ai-assistant', [AiAssistantController::class, 'ask'])->name('projects.ai-assistant.ask');
+    Route::post('projects/{project}/ai-assistant/clear', [AiAssistantController::class, 'clear'])->name('projects.ai-assistant.clear');
+    Route::post('projects/{project}/ai-assistant/select-model', [AiAssistantController::class, 'selectModel'])->name('projects.ai-assistant.select-model');
+    Route::get('projects/{project}/ai-settings', [AiSettingsController::class, 'index'])->name('projects.ai-settings.index');
+    Route::post('projects/{project}/ai-settings', [AiSettingsController::class, 'store'])->name('projects.ai-settings.store');
+    Route::delete('projects/{project}/ai-settings/{aiProvider}', [AiSettingsController::class, 'destroy'])->name('projects.ai-settings.destroy');
     Route::get('projects/{project}/metrics/data', [MetricController::class, 'data'])->name('projects.metrics.data');
+    Route::get('projects/{project}/metrics/anomalies', [MetricController::class, 'anomalies'])->name('projects.metrics.anomalies');
     Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('projects.metrics.targets.store');
     Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('projects.metrics.targets.destroy');
 

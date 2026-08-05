@@ -30,11 +30,26 @@
                         </p>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    @click="clear()"
-                    class="text-xs text-gray-500 hover:text-gray-300 transition"
-                >Clear</button>
+                <div class="flex items-center gap-3">
+                    @if($availableModels->isNotEmpty())
+                        <select 
+                            x-model="selectedModel" 
+                            @change="changeModel($event)" 
+                            class="bg-gray-950 border border-gray-850 rounded-lg px-2 py-1 text-xs text-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono max-w-[12rem] truncate"
+                        >
+                            @foreach($availableModels as $modelOption)
+                                <option value="{{ $modelOption['model'] }}" data-provider-id="{{ $modelOption['provider_id'] }}">
+                                    {{ $modelOption['label'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+                    <button
+                        type="button"
+                        @click="clear()"
+                        class="text-xs text-gray-500 hover:text-gray-300 transition"
+                    >Clear</button>
+                </div>
             </div>
 
             <div class="px-5 py-5">
@@ -142,19 +157,54 @@
     <script>
         function assistant() {
             return {
-                messages: [],
+                messages: @json($messages->map(fn ($message) => ['role' => $message->role, 'content' => $message->content])),
                 draft: '',
                 loading: false,
                 error: null,
+                selectedModel: @json($selectedModel),
+                selectedProviderId: @json($selectedProviderId),
+
+                async changeModel(event) {
+                    const option = event.target.options[event.target.selectedIndex];
+                    const providerId = option.getAttribute('data-provider-id') || null;
+                    const model = this.selectedModel;
+                    
+                    try {
+                        await fetch(@json(route('projects.ai-assistant.select-model', $project)), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                provider_id: providerId,
+                                model: model
+                            })
+                        });
+                    } catch (e) {
+                        // Failed to save model preference
+                    }
+                },
 
                 ask(question) {
                     this.draft = question;
                     this.submit();
                 },
 
-                clear() {
+                async clear() {
                     this.messages = [];
                     this.error = null;
+
+                    try {
+                        await fetch(@json(route('projects.ai-assistant.clear', $project)), {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                        });
+                    } catch (e) {
+                        // History is best-effort; the UI is already cleared.
+                    }
                 },
 
                 async submit() {
@@ -164,6 +214,7 @@
                     }
 
                     this.messages.push({ role: 'user', content: question });
+                    this.messages.push({ role: 'assistant', content: '' });
                     this.draft = '';
                     this.error = null;
                     this.loading = true;
@@ -175,22 +226,60 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Accept': 'application/json',
+                                'Accept': 'text/event-stream',
                                 'X-CSRF-TOKEN': @json(csrf_token()),
                             },
                             body: JSON.stringify({ message: question }),
                         });
 
-                        const payload = await response.json();
-
-                        if (!response.ok) {
-                            throw new Error(payload.message ?? 'The request failed.');
+                        if (!response.ok || !response.body) {
+                            throw new Error('The request failed.');
                         }
 
-                        this.messages.push({ role: 'assistant', content: payload.data.answer });
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder();
+                        let buffer = '';
+
+                        while (true) {
+                            const { value, done } = await reader.read();
+                            if (done) break;
+                            buffer += decoder.decode(value, { stream: true });
+
+                            const events = buffer.split('\n\n');
+                            buffer = events.pop() || '';
+
+                            for (const event of events) {
+                                const [eventLine, ...dataLines] = event.split('\n');
+                                const data = dataLines
+                                    .filter(line => line.startsWith('data:'))
+                                    .map(line => line.replace(/^data:\s*/, ''))
+                                    .join('');
+
+                                if (!data) continue;
+
+                                let payload;
+                                try {
+                                    payload = JSON.parse(data);
+                                } catch (e) {
+                                    continue;
+                                }
+
+                                if (eventLine.includes('token')) {
+                                    this.messages[this.messages.length - 1].content += payload.data?.answer ?? '';
+                                    this.$nextTick(() => this.scrollToBottom());
+                                } else if (eventLine.includes('error')) {
+                                    throw new Error(payload.message ?? 'The AI assistant could not be reached.');
+                                } else if (eventLine.includes('done')) {
+                                    break;
+                                }
+                            }
+                        }
                     } catch (e) {
                         this.error = e.message || 'Something went wrong.';
-                        this.messages.push({ role: 'assistant', content: 'Sorry, I could not answer that right now.' });
+                        const last = this.messages[this.messages.length - 1];
+                        if (last && last.role === 'assistant' && last.content === '') {
+                            last.content = 'Sorry, I could not answer that right now.';
+                        }
                     } finally {
                         this.loading = false;
                         this.$nextTick(() => this.scrollToBottom());

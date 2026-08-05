@@ -219,6 +219,26 @@ class Project extends Model
     }
 
     /**
+     * Get the AI assistant conversations held for this project.
+     *
+     * @return HasMany<Conversation, $this>
+     */
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
+    /**
+     * Get the AI providers configured for this project.
+     *
+     * @return HasMany<AiProvider, $this>
+     */
+    public function aiProviders(): HasMany
+    {
+        return $this->hasMany(AiProvider::class);
+    }
+
+    /**
      * Resolve a single member of this project by user id (for scoped route binding).
      *
      * @return BelongsToMany<User, $this, ProjectMember, 'pivot'>

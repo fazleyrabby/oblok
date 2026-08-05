@@ -180,3 +180,80 @@ test('API can list, create, and delete scrape targets', function () {
 
     $this->assertDatabaseCount('metric_targets', 0);
 });
+
+test('anomalies endpoint reports a metric that spiked above its baseline', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $owner->id]);
+
+    foreach (array_fill(0, 20, 10.0) as $index => $value) {
+        MetricSample::factory()->create([
+            'project_id' => $project->id,
+            'name' => 'http_requests_total',
+            'value' => $value,
+            'recorded_at' => now()->subMinutes(30 - $index),
+        ]);
+    }
+
+    foreach (array_fill(0, 5, 500.0) as $index => $value) {
+        MetricSample::factory()->create([
+            'project_id' => $project->id,
+            'name' => 'http_requests_total',
+            'value' => $value,
+            'recorded_at' => now()->subMinutes(5 - $index),
+        ]);
+    }
+
+    $response = $this->actingAs($owner)->getJson(route('projects.metrics.anomalies', $project));
+
+    $response->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.name', 'http_requests_total')
+        ->assertJsonPath('data.0.direction', 'up')
+        ->assertJsonPath('data.0.severity', 'critical');
+});
+
+test('anomalies endpoint returns no anomalies for stable metrics', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $owner->id]);
+
+    foreach (range(0, 30) as $index) {
+        MetricSample::factory()->create([
+            'project_id' => $project->id,
+            'name' => 'cpu_usage',
+            'value' => 40.0,
+            'recorded_at' => now()->subMinutes(30 - $index),
+        ]);
+    }
+
+    $this->actingAs($owner)->getJson(route('projects.metrics.anomalies', $project))
+        ->assertOk()
+        ->assertJsonCount(0, 'data');
+});
+
+test('metrics dashboard surfaces detected anomalies', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['user_id' => $owner->id]);
+
+    foreach (array_fill(0, 20, 10.0) as $index => $value) {
+        MetricSample::factory()->create([
+            'project_id' => $project->id,
+            'name' => 'http_requests_total',
+            'value' => $value,
+            'recorded_at' => now()->subMinutes(30 - $index),
+        ]);
+    }
+
+    foreach (array_fill(0, 5, 900.0) as $index => $value) {
+        MetricSample::factory()->create([
+            'project_id' => $project->id,
+            'name' => 'http_requests_total',
+            'value' => $value,
+            'recorded_at' => now()->subMinutes(5 - $index),
+        ]);
+    }
+
+    $this->actingAs($owner)->get(route('projects.metrics.index', $project))
+        ->assertOk()
+        ->assertSee('Detected anomalies')
+        ->assertSee('http_requests_total');
+});

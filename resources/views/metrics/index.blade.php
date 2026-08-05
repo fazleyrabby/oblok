@@ -79,6 +79,64 @@
         </div>
 
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider">Detected anomalies</h3>
+                    <p class="text-xs text-gray-400 mt-1">Metric series whose recent values deviate significantly from their own baseline (last 24h).</p>
+                </div>
+                <span id="anomaly-count" class="text-xs px-2.5 py-1 rounded-full bg-gray-800 text-gray-300">{{ count($anomalies) }} found</span>
+            </div>
+
+            @if($anomalies === [])
+                <p class="mt-5 text-sm text-gray-500">No anomalies detected. Keep collecting metrics to build baselines.</p>
+            @else
+                <div class="overflow-x-auto mt-4">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-gray-800">
+                                <th class="py-2 pr-4 font-medium">Metric</th>
+                                <th class="py-2 pr-4 font-medium">Direction</th>
+                                <th class="py-2 pr-4 font-medium">Change</th>
+                                <th class="py-2 pr-4 font-medium">Z-score</th>
+                                <th class="py-2 pr-4 font-medium">Recent</th>
+                                <th class="py-2 pr-4 font-medium">Baseline</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anomaly-rows">
+                            @foreach($anomalies as $anomaly)
+                                <tr class="border-b border-gray-800/60">
+                                    <td class="py-2.5 pr-4 text-gray-200 font-medium">
+                                        {{ $anomaly['name'] }}
+                                        @if($anomaly['labels'] !== [])
+                                            <span class="text-xs text-gray-500">
+                                                ({{ collect($anomaly['labels'])->map(fn ($v, $k) => $k.'='.$v)->join(', ') }})
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="py-2.5 pr-4">
+                                        <span class="text-xs font-semibold uppercase tracking-wider {{ $anomaly['direction'] === 'up' ? 'text-amber-400' : 'text-red-400' }}">
+                                            {{ $anomaly['direction'] === 'up' ? 'Spike' : 'Drop' }}
+                                        </span>
+                                    </td>
+                                    <td class="py-2.5 pr-4 text-gray-300">
+                                        @if($anomaly['percent_change'] !== null)
+                                            {{ ($anomaly['direction'] === 'up' ? '+' : '').number_format($anomaly['percent_change'], 1).'%' }}
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
+                                    <td class="py-2.5 pr-4 text-gray-300">{{ $anomaly['z_score'] }}</td>
+                                    <td class="py-2.5 pr-4 text-gray-300">{{ $anomaly['current_mean'] }}</td>
+                                    <td class="py-2.5 pr-4 text-gray-300">{{ $anomaly['baseline_mean'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider">Metric chart</h3>
@@ -174,4 +232,54 @@
             load();
         </script>
     @endif
+
+    <script>
+        const anomalyUrl = @json(route('projects.metrics.anomalies', $project));
+
+        async function refreshAnomalies() {
+            try {
+                const res = await fetch(anomalyUrl);
+                if (!res.ok) return;
+                const payload = await res.json();
+                const rows = payload.data || [];
+
+                const count = document.getElementById('anomaly-count');
+                if (count) count.textContent = rows.length + ' found';
+
+                const tbody = document.getElementById('anomaly-rows');
+                if (!tbody) return;
+
+                tbody.innerHTML = rows.map(a => {
+                    const labels = a.labels && Object.keys(a.labels).length
+                        ? ` <span class="text-xs text-gray-500">(${Object.entries(a.labels).map(([k, v]) => `${k}=${v}`).join(', ')})</span>`
+                        : '';
+                    const change = a.percent_change !== null && a.percent_change !== undefined
+                        ? (a.direction === 'up' ? '+' : '') + Number(a.percent_change).toFixed(1) + '%'
+                        : '—';
+                    const tone = a.direction === 'up' ? 'text-amber-400' : 'text-red-400';
+                    return `<tr class="border-b border-gray-800/60">
+                        <td class="py-2.5 pr-4 text-gray-200 font-medium">${escapeHtml(a.name)}${labels}</td>
+                        <td class="py-2.5 pr-4"><span class="text-xs font-semibold uppercase tracking-wider ${tone}">${a.direction === 'up' ? 'Spike' : 'Drop'}</span></td>
+                        <td class="py-2.5 pr-4 text-gray-300">${change}</td>
+                        <td class="py-2.5 pr-4 text-gray-300">${a.z_score}</td>
+                        <td class="py-2.5 pr-4 text-gray-300">${a.current_mean}</td>
+                        <td class="py-2.5 pr-4 text-gray-300">${a.baseline_mean}</td>
+                    </tr>`;
+                }).join('');
+            } catch (e) {
+                // Best-effort refresh; the server-rendered table stays put.
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+            }[c]));
+        }
+
+        if (document.getElementById('anomaly-rows')) {
+            refreshAnomalies();
+            setInterval(refreshAnomalies, 60000);
+        }
+    </script>
 </x-app-layout>
