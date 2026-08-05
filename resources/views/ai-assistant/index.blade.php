@@ -81,7 +81,8 @@
                     </template>
 
                     <template x-for="(message, index) in messages" :key="index">
-                        <div class="flex flex-col"
+                        <div x-show="message.role === 'user' || message.content !== ''"
+                             class="flex flex-col"
                              :class="message.role === 'user' ? 'items-end' : 'items-start'">
                             <p class="text-[11px] font-semibold uppercase tracking-wider mb-1 px-1"
                                :class="message.role === 'user' ? 'text-indigo-400' : 'text-emerald-400'"
@@ -94,7 +95,7 @@
                         </div>
                     </template>
 
-                    <div x-show="loading" class="flex flex-col items-start">
+                    <div x-show="loading && (messages.length === 0 || messages[messages.length - 1].role !== 'assistant' || messages[messages.length - 1].content === '')" class="flex flex-col items-start">
                         <p class="text-[11px] font-semibold uppercase tracking-wider mb-1 px-1 text-emerald-400">Assistant</p>
                         <div class="bg-gray-950 border border-gray-800 rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-2.5">
                             <span class="typing-dot"></span>
