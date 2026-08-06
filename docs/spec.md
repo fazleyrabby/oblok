@@ -255,15 +255,15 @@ These modules are planned for post-MVP development. See [roadmap.md](roadmap.md)
 |--------|-------------|
 | Logs | Centralized log aggregation, real-time log stream, and HTTP access log inspection (method, status, latency, user-agent filters) |
 | Queue Monitoring | Job queue visibility with inspection and retry |
-| Notifications | Multi-channel alerting (email, Slack, webhooks) |
+| Notifications | Multi-channel alerting (email, Slack, webhooks) with multi-level escalation chaining and user rotation preferences |
 | Deployments | Deployment tracking and history |
-| Metrics | Custom metric collection and dashboards |
+| Metrics | Custom metric collection and dashboards, including **Apdex (Application Performance Index)** scoring for latency thresholds |
 | API Management | API key management and usage tracking |
 | Webhook Inspector | Incoming webhook logging and replay |
 | Scheduler | Cron job monitoring and failure detection |
 | Integrations | Third-party service connections (GitHub, Slack, PagerDuty) |
-| AI Assistant | Natural language operational queries with token streaming and persistent chat history, statistical anomaly detection over metrics, automated runbooks — natural-language Q&A + anomaly detection delivered (Phases 23–25) |
-| Incident Management | Incident lifecycle tracking with timeline and postmortems |
+| AI Assistant | Natural language operational queries, anomaly detection, incident suggestions grounded in a consolidated **Event & Change Timeline**, and **Self-Healing Runbooks** (triggering queue restarts, cache clearing, or SSH scripts/webhooks on alert failures) |
+| Incident Management | Incident lifecycle tracking with timeline, postmortems, smart alert deduplication, and flapping protection |
 | Team Collaboration | Multi-user access, roles, permissions, and activity feeds |
 | Analytics | Operational analytics and trend reporting |
 

@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\AiProvider;
 use App\Models\Conversation;
 use App\Models\Project;
 use App\Models\User;
-use App\Models\AiProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 
@@ -41,7 +41,7 @@ test('project owner can store a custom AI provider', function () {
     ]);
 
     $response->assertRedirect(route('projects.ai-settings.index', $project));
-    
+
     $provider = AiProvider::first();
     expect($provider)->not->toBeNull();
     expect($provider->name)->toBe('My Llama.cpp');
@@ -128,7 +128,7 @@ test('assistant streams tokens from the custom provider when selected', function
     $response->assertOk();
     expect($response->streamedContent())->toContain('Custom response');
 
-    Http::assertSent(function ($request) use ($provider) {
+    Http::assertSent(function ($request) {
         return $request->url() === 'http://localhost/v1/chat/completions'
             && $request->hasHeader('Authorization', 'Bearer custom-secret-key')
             && $request['model'] === 'custom-model';

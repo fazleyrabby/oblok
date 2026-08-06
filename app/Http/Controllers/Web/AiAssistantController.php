@@ -35,7 +35,7 @@ class AiAssistantController extends Controller
             $availableModels->push([
                 'provider_id' => '',
                 'model' => $defaultModel,
-                'label' => $defaultModel . ' (Default)',
+                'label' => $defaultModel.' (Default)',
             ]);
         }
 
@@ -44,13 +44,13 @@ class AiAssistantController extends Controller
                 $availableModels->push([
                     'provider_id' => $prov->id,
                     'model' => $modelName,
-                    'label' => $modelName . ' (' . $prov->name . ')',
+                    'label' => $modelName.' ('.$prov->name.')',
                 ]);
             }
         }
 
-        $selectedProviderId = $conversation?->selected_provider_id;
-        $selectedModel = $conversation?->selected_model ?? $defaultModel;
+        $selectedProviderId = $conversation ? $conversation->selected_provider_id : null;
+        $selectedModel = $conversation ? ($conversation->selected_model ?? $defaultModel) : $defaultModel;
 
         return view('ai-assistant.index', compact(
             'projects',

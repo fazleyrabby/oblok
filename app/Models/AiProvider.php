@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,8 +39,8 @@ class AiProvider extends Model
      */
     public function setApiKeyAttribute(?string $value): void
     {
-        $this->attributes['api_key'] = $value !== null && $value !== '' 
-            ? Crypt::encryptString($value) 
+        $this->attributes['api_key'] = $value !== null && $value !== ''
+            ? Crypt::encryptString($value)
             : null;
     }
 
@@ -49,10 +50,10 @@ class AiProvider extends Model
     public function getApiKeyAttribute(?string $value): ?string
     {
         try {
-            return $value !== null && $value !== '' 
-                ? Crypt::decryptString($value) 
+            return $value !== null && $value !== ''
+                ? Crypt::decryptString($value)
                 : null;
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        } catch (DecryptException $e) {
             return null;
         }
     }

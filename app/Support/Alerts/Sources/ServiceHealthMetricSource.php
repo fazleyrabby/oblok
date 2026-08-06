@@ -16,7 +16,9 @@ class ServiceHealthMetricSource implements MetricSource
      */
     public function readingFor(AlertRule $rule): ?MetricReading
     {
-        $serviceIds = $rule->project->services()->pluck('services.id');
+        $serviceIds = $rule->project->services()
+            ->where('is_flapping', false)
+            ->pluck('services.id');
 
         if ($serviceIds->isEmpty()) {
             return null;

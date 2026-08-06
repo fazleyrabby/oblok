@@ -42,7 +42,7 @@ class AiSettingsController extends Controller
         // Parse comma-separated models list
         $modelsArray = array_filter(
             array_map('trim', explode(',', $validated['models'])),
-            fn($val) => $val !== ''
+            fn ($val) => $val !== ''
         );
 
         $project->aiProviders()->create([

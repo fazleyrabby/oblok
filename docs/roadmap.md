@@ -97,9 +97,9 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 |-------------|-------------|
 | AI Assistant | Natural language queries against operational data, with token streaming and persistent per-project chat history — ✅ delivered (Phase 23) |
 | Anomaly Detection | Automatic detection of unusual metric patterns — ✅ delivered (Phase 25) |
-| Incident Suggestions | AI-generated root cause hypotheses based on correlated data — ✅ delivered (Phase 24) |
-| Runbook Automation | Execute predefined operational procedures from natural language commands |
-| Smart Alerts | Reduce alert noise through pattern recognition and deduplication |
+| Incident Suggestions | AI-generated root-cause hypotheses grounded in a consolidated **Event & Change Timeline** (correlating deployments, alerts, metrics, and logs) — ✅ delivered (Phase 24) |
+| Runbook & Self-Healing | Execute predefined operational procedures (e.g., restart queue worker, clear Laravel cache, or run custom SSH scripts/webhooks) manually or automatically on check failure |
+| Smart Alerts | Reduce alert noise through grouping concurrent service outages into single incidents, and silencing flapping alerts |
 
 ---
 
@@ -118,6 +118,8 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Migration Tooling | Safe upgrade path between versions |
 | Accessibility | Full WCAG AA compliance audit |
 | API v1 (complete) | Stable, versioned API covering all features |
+| Apdex Scoring | Integrate Apdex metrics on dashboards to measure and report end-user satisfaction from response latency |
+| Alert Escalations | Support multi-level notification escalation rules (Level 1 -> Level 2) with user on-call preference schedules |
 | Onboarding | First-run setup wizard and guided tour |
 
 ---

@@ -20,6 +20,8 @@ class PingServiceHealth
     public function handle(Service $service): HealthCheckResult
     {
         $previousStatus = $service->status;
+        $previousFlapping = (bool) $service->is_flapping;
+
         $resultData = $this->healthCheckerRegistry->check($service);
 
         $result = HealthCheckResult::create([
@@ -31,12 +33,30 @@ class PingServiceHealth
             'created_at' => now(),
         ]);
 
+        $transitions = $service->calculateTransitions(10);
+        $isFlapping = $previousFlapping;
+
+        if ($previousFlapping) {
+            if ($transitions < 2) {
+                $isFlapping = false;
+            }
+        } else {
+            if ($transitions >= 3) {
+                $isFlapping = true;
+            }
+        }
+
         $service->update([
             'status' => $resultData->status,
             'last_checked_at' => now(),
+            'is_flapping' => $isFlapping,
         ]);
 
-        if ($previousStatus !== 'unknown' && $previousStatus !== $resultData->status) {
+        if ($previousFlapping && ! $isFlapping) {
+            // Exited flapping state: force status evaluation
+            event(new ServiceStatusChanged($service, 'unknown', $resultData->status));
+            ServiceHealthChanged::dispatch($service->project, $service, $resultData->status);
+        } elseif (! $isFlapping && $previousStatus !== 'unknown' && $previousStatus !== $resultData->status) {
             event(new ServiceStatusChanged($service, $previousStatus, $resultData->status));
             ServiceHealthChanged::dispatch($service->project, $service, $resultData->status);
         }

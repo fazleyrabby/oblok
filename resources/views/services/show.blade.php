@@ -6,7 +6,11 @@
                     <h2 class="font-semibold text-xl text-gray-100 leading-tight">
                         {{ $service->name }}
                     </h2>
-                    @if($service->status === 'healthy')
+                    @if($service->is_flapping)
+                        <span class="px-2.5 py-1 text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full flex items-center gap-1 animate-pulse">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Flapping
+                        </span>
+                    @elseif($service->status === 'healthy')
                         <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">
                             Healthy
                         </span>

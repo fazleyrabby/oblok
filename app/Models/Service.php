@@ -28,7 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'config', 'status', 'last_checked_at'])]
+#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'config', 'status', 'last_checked_at', 'is_flapping'])]
 class Service extends Model
 {
     /** @use HasFactory<ServiceFactory> */
@@ -47,6 +47,7 @@ class Service extends Model
             'expected_status_code' => 'integer',
             'config' => 'array',
             'last_checked_at' => 'datetime',
+            'is_flapping' => 'boolean',
         ];
     }
 
@@ -98,5 +99,31 @@ class Service extends Model
     public function isHealthy(): bool
     {
         return $this->status === 'healthy';
+    }
+
+    /**
+     * Calculate the number of status transitions in the last $limit results.
+     */
+    public function calculateTransitions(int $limit = 10): int
+    {
+        $recentResults = $this->healthCheckResults()
+            ->limit($limit)
+            ->get(['status']);
+
+        if ($recentResults->count() < 2) {
+            return 0;
+        }
+
+        $transitions = 0;
+        $previousStatus = null;
+
+        foreach ($recentResults as $result) {
+            if ($previousStatus !== null && $previousStatus !== $result->status) {
+                $transitions++;
+            }
+            $previousStatus = $result->status;
+        }
+
+        return $transitions;
     }
 }

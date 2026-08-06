@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Http;
 class OpenAiCompatibleDriver implements AiProvider
 {
     protected string $endpoint;
+
     protected string $model;
+
     protected ?string $key;
+
     protected int $timeout;
 
     public function __construct(
