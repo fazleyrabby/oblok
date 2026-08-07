@@ -2,6 +2,7 @@
 
 namespace App\Actions\Services;
 
+use App\Events\ServiceFlappingChanged;
 use App\Events\ServiceHealthChanged;
 use App\Events\ServiceStatusChanged;
 use App\Models\HealthCheckResult;
@@ -51,6 +52,11 @@ class PingServiceHealth
             'last_checked_at' => now(),
             'is_flapping' => $isFlapping,
         ]);
+
+        // Notify when flapping state changes.
+        if ($previousFlapping !== $isFlapping) {
+            ServiceFlappingChanged::dispatch($service->project, $service, $isFlapping);
+        }
 
         if ($previousFlapping && ! $isFlapping) {
             // Exited flapping state: force status evaluation

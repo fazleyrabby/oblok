@@ -32,13 +32,14 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $last_evaluated_at
  * @property Carbon|null $last_triggered_at
  * @property int $cooldown_minutes
+ * @property string|null $active_event_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
 #[Fillable([
     'project_id', 'name', 'description', 'metric', 'comparison', 'threshold',
     'consecutive_failures', 'window_minutes', 'severity', 'enabled',
-    'last_evaluated_at', 'last_triggered_at', 'cooldown_minutes',
+    'last_evaluated_at', 'last_triggered_at', 'cooldown_minutes', 'active_event_id',
 ])]
 class AlertRule extends Model
 {
@@ -97,6 +98,16 @@ class AlertRule extends Model
     public function events(): HasMany
     {
         return $this->hasMany(AlertEvent::class);
+    }
+
+    /**
+     * Get the currently firing alert event, if any.
+     *
+     * @return BelongsTo<AlertEvent, $this>
+     */
+    public function activeEvent(): BelongsTo
+    {
+        return $this->belongsTo(AlertEvent::class, 'active_event_id');
     }
 
     /**
@@ -163,5 +174,13 @@ class AlertRule extends Model
         };
 
         return $this->comparison->matches($value, $threshold);
+    }
+
+    /**
+     * Determine if this rule currently has a firing (active) alert.
+     */
+    public function isFiring(): bool
+    {
+        return $this->active_event_id !== null;
     }
 }

@@ -21,6 +21,9 @@ class DispatchAlertRule
 {
     /**
      * Create an alert event for a triggered rule and fan out deliveries.
+     *
+     * If the rule already has a firing alert event, the alert is deduplicated
+     * and no new event or notifications are created.
      */
     public function handle(AlertRule $rule, MetricReading $reading): ?AlertEvent
     {
@@ -28,19 +31,31 @@ class DispatchAlertRule
             return null;
         }
 
-        return DB::transaction(function () use ($rule, $reading) {
+        $fingerprint = $this->generateFingerprint($rule, $reading);
+
+        // Deduplicate: if this rule already has an active firing event, skip.
+        if ($rule->isFiring()) {
+            $rule->update(['last_evaluated_at' => now()]);
+
+            return null;
+        }
+
+        return DB::transaction(function () use ($rule, $reading, $fingerprint) {
             $event = AlertEvent::create([
                 'alert_rule_id' => $rule->id,
                 'project_id' => $rule->project_id,
                 'severity' => $rule->severity,
                 'subject' => $rule->name,
                 'context' => $reading->context,
+                'state' => 'firing',
+                'fingerprint' => $fingerprint,
                 'triggered_at' => now(),
             ]);
 
             $rule->update([
                 'last_triggered_at' => now(),
                 'last_evaluated_at' => now(),
+                'active_event_id' => $event->id,
             ]);
 
             AlertTriggered::dispatch($rule->project, $event);
@@ -55,6 +70,21 @@ class DispatchAlertRule
 
             return $event;
         });
+    }
+
+    /**
+     * Generate a fingerprint for deduplicating alert events.
+     */
+    protected function generateFingerprint(AlertRule $rule, MetricReading $reading): string
+    {
+        $contextKey = '';
+        if (! empty($reading->context)) {
+            $sorted = $reading->context;
+            ksort($sorted);
+            $contextKey = json_encode($sorted);
+        }
+
+        return hash('xxh128', $rule->id.$rule->metric->value.$contextKey);
     }
 
     /**

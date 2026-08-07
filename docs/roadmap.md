@@ -99,7 +99,7 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 | Anomaly Detection | Automatic detection of unusual metric patterns — ✅ delivered (Phase 25) |
 | Incident Suggestions | AI-generated root-cause hypotheses grounded in a consolidated **Event & Change Timeline** (correlating deployments, alerts, metrics, and logs) — ✅ delivered (Phase 24) |
 | Runbook & Self-Healing | Execute predefined operational procedures (e.g., restart queue worker, clear Laravel cache, or run custom SSH scripts/webhooks) manually or automatically on check failure |
-| Smart Alerts | Reduce alert noise through grouping concurrent service outages into single incidents, and silencing flapping alerts |
+| Smart Alerts | Reduce alert noise through grouping concurrent service outages into single incidents, and silencing flapping alerts — ✅ delivered (Phase 26) |
 
 ---
 

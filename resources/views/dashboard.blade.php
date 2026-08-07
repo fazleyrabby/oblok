@@ -16,8 +16,8 @@
     </x-slot>
 
     <div class="space-y-6">
-        <!-- 4 Summary Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 6 Summary Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Total Projects Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
@@ -66,11 +66,11 @@
                 </div>
             </div>
 
-            <!-- Active Incidents Card -->
+            <!-- Open Incidents Card -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Open Incidents</span>
-                    <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
+                    <span class="p-2 {{ $overview['active_incidents'] > 0 ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400' }} rounded-lg">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
@@ -78,7 +78,39 @@
                 </div>
                 <div class="mt-3 flex items-baseline space-x-2">
                     <span class="text-2xl font-bold text-white">{{ $overview['active_incidents'] }}</span>
-                    <span class="text-xs text-gray-400">issues</span>
+                    <span class="text-xs {{ $overview['active_incidents'] > 0 ? 'text-red-400' : 'text-gray-400' }}">issues</span>
+                </div>
+            </div>
+
+            <!-- Active Alerts Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Firing Alerts</span>
+                    <span class="p-2 {{ $overview['active_alerts'] > 0 ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-400' }} rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline space-x-2">
+                    <span class="text-2xl font-bold text-white">{{ $overview['active_alerts'] }}</span>
+                    <span class="text-xs {{ $overview['active_alerts'] > 0 ? 'text-red-400' : 'text-emerald-400' }}">{{ $overview['active_alerts'] > 0 ? 'firing' : 'clear' }}</span>
+                </div>
+            </div>
+
+            <!-- Flapping Services Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Flapping Services</span>
+                    <span class="p-2 {{ $overview['flapping_services'] > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400' }} rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline space-x-2">
+                    <span class="text-2xl font-bold text-white">{{ $overview['flapping_services'] }}</span>
+                    <span class="text-xs {{ $overview['flapping_services'] > 0 ? 'text-amber-400 animate-pulse' : 'text-emerald-400' }}">{{ $overview['flapping_services'] > 0 ? 'unstable' : 'stable' }}</span>
                 </div>
             </div>
         </div>

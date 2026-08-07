@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AlertSeverity;
 use Database\Factories\AlertEventFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +20,14 @@ use Illuminate\Support\Carbon;
  * @property AlertSeverity $severity
  * @property string $subject
  * @property array<string, mixed>|null $context
+ * @property string $state
+ * @property string|null $fingerprint
  * @property Carbon $triggered_at
+ * @property Carbon|null $resolved_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['alert_rule_id', 'project_id', 'severity', 'subject', 'context', 'triggered_at'])]
+#[Fillable(['alert_rule_id', 'project_id', 'severity', 'subject', 'context', 'state', 'fingerprint', 'triggered_at', 'resolved_at'])]
 class AlertEvent extends Model
 {
     /** @use HasFactory<AlertEventFactory> */
@@ -40,6 +44,7 @@ class AlertEvent extends Model
             'severity' => AlertSeverity::class,
             'context' => 'array',
             'triggered_at' => 'datetime',
+            'resolved_at' => 'datetime',
         ];
     }
 
@@ -71,5 +76,46 @@ class AlertEvent extends Model
     public function deliveries(): HasMany
     {
         return $this->hasMany(NotificationDelivery::class);
+    }
+
+    /**
+     * Scope a query to only include firing (active) alert events.
+     *
+     * @param  Builder<$this>  $query
+     * @return Builder<$this>
+     */
+    public function scopeFiring(Builder $query): Builder
+    {
+        return $query->where('state', 'firing');
+    }
+
+    /**
+     * Scope a query to only include resolved alert events.
+     *
+     * @param  Builder<$this>  $query
+     * @return Builder<$this>
+     */
+    public function scopeResolved(Builder $query): Builder
+    {
+        return $query->where('state', 'resolved');
+    }
+
+    /**
+     * Determine if the alert event is currently firing.
+     */
+    public function isFiring(): bool
+    {
+        return $this->state === 'firing';
+    }
+
+    /**
+     * Resolve the alert event.
+     */
+    public function resolve(): bool
+    {
+        return $this->update([
+            'state' => 'resolved',
+            'resolved_at' => now(),
+        ]);
     }
 }
