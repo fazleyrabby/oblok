@@ -2,7 +2,6 @@
 
 use App\Actions\Runbooks\CreateRunbook;
 use App\Actions\Runbooks\ExecuteRunbook;
-use App\Enums\AlertMetric;
 use App\Enums\RunbookRunStatus;
 use App\Enums\RunbookType;
 use App\Events\AlertTriggered;
@@ -12,7 +11,6 @@ use App\Models\AlertEvent;
 use App\Models\AlertRule;
 use App\Models\Project;
 use App\Models\Runbook;
-use App\Models\RunbookRun;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;

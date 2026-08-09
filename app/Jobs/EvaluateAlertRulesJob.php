@@ -50,4 +50,3 @@ class EvaluateAlertRulesJob implements ShouldQueue
             });
     }
 }
-

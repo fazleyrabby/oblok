@@ -82,6 +82,7 @@ class ExecuteRunbook
 
         if (empty($url)) {
             $run->markFailed('Webhook URL is empty.', 400);
+
             return;
         }
 
@@ -94,7 +95,7 @@ class ExecuteRunbook
             default => $request->post($url, is_array($body) ? $body : json_decode($body ?: '{}', true)),
         };
 
-        $output = "HTTP {$response->status()}\n" . $response->body();
+        $output = "HTTP {$response->status()}\n".$response->body();
 
         if ($response->successful()) {
             $run->markSuccessful($output, $response->status());
@@ -113,7 +114,7 @@ class ExecuteRunbook
 
         $result = Process::timeout($timeout)->run($command);
 
-        $output = trim($result->output() . "\n" . $result->errorOutput());
+        $output = trim($result->output()."\n".$result->errorOutput());
 
         if ($result->successful()) {
             $run->markSuccessful($output ?: 'Process completed successfully.', $result->exitCode());

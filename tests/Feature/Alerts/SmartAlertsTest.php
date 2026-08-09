@@ -21,7 +21,6 @@ use App\Services\Monitoring\HealthCheckerRegistry;
 use App\Services\Monitoring\HealthCheckResultData;
 use App\Support\Alerts\MetricReading;
 use App\Support\Alerts\Sources\ServiceHealthMetricSource;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
@@ -396,4 +395,3 @@ function mockHealthCheckResponse(string $status)
     $registry->shouldReceive('check')->andReturn($resultData);
     app()->instance(HealthCheckerRegistry::class, $registry);
 }
-
