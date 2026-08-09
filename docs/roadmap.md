@@ -93,13 +93,13 @@ oblok uses semantic versioning. Pre-1.0 releases indicate active development. Br
 
 **Goal:** A user can ask oblok questions about their systems and receive intelligent assistance.
 
-| Deliverable | Description |
-|-------------|-------------|
-| AI Assistant | Natural language queries against operational data, with token streaming and persistent per-project chat history — ✅ delivered (Phase 23) |
-| Anomaly Detection | Automatic detection of unusual metric patterns — ✅ delivered (Phase 25) |
-| Incident Suggestions | AI-generated root-cause hypotheses grounded in a consolidated **Event & Change Timeline** (correlating deployments, alerts, metrics, and logs) — ✅ delivered (Phase 24) |
+| Deliverable            | Description                                                                                                                                                                |
+| ------------------------| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AI Assistant           | Natural language queries against operational data, with token streaming and persistent per-project chat history — ✅ delivered (Phase 23)                                   |
+| Anomaly Detection      | Automatic detection of unusual metric patterns — ✅ delivered (Phase 25)                                                                                                    |
+| Incident Suggestions   | AI-generated root-cause hypotheses grounded in a consolidated **Event & Change Timeline** (correlating deployments, alerts, metrics, and logs) — ✅ delivered (Phase 24)    |
 | Runbook & Self-Healing | Execute predefined operational procedures (e.g., restart queue worker, clear Laravel cache, or run custom SSH scripts/webhooks) manually or automatically on check failure |
-| Smart Alerts | Reduce alert noise through grouping concurrent service outages into single incidents, and silencing flapping alerts — ✅ delivered (Phase 26) |
+| Smart Alerts           | Reduce alert noise through grouping concurrent service outages into single incidents, and silencing flapping alerts — ✅ delivered (Phase 26)                               |
 
 ---
 
@@ -171,5 +171,5 @@ oblok treats every monitored project as a black box, regardless of framework (La
 | v0.2    | ✅ Delivered | Log Aggregation, Queue Monitoring, Notifications, Alert Rules (Phases 5–10); Realtime Updates (Phase 21) |
 | v0.3    | ✅ Delivered | Deployment Tracking (Phase 5); API Key Management (Phase 14); Custom Metrics + Dashboards (Phase 16); Resource + Request Monitoring (Phases 19–20); Advanced Check Types (Phase 18) |
 | v0.4    | ✅ Delivered | Webhook Inspector + Replay (Phase 11); Scheduler Monitoring (Phase 12); GitHub Integration (Phase 13); Slack Integration (Phase 15); oblok Agent (Phase 17) |
-| v0.5    | 🔄 In Progress | AI Assistant (streaming + chat history), Incident Suggestions, and Anomaly Detection delivered (Phases 23–25); runbook automation and smart alerts remaining |
+| v0.5    | 🔄 In Progress | AI Assistant, Incident Suggestions, Anomaly Detection, and Smart Alerts delivered (Phases 23–26); runbook & self-healing automation remaining |
 | v1.0    | ⚪ Planned　　　　 | Stability, security/perf audit, WCAG AA, onboarding wizard, complete API v1 |
