@@ -66,6 +66,16 @@ class Project extends Model
     }
 
     /**
+     * Get the runbooks configured for this project.
+     *
+     * @return HasMany<Runbook, $this>
+     */
+    public function runbooks(): HasMany
+    {
+        return $this->hasMany(Runbook::class);
+    }
+
+    /**
      * Get the deployments recorded for this project.
      *
      * @return HasMany<Deployment, $this>

@@ -165,11 +165,11 @@ oblok treats every monitored project as a black box, regardless of framework (La
 
 ## Milestone Status
 
-| Version | Status　　　　　　| Notes |
-| ---------| -------------------| -------|
-| v0.1    | ✅ Delivered | Auth, Projects, Dashboard, Service Monitoring (Phases 0–4) |
-| v0.2    | ✅ Delivered | Log Aggregation, Queue Monitoring, Notifications, Alert Rules (Phases 5–10); Realtime Updates (Phase 21) |
-| v0.3    | ✅ Delivered | Deployment Tracking (Phase 5); API Key Management (Phase 14); Custom Metrics + Dashboards (Phase 16); Resource + Request Monitoring (Phases 19–20); Advanced Check Types (Phase 18) |
-| v0.4    | ✅ Delivered | Webhook Inspector + Replay (Phase 11); Scheduler Monitoring (Phase 12); GitHub Integration (Phase 13); Slack Integration (Phase 15); oblok Agent (Phase 17) |
-| v0.5    | 🔄 In Progress | AI Assistant, Incident Suggestions, Anomaly Detection, and Smart Alerts delivered (Phases 23–26); runbook & self-healing automation remaining |
-| v1.0    | ⚪ Planned　　　　 | Stability, security/perf audit, WCAG AA, onboarding wizard, complete API v1 |
+| Version | Status　　　　 | Notes                                                                                                                                                                               |
+| ---------| ----------------| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| v0.1    | ✅ Delivered　　| Auth, Projects, Dashboard, Service Monitoring (Phases 0–4)                                                                                                                          |
+| v0.2    | ✅ Delivered　　| Log Aggregation, Queue Monitoring, Notifications, Alert Rules (Phases 5–10); Realtime Updates (Phase 21)                                                                            |
+| v0.3    | ✅ Delivered　　| Deployment Tracking (Phase 5); API Key Management (Phase 14); Custom Metrics + Dashboards (Phase 16); Resource + Request Monitoring (Phases 19–20); Advanced Check Types (Phase 18) |
+| v0.4    | ✅ Delivered　　| Webhook Inspector + Replay (Phase 11); Scheduler Monitoring (Phase 12); GitHub Integration (Phase 13); Slack Integration (Phase 15); oblok Agent (Phase 17)                         |
+| v0.5    | ✅ Delivered　　| AI Assistant, Incident Suggestions, Anomaly Detection, Smart Alerts, and Runbook Automation (Phases 23–27)                                                                          |
+| v1.0    | 🔄 In Progress | Stability, security/perf audit, WCAG AA, onboarding wizard, complete API v1                                                                                                         |

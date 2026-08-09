@@ -28,7 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'config', 'status', 'last_checked_at', 'is_flapping'])]
+#[Fillable(['project_id', 'name', 'type', 'target', 'check_interval', 'timeout', 'expected_status_code', 'config', 'status', 'last_checked_at', 'is_flapping', 'runbook_id'])]
 class Service extends Model
 {
     /** @use HasFactory<ServiceFactory> */
@@ -59,6 +59,16 @@ class Service extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the self-healing runbook assigned to this service.
+     *
+     * @return BelongsTo<Runbook, $this>
+     */
+    public function runbook(): BelongsTo
+    {
+        return $this->belongsTo(Runbook::class);
     }
 
     /**

@@ -18,6 +18,7 @@ use App\Http\Controllers\Web\NotificationDeliveryController;
 use App\Http\Controllers\Web\ProjectController;
 use App\Http\Controllers\Web\ProjectMemberController;
 use App\Http\Controllers\Web\QueueController;
+use App\Http\Controllers\Web\RunbookController;
 use App\Http\Controllers\Web\ScheduledTaskController;
 use App\Http\Controllers\Web\ServiceController;
 use App\Http\Controllers\Web\WebhookCallController;
@@ -96,6 +97,8 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/metrics/anomalies', [MetricController::class, 'anomalies'])->name('projects.metrics.anomalies');
     Route::post('projects/{project}/metrics/targets', [MetricController::class, 'storeTarget'])->name('projects.metrics.targets.store');
     Route::delete('projects/{project}/metrics/targets/{metricTarget}', [MetricController::class, 'destroyTarget'])->name('projects.metrics.targets.destroy');
+    Route::resource('projects.runbooks', RunbookController::class);
+    Route::post('projects/{project}/runbooks/{runbook}/execute', [RunbookController::class, 'execute'])->name('projects.runbooks.execute');
 
     Route::resource('projects.notification-channels', NotificationChannelController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 

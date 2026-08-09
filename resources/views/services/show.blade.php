@@ -27,6 +27,14 @@
                 <p class="text-xs font-mono text-gray-400 mt-1">{{ $service->target }}</p>
             </div>
             <div class="flex items-center space-x-3">
+                @if($service->runbook)
+                    <form method="POST" action="{{ route('projects.runbooks.execute', [$project, $service->runbook]) }}">
+                        @csrf
+                        <button type="submit" class="px-3 py-1.5 bg-purple-600/80 hover:bg-purple-600 text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition" title="Run self-healing runbook: {{ $service->runbook->name }}">
+                            🛠️ Self-Healing
+                        </button>
+                    </form>
+                @endif
                 <form method="POST" action="{{ route('projects.services.ping', [$project, $service]) }}">
                     @csrf
                     <button type="submit" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition">

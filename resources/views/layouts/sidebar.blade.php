@@ -151,6 +151,15 @@
                     <span x-show="!sidebarCollapsed" class="ml-3">Incidents</span>
                 </a>
 
+                <a href="{{ $navProject ? route('projects.runbooks.index', $navProject) : route('projects.index') }}"
+                   :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
+                   class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.runbooks.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed" class="ml-3">Runbooks</span>
+                </a>
+
                 <a href="{{ $navProject ? route('projects.alert-rules.index', $navProject) : route('projects.index') }}"
                    :class="sidebarCollapsed ? 'justify-center' : 'px-3'"
                    class="flex items-center py-2 rounded-lg text-sm font-medium transition {{ request()->routeIs('projects.alert-rules.*') ? 'bg-indigo-600 text-white font-semibold' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">

@@ -40,6 +40,7 @@ use Illuminate\Support\Carbon;
     'project_id', 'name', 'description', 'metric', 'comparison', 'threshold',
     'consecutive_failures', 'window_minutes', 'severity', 'enabled',
     'last_evaluated_at', 'last_triggered_at', 'cooldown_minutes', 'active_event_id',
+    'runbook_id',
 ])]
 class AlertRule extends Model
 {
@@ -75,6 +76,16 @@ class AlertRule extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the self-healing runbook assigned to this alert rule.
+     *
+     * @return BelongsTo<Runbook, $this>
+     */
+    public function runbook(): BelongsTo
+    {
+        return $this->belongsTo(Runbook::class);
     }
 
     /**

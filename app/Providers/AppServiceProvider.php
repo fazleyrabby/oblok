@@ -12,9 +12,14 @@ use App\Support\Alerts\Sources\DeploymentStatusMetricSource;
 use App\Support\Alerts\Sources\IncidentOpenedMetricSource;
 use App\Support\Alerts\Sources\QueueBacklogMetricSource;
 use App\Support\Alerts\Sources\ServiceHealthMetricSource;
+use App\Events\AlertTriggered;
+use App\Events\ServiceStatusChanged;
+use App\Listeners\ExecuteSelfHealingOnAlertTriggered;
+use App\Listeners\ExecuteSelfHealingOnServiceFailure;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -64,5 +69,8 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute((int) config('oblok.api.rate_limit'))->by($key);
         });
+
+        Event::listen(ServiceStatusChanged::class, ExecuteSelfHealingOnServiceFailure::class);
+        Event::listen(AlertTriggered::class, ExecuteSelfHealingOnAlertTriggered::class);
     }
 }
